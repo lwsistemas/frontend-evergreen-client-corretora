@@ -1,0 +1,165 @@
+html {
+  margin: 0px;
+  height: 100%;
+  width: 100%;
+}
+
+.body-login {
+  position: relative;
+  overflow-y: auto;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #121212;
+}
+
+#main-wrapper {
+  transition: all 0.25s ease-in;
+  position: relative;
+  z-index: 1;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+#main-wrapper.show {
+  opacity: 1;
+}
+
+.backgroud-login {
+  width: 100%;
+  height: 100%;
+  background-color: radial-gradient(49.28% 48.72% at 54.78% 51.29%, #14131A 0%, #0A0A0D 78.73%);
+}
+
+.painel-login {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  width: auto;
+  overflow: hidden;
+  height: auto !important;
+  float: right;
+  background-color: #1D1D1D;
+  border-radius: 4px;
+  min-width: 320px;
+  max-width: 8200px;
+  position: absolute;
+  padding: 24px;
+  transition-delay: 10ms;
+  color: #fff;
+}
+
+.painel-login a {
+  color: #ffc107;
+}
+
+.painel-login a:hover {
+  opacity: 0.8;
+}
+
+.content-banner {
+  padding: 0px 64px;
+}
+
+.card-login-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding: 0 0 24px 0;
+}
+
+.painel-login input {
+  color: #ffc107;
+  border-radius: 10px;
+  font-size: 20px;
+  height: 55px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.painel-login input:focus {
+  border: 2px solid #ffc107;
+}
+
+.painel-login .button-login {
+  color: #ffffff;
+  border-radius: 5px;
+  font-size: 18px;
+  height: 65px;
+  border-bottom: 1px #ffc107;
+}
+.footer-login {
+  display: flex;
+  align-items: flex-end;
+}
+
+.card-content {
+  min-width: 400px !important;
+}
+
+::-webkit-input-placeholder {
+  color: #f03154;
+}
+
+:-moz-placeholder {
+  color: #ffc107;
+}
+
+::-moz-placeholder {
+  color: #ffc107;
+}
+
+:-ms-input-placeholder {
+  color: #ffc107;
+}
+
+.icon-back {
+  display: none;
+}
+
+.icon-back a {
+  color: #fff !important;
+}
+
+/* .select-form{
+height: 100%;
+border: 1px solid rgba(255, 255, 255, 0.2);
+
+}
+.select-form div {
+  background-color:#000;
+} */
+
+@media screen and (max-width: 824px) {
+  .content-banner {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 678px) {
+  .painel-login {
+    position: absolute;
+    width: 100%;
+    height: 100vh !important;
+    margin: 0px;
+  }
+  .card-content {
+    min-width: 300px !important;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    align-items: top;
+  }
+  .icon-back {
+    display: block;
+  }
+}

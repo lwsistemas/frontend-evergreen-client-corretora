@@ -1,0 +1,143 @@
+{
+  "tokenCoins": {
+    "0": "BRL",
+    "1": "BTC",
+    "1027": "ETH",
+    "825": "USDT",
+    "1000": "LTC",
+    "3": "EUR"
+
+  },
+  "tokenGraf": {
+    "BTC": true,
+    "USDT": true,
+    "ETH": true,
+    "LTC": true,
+    "XRP": true,
+    "EUR": true
+
+  },
+  "coins": [
+    {
+      "id": 1,
+      "name": "Bitcoin",
+      "symbol": "BTC"
+    },
+    
+    {
+      "id": 825,
+      "name": "Tether",
+      "symbol": "USDT"
+    }
+  ],
+  "coinsDB": [
+    {
+      "id": 1,
+      "name": "BTC",
+      "idname": "BTC",
+      "icon": "usdIcon",
+      "onBinance": true
+    },
+    {
+      "id": 1027,
+      "name": "ETH",
+      "idname": "ETH",
+      "icon": "ethIcon",
+      "onBinance": true
+    },
+    {
+      "id": 1000,
+      "name": "LTC",
+      "idname": "LTC",
+      "icon": "ltcIcon",
+      "onBinance": true
+
+    },
+    {
+      "id": 825,
+      "name": "USDT",
+      "idname": "USDT",
+      "icon": "usdIcon",
+      "onBinance": true
+    },
+    {
+      "id": 3,
+      "name": "EUR",
+      "idname": "Euro",
+      "icon": "EurIcon",
+      "onBinance": true
+    }
+  ],
+  "transferType": [
+    {
+      "type": "email",
+      "name": "E-mail"
+    },
+    {
+      "type": "hash",
+      "name": "External wallet"
+    },
+    {
+      "type": "mobile",
+      "name": "Phone"
+    },
+    {
+      "type": "login",
+      "name": "Username"
+    }
+  ],
+  "transferTypeList": {
+    "email": "E-mail",
+    "hash": "External wallet",
+    "mobile": "Phone",
+    "login": "Username"
+  },
+  "pagination": {
+    "intertransfer": 20
+  },
+  "depositType": {
+    "deposit": "Deposit",
+    "pix": "Pix",
+    "credit_card": "Credit Card",
+    "picpay": "PicPay",
+    "boleto_express": "Bankslip"
+  },
+  "status": {
+    "0": "Pending",
+    "101": "Paid",
+    "102": "Expired",
+    "103": "Canceled",
+    "104": "Reversed",
+    "1":"Paid"
+  },
+  "langague": {
+    "pt": "/static/media/ptbr.12727422.png",
+    "en": "/static/media/eng.2949adaf.png",
+    "es": "/static/media/esp.f242dccf.png",
+    "globe": "/static/media/globepng.531bdead.png"
+  },
+  "optDoc": [
+    {
+      "id": "toUser",
+      "name": "RG/CNH/Identificação"
+    },
+    {
+      "id": "toUser",
+      "name": "PIS/PASEP e Outros"
+    },
+    {
+      "id": "toDepend",
+      "name": "RG/CNH/Identificação de Dependentes"
+    },
+    {
+      "id": "toUser",
+      "name": "Comprovante de Residencia"
+    },
+    {
+      "id": "toUser",
+      "name": "Comprovante de Depósito"
+    }
+  ],
+  "baseURL": "https://idexchangeumbrella.org/"
+
+}

@@ -1,0 +1,42 @@
+
+/* card-select */
+.card-select {
+  padding: 15px 20px;
+    /* background: #131722; */
+    border-radius: 10px;
+    border: #aa820a 1px solid;
+}
+.card-not-select {
+  padding: 15px 20px;
+    /* background: #131722; */
+    border-radius: 5px;
+
+}
+input[type="text"]:disabled {
+  background: #e5e6e7;
+}
+
+.content-body{
+  padding: 70px 0px 0px;
+}
+
+
+.btn-buy {
+  color: #fff;
+  background-color: #0ca520;
+  border-color: #069913;
+  width: 100%;
+}
+
+.btn-buy:hover {
+  color: #fff;
+  background-color: #aa820a;
+  border-color: #aa820a;
+}
+
+.btn-buy:focus, .btn-buy.focus {
+  color: #fff;
+  background-color: #0db463;
+  border-color: #0ca95c;
+  box-shadow: 0 0 0 0rem rgba(52, 222, 139, 0.5);
+}

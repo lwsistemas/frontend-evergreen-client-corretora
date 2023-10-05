@@ -1,0 +1,18 @@
+.slide-container {
+  width: 100%;
+    overflow: hidden;
+    position: relative;
+    cursor: grabbing;
+    touch-action: pan-x !important;
+  }
+
+.slide-content {
+  display: flex;
+  flex-direction: row; 
+}
+
+.slide-element {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

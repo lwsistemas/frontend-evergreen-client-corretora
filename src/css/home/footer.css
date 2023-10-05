@@ -1,0 +1,34 @@
+
+.footer a {
+  color: #a1a0a7;
+}
+
+.footer a:hover {
+  color: #fff;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 678px) {
+  .header-footer {
+    flex-direction: column;
+  }
+
+  .header-footer div {
+    margin-top: 24px;
+  }
+  .header-footer div p {
+    text-align: left;
+  }
+
+  .footer-social ul {
+    text-align: left !important;
+  }
+  .nav-footer {
+    display: wrap !important;
+    flex-wrap: wrap;
+  }
+
+  .footer-sticks {
+    justify-content: start !important;
+  }
+}

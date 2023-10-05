@@ -1,0 +1,77 @@
+.prices {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  overflow-x: auto;
+  padding: 0 80px 0 0;
+  margin-bottom: 80px;
+  position: relative;
+  background: #1D1D1D;
+}
+
+.crypto {
+  width: 225px;
+  height: 110px;
+  background: #1D1D1D;
+  padding: 20px;
+  animation: slide-animation 5s infinite linear;
+}
+
+.scroller {
+  display: flex;
+  width: 100%;
+}
+
+.card-title {
+  color: #fff;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 130%;
+  letter-spacing: -0.18px;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.card-operation {
+  color: #fff;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 130%;
+  letter-spacing: -0.14px;
+}
+
+.card-operation-result {
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 130%;
+  letter-spacing: -0.12px;
+}
+
+/* @keyframes slide-animation {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+} */
+
+.scroller {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.slide-left {
+  transform: translateX(-100%);
+}
+
+.slide-right {
+  transform: translateX(0%);
+}

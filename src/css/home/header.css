@@ -1,0 +1,27 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    transition: background-color 0.3s ease;
+    background-color: #1D1D1D;
+    backdrop-filter: blur(5px);
+  }
+  
+  .header.scrolled {
+    background-color: #1D1D1D;
+  }
+  
+  .header .navbar {
+    background-color: transparent !important;
+  }
+  
+  .header .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .header .nav-link {
+    color: #fff !important;
+  }
+  
