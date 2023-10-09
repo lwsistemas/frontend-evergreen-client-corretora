@@ -404,7 +404,7 @@ function Exchange() {
                                             { "height": "635px" }
                                         }>
                                         {
-                                            < TradingViewWidget2 symbol={currencyTrade}
+                                            < TradingViewWidget2 symbol={currencyTrade} id='robots'
                                             />
                                         } </div>
 

@@ -23,7 +23,7 @@ export const About = () => {
             >
               <div
                 className="card-body"
-                style={{ background: "#1D1D1D", borderRadius: "4px" }}
+                style={{ background: "#1D1D1D", borderRadius: "9px" }}
               >
                 <span>
                   <i className="fa fa-users" style={{ color: "#FFC107" }}></i>

@@ -5009,6 +5009,21 @@ input[type="button"].btn-block {
   border-radius: 0.25rem;
 }
 
+.carder{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #181818;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 5px;
+}
+.carder :hover{
+  background-color: #252d43;
+}
+
 .card>hr {
   margin-right: 0;
   margin-left: 0;
@@ -5052,6 +5067,7 @@ input[type="button"].btn-block {
 
 .card-link:hover {
   text-decoration: none;
+  background-color: #007bff;
 }
 
 .card-link+.card-link {

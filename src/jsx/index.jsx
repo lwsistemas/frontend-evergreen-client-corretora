@@ -48,6 +48,7 @@ import efetuarLoginAdm from './pages/efetuarLoginAdm'
 import RoboStop from './pages/stopRobo'
 import DepositCripo from './pages/deposit-cripto'
 import BlogAtualisys from './pages/blog';
+import PageStocks from './pages/PageStocks'
 
 
 
@@ -115,9 +116,7 @@ class Index extends Component {
                             <Route path="/user/bank" component={EditBank} isPrivate={true} redirectTo="/"/>
                             <Route path="/user/secutiry" component={EditSecutiry} isPrivate={true} redirectTo="/"/>
                             <Route path="/mercados" component={mercados} isPrivate={true} redirectTo="/"/>
-                            <Route path="/mercados/cryptos" component={mercados} isPrivate={true} redirectTo="/"/>
-                            <Route path="/mercados/stocks" component={mercados} isPrivate={true} redirectTo="/"/>
-                            <Route path="/mercados/arbitragem" component={mercados} isPrivate={true} redirectTo="/"/>
+                            <Route path="/Stocks" component={PageStocks} isPrivate={true} redirectTo="/"/>                            
                             <Route path="/robots/:Strid" exact={true} component={robots} isPrivate={true} redirectTo="/"/>
                             <Route path="/robo/stop/:id/:idmkt" exact={true} component={RoboStop} isPrivate={true} redirectTo="/"/>
                             <Route path="/robots/" exact={true} component={robots} isPrivate={true} redirectTo="/"/>

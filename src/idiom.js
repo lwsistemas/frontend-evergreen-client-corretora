@@ -5,6 +5,7 @@ import Cookies from 'universal-cookie'
 const resources = {
     pt: {
         translation: {
+            "Application_StartMarketStocks": "Configurar Software",
             "No_Response_Found": "Sem dados no momento, aguardando agentes",
             "Send_Reply_Support": "Enviar resposta",
             "Send_Reply" : "Enviando resposta",

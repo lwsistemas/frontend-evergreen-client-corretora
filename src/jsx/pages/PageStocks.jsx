@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link , useParams} from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 // import { Row, Col, Card } from 'react-bootstrap';
 import Header2 from '../layout/header2';
 import Sidebar from '../layout/sidebar/sidebar';
@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { User } from "../store/User/User.action";
 import BottomBar from '../layout/sidebar/bottom-bar';
 import { Loader } from "./home/components/loader";
+import TradingViewWidget2 from '../element/dashboard/TradingViewWidget';
 
 
 function Mercados() {
@@ -30,7 +31,7 @@ function Mercados() {
 
     const getPrices = async () => {
         try {
-            const prices = (await axios.get(`/price`)).data
+            const prices = (await axios.get(`/price/Stocks`)).data
             //console.log(prices)
             setPrices(prices.reverse())
             return prices
@@ -67,9 +68,20 @@ function Mercados() {
         setIsLoading(false)
     }, [])
 
+
+    useEffect(async () => {
+        const interval = setInterval(async () => {
+            await getPrices()
+        }, 12000);
+        return () => {
+            clearInterval(interval);
+        };
+
+    }, []);
+    const Title = t(`Application_Mercados`) + ' / Stocks'
     return (
         <>
-            <Header2 title={t('Application_Mercados')} />
+            <Header2 title={Title} />
             <Sidebar selectedItem="markets" />
 
             {isLoading ? (
@@ -96,63 +108,87 @@ function Mercados() {
                                 </div>
                             </div>
                         </div>
-                        <div class="row" style={{ marginTop: "50px" }}>
-                            {
-                                prices.filter(element => element.isMarket == 1).map(coin => {
-                                    if (coin.coin != null && coin.price != null) {
-                                        return ((
-                                            <div className="col-xl-3 col-lg-4 col-md-6 col-sm-6">
-                                                <div className="card">
-                                                    <div className="card-header">
-                                                        <div className="d-flex align-items-center">
-                                                            <span><img src={coin.img} style={{
-                                                                width: '25px',
-                                                                height: '25px',
-                                                                margin: '10px'
-                                                            }} /></span>
-                                                            <div className="flex-grow-2" style={{
-                                                                marginLeft: '5px',
-                                                                fontSize: '20px',
-                                                                Width: '150px'
-                                                            }}>
-                                                                {coin.coinSimbolo}/USD
-                                                            </div>
-                                                        </div>
-                                                        <p className="mb-0"
-                                                            style={{ float: 'right', position: 'relative', left: '14%' }}>
-                                                            24h
-                                                        </p>
-                                                        <span style={{
-                                                            position: 'relative',
-                                                            float: 'left',
-                                                            top: 60,
-                                                            color: coin.daily_percent_change > 0 ? '#07ce71' : '#7f2929',
-                                                            left: '0%'
-                                                        }}>
-                                                            {coin.daily_percent_change}%
-                                                        </span>
-                                                    </div>
-                                                    <div className="card-body">
-                                                        <h5>
-                                                            {Intl.NumberFormat('en-IN', { style: 'currency', currency: 'USD', minimumFractionDigits: 6 }).format(coin.price)}
+                        <div class="row" style={{ marginTop: "10px" }}>
 
-                                                        </h5>
-                                                        <div style={{ float: "right", margin: '20px 0 0 10px' }}>
-                                                            <Link class="btn btn-outline-primary  btn-xxs"
-                                                                to={"/robots/" + coin.coinSimbolo + "&" + coin.coin}>
-                                                                {t('Application_StartMarket')}&nbsp;<i class="fa fa-credit-card"></i> </Link>
+                            {
+                                prices.filter(element => element.market == 'STOCKS').map(coin => (
+                                    <div className="col-md-12" key={coin.id}>
+                                        <div className="card">
+                                            <div className="card-header">
+                                                <div className="d-flex align-items-center">
+                                                    <span>
+                                                        <img
+                                                            src={coin.img}
+                                                            style={{
+                                                                width: 'auto',
+                                                                height: '65px',
+                                                                margin: '10px'
+                                                            }}
+                                                            alt={`${coin.img} logo`}
+                                                        />
+                                                    </span>
+                                                    <div
+                                                        className="flex-grow-1"
+                                                        style={{
+                                                            marginLeft: '5px',
+                                                            fontSize: '20px',
+                                                            width: '80%'
+                                                        }}
+                                                    >
+                                                        {coin.ticker} / {coin.msh_id} / Setor: {coin.sector} / industry {coin.industry}
+                                                    </div>
+                                                </div>
+                                                <p style={{ textAlign: 'right' }}>
+                                                    <span
+                                                        style={{ color: coin.change_perc_today > 0 ? '#07ce71' : '#7f2929' }}
+                                                    >
+                                                        &nbsp;{coin.change_perc_today}% 24h
+                                                    </span>
+                                                    <h3 className='mt-2'>
+                                                        {Intl.NumberFormat('en-IN', {
+                                                            style: 'currency',
+                                                            currency: 'USD',
+                                                            minimumFractionDigits: 2
+                                                        }).format(coin.last_price)}
+                                                    </h3>
+                                                    <span>
+                                                        Composite Figi: {coin.composite_figi}
+                                                    </span>
+                                                </p>
+
+                                            </div>
+                                            <div className="card-body" style={{ minHeight: '400px' }}>
+                                                <div className='row'>
+                                                    <div className='col-md-4'>
+                                                        <div className='text-justify'>
+                                                            {coin.description}
                                                         </div>
+
+                                                        <div style={{ float: "left", margin: '20px 0 0 10px' }}>
+                                                            <Link
+                                                                className="btn btn-outline-primary btn-lg"
+                                                                style={{ width: '100%' }}
+                                                                to={`/robots/Stocks/${coin.ticker}`}
+                                                            >
+                                                                {t('Application_StartMarketStocks')}&nbsp;<i className="fa fa-bar-chart-o"></i>
+                                                            </Link>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className='col-md-8 mt-2' style={{ minHeight: '400px' }}>
+                                                        <TradingViewWidget2 symbol={coin.ticker} id={coin.ticker} />
                                                     </div>
                                                 </div>
                                             </div>
-                                        ))
-                                    }
-                                }
-                                )
+                                        </div>
+                                    </div>
+                                ))
                             }
-                            
+
+
+
                         </div>
-                        <div class="row">
+                        {/* <div class="row">
                             <div className="col-xl-12 col-lg-12 col-md-12">
                                 <div className="card">
                                     <div className="card-header">
@@ -203,7 +239,7 @@ function Mercados() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             )}

@@ -90,7 +90,7 @@ export const MarketPrices = (prices) => {
                                 : "#E50202",
                           }}
                         >
-                          {coin.daily_volume} vol
+                          {coin.daily_percent_change}%
                         </span>
                       </div>
                     </div>

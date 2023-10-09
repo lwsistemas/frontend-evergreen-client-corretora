@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 function ButtonsMarketsIndices() {
@@ -7,8 +7,9 @@ function ButtonsMarketsIndices() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
+    const [isStock, setisStock] = useState(true)
     let timeout = 0; // Variável para armazenar o timeout
-
+    
     const openModal = (message) => {
         setModalMessage(message);
         setIsModalOpen(true);
@@ -30,12 +31,22 @@ function ButtonsMarketsIndices() {
         switch (option) {
             case 'Stocks':
                 return "Você não tem acesso a esse tipo de investimento de Stock";
+                
             case 'Arbitragem':
                 return "Você não tem acesso a esse tipo de investimento para Arbitragem";
             default:
                 return '';
         }
     };
+
+    const getStock = (option) => {
+        switch (option) {
+            case 'Stocks':
+                
+                window.location.href = '/Stocks';
+        }
+
+    }
 
     useEffect(() => {
         // Limpa o timeout quando o componente é desmontado
@@ -46,18 +57,24 @@ function ButtonsMarketsIndices() {
 
     return (
         <div className="flex-row" role="group" style={{ display: 'flex', float: 'right' }}>
-            <Link className="btn btn-outline-primary m-1" to={'./mercados'}>
+            <Link className="btn btn-outline-primary m-1" to={'/mercados'}>
                 {t('Application_Cryptos')}&nbsp;<i className="mdi mdi-bitcoin"></i>
             </Link>
             <button
                 className="btn btn-outline-primary m-1"
                 onClick={() => {
-                    const message = getMessage('Stocks');
-                    openModal(message);
+                    if (isStock == true) {
+                        // Chama a função getStock com o parâmetro 'Stocks'
+                        getStock('Stocks');
+                    } else {
+                        const message = getMessage('Stocks');
+                        openModal(message);
+                    }
                 }}
             >
                 {t('Application_Stock')}&nbsp;<i className="mdi mdi-finance"></i>
             </button>
+
             <button
                 className="btn btn-outline-primary m-1"
                 onClick={() => {

@@ -344,7 +344,7 @@ function Exchange() {
                       style={{ height: "335px" }}
                     >
                       {
-                        <TradingViewWidget2 symbol={`${Robot.moedaSimbolo}USD`}
+                        <TradingViewWidget2 symbol={`${Robot.moedaSimbolo}USD`} id='RoboInterno'
                           
                         />
                       }{" "}

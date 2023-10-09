@@ -1012,7 +1012,7 @@ function Dashboard() {
                 class="tradingview-widget-container card"
                 style={{ height: "460px", display: onBinance }}
               >
-                <TradingViewWidget2 symbol={setSymbol()} />
+                <TradingViewWidget2 symbol={setSymbol()} id='ExchangePro' />
 
                 {/* {setSymbol()}
                 {
