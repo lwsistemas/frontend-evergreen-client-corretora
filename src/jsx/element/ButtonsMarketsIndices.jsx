@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useSelector, useDispatch } from 'react-redux';
+
 
 function ButtonsMarketsIndices() {
+    const user = useSelector(state => state.user)
     const { t } = useTranslation();
-
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
-    const [isStock, setisStock] = useState(true)
+    const [isStock, setisStock] = useState(user.isStock === 1);
     let timeout = 0; // Variável para armazenar o timeout
     
     const openModal = (message) => {
@@ -72,6 +74,7 @@ function ButtonsMarketsIndices() {
                     }
                 }}
             >
+                
                 {t('Application_Stock')}&nbsp;<i className="mdi mdi-finance"></i>
             </button>
 

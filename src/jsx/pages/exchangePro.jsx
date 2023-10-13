@@ -971,9 +971,9 @@ function Dashboard() {
                                     </Card.Text>
                                   </div>
                                 </div>
-                                <div>
+                                <div style={{textAlign:"right",fontSize:"16px"}}>
                                   <Card.Text>
-                                    <strong>
+                                    <strong style={{textAlign:"right"}}>
                                       {Intl.NumberFormat("EN-US", {
                                         style: "currency",
                                         currency: "USD",

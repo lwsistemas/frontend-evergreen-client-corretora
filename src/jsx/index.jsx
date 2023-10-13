@@ -49,6 +49,7 @@ import RoboStop from './pages/stopRobo'
 import DepositCripo from './pages/deposit-cripto'
 import BlogAtualisys from './pages/blog';
 import PageStocks from './pages/PageStocks'
+import PageRoboStock from './pages/robotsStocks'
 
 
 
@@ -118,6 +119,7 @@ class Index extends Component {
                             <Route path="/mercados" component={mercados} isPrivate={true} redirectTo="/"/>
                             <Route path="/Stocks" component={PageStocks} isPrivate={true} redirectTo="/"/>                            
                             <Route path="/robots/:Strid" exact={true} component={robots} isPrivate={true} redirectTo="/"/>
+                            <Route path="/robots/Stocks/:Strid/:id" exact={true} component={PageRoboStock} isPrivate={true} redirectTo="/"/>
                             <Route path="/robo/stop/:id/:idmkt" exact={true} component={RoboStop} isPrivate={true} redirectTo="/"/>
                             <Route path="/robots/" exact={true} component={robots} isPrivate={true} redirectTo="/"/>
                             <Route path="/contratos/" exact={true} component={contratos} isPrivate={true} redirectTo="/"/>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { Link , useParams} from 'react-router-dom';
 // import { Row, Col, Card } from 'react-bootstrap';
 import Header2 from '../layout/header2';
@@ -22,11 +22,13 @@ function Mercados() {
     const user = useSelector(state => state.user)
     const { t } = useTranslation()
     const [prices, setPrices] = useState([])
+    const [mercados, setmercados] = useState(0)
     const parametros = useParams();
     const [currencyTipo, setCurrencyTipo] = useState("")
 
     const [isLoading, setIsLoading] = useState(true);
     const dispatch = useDispatch();
+    const [repos, setRepos] = useState([])
 
     const getPrices = async () => {
         try {
@@ -65,7 +67,20 @@ function Mercados() {
         await validUser()
         await getPrices()
         setIsLoading(false)
-    }, [])
+    }, [mercados]) //eslint-disable-line
+
+
+    useEffect(async () => {
+        const interval = setInterval(async () => {
+            await getPrices()
+            // setmercados(mercados + 1);
+            // console.log(mercados)
+            }, 4000);
+        return () => {
+            clearInterval(interval);
+        };
+
+    }, [mercados]); //eslint-disable-line
 
     return (
         <>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-// import { Row, Col, Card } from 'react-bootstrap';
 import Header2 from "../layout/header2";
 import Sidebar from "../layout/sidebar/sidebar";
 import { useTranslation } from "react-i18next";
@@ -16,10 +15,9 @@ import BottomBar from "../layout/sidebar/bottom-bar";
 import { DialogContent, DialogTitle, DialogActions } from '@material-ui/core';
 import { Dialog } from '@mui/material';
 import { Modal, Button, Form } from 'react-bootstrap';
+import ReactPaginate from 'react-paginate';
 import { Loader } from "./home/components/loader";
-
-
-
+import CustomPagination from '../pages/home/components/CustomPagination';
 
 const WithoutFiatIcon = (props) => (
   <svg
@@ -90,30 +88,27 @@ function Exchange() {
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [isValorSacado, setisValorSacado] = useState(0)
   const [isLoading, setIsLoading] = useState(true);
-
-
   const dispatch = useDispatch()
   const mmzero = 0.02
+  const itemsPerPage = 20; // Defina o número de itens por página
+  const [currentPage, setCurrentPage] = useState(0);
 
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected);
+  };
 
   const VerificarValores = () => {
     //console.log(inputValue)
-
-
 
     if (inputValue > parseFloat(isValorMargem)) {
       setShowErrorMessage(true);
     } else {
       setShowErrorMessage(false);
-
-
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-
 
     const data = {
       authKey: user.authKey,
@@ -127,7 +122,6 @@ function Exchange() {
       handleClose()
       setisValorSacado(inputValue)
     }
-
 
     //handleClose();
   };
@@ -150,26 +144,21 @@ function Exchange() {
         clearInterval(intervalId);
       }, 5000); // 3000 milissegundos = 3 segundos
     }
-
-
-
   };
 
   const openDialogSaque = (e) => {
     setDialogOpenSaque(true)
-  }
+  };
 
   const closeDialog = () => {
     setDialogOpen(false);
     //window.location.href = '/robos';
   };
 
-
   const closeDialogSaque = () => {
     setDialogOpenSaque(false);
-    //window.location.href = '/robos';
+    window.location.href = '/robos';
   };
-
 
   const getRobot = async () => {
     try {
@@ -225,11 +214,10 @@ function Exchange() {
   };
 
   useEffect(async () => {
-
-    setIsLoading(true)
-    await validUser()
+    setIsLoading(true);
+    await validUser();
     await getRobot();
-  }, [])
+  }, []);
 
   useEffect(async () => {
     await getUser();
@@ -240,15 +228,24 @@ function Exchange() {
     return () => {
       clearInterval(interval);
     };
-
   }, []);
 
   useEffect(async () => {
     await getTickets();
-
-    setIsLoading(false)
+    setIsLoading(false);
   }, []);
 
+  // Aplicar a paginação
+
+
+  const offset = currentPage * itemsPerPage;
+  const pageCount = `${Math.ceil(Tickets.length / itemsPerPage)}`;
+
+  const displayedTickets = Tickets.slice(offset, offset + itemsPerPage);
+  const paginationStyles = {
+    previousLinkClassName: 'btn btn-secondary',
+    nextLinkClassName: 'btn btn-secondary',
+  };
   return (
     <>
       <Header2 title={t("Hash") + " : " + ContratoAtual} />
@@ -261,7 +258,6 @@ function Exchange() {
             <div className="row">
               <div className="col-xl-5 col-lg-5 col-md-5">
                 <div className="card">
-
                   <div className="card-body">
                     <div> </div>
                     <h5 className="text-gray">
@@ -345,7 +341,7 @@ function Exchange() {
                     >
                       {
                         <TradingViewWidget2 symbol={`${Robot.moedaSimbolo}USD`} id='RoboInterno'
-                          
+
                         />
                       }{" "}
                     </div>
@@ -373,123 +369,121 @@ function Exchange() {
                               </tr>
                             </thead>
                             <tbody>
-                              {(() => {
-                                const display = Tickets.map((data) => (
-                                  <tr>
+                              {displayedTickets.map((data) => (
+                                <tr key={data.id}>
+                                  <td className="text-left">
+                                    <Moment format="DD/MM/YY - HH:mm">
+                                      {data.createdAt}
+                                    </Moment>
+                                  </td>
+                                  <td className="text-left">
+                                    {(() => {
+                                      if (data.tipo == 1) {
+                                        return (
+                                          <span className="text-success">
+                                            ${" "}
+                                            <CurrencyFormat
+                                              value={data.ganho}
+                                              decimalScale={6}
+                                              displayType={"text"}
+                                              thousandSeparator={true}
+                                            />
+                                          </span>
+                                        );
+                                      } else {
+                                        return (
+                                          <span className="text-danger">
+                                            ${" "}
+                                            {Intl.NumberFormat("en-IN", {
+                                              maximumSignificantDigits: 6,
+                                            }).format(data.ganho)}
+                                          </span>
+                                        );
+                                      }
+                                    })()}
+                                  </td>
+                                  <td className="text-left">
+                                    {(() => {
+                                      if (data.tipo == 1) {
+                                        return (
+                                          <span className="text-success">
+                                            {" "}
+                                            <CurrencyFormat
+                                              value={data.resultValue}
+                                              decimalScale={6}
+                                              displayType={"text"}
+                                              thousandSeparator={true}
+                                            />{" "}
+                                            %
+                                          </span>
+                                        );
+                                      } else {
+                                        return (
+                                          <span className="text-danger">
+                                            {" "}
+                                            {Intl.NumberFormat("en-IN", {
+                                              maximumSignificantDigits: 6,
+                                            }).format(data.resultValue)}{" "}
+                                            %
+                                          </span>
+                                        );
+                                      }
+                                    })()}
+                                  </td>
 
-                                    <td className="text-left">
-                                      <Moment format="DD/MM/YY - HH:mm">
-                                        {data.createdAt}
-                                      </Moment>
-                                    </td>
-                                    <td className="text-left">
-                                      {(() => {
-                                        if (data.tipo == 1) {
-                                          return (
-                                            <span className="text-success">
-                                              ${" "}
-                                              <CurrencyFormat
-                                                value={data.ganho}
-                                                decimalScale={6}
-                                                displayType={"text"}
-                                                thousandSeparator={true}
-                                              />
-                                            </span>
-                                          );
-                                        } else {
-                                          return (
-                                            <span className="text-danger">
-                                              ${" "}
-                                              {Intl.NumberFormat("en-IN", {
-                                                maximumSignificantDigits: 6,
-                                              }).format(data.ganho)}
-                                            </span>
-                                          );
-                                        }
-                                      })()}
-                                    </td>
-                                    <td className="text-left">
-                                      {(() => {
-                                        if (data.tipo == 1) {
-                                          return (
-                                            <span className="text-success">
-                                              {" "}
-                                              <CurrencyFormat
-                                                value={data.resultValue}
-                                                decimalScale={6}
-                                                displayType={"text"}
-                                                thousandSeparator={true}
-                                              />{" "}
-                                              %
-                                            </span>
-                                          );
-                                        } else {
-                                          return (
-                                            <span className="text-danger">
-                                              {" "}
-                                              {Intl.NumberFormat("en-IN", {
-                                                maximumSignificantDigits: 6,
-                                              }).format(data.resultValue)}{" "}
-                                              %
-                                            </span>
-                                          );
-                                        }
-                                      })()}
-                                    </td>
-
-                                    <td className="text-left">
-                                      {(() => {
-                                        if (data.status == 0) {
-                                          return (
-                                            <span className="badge badge-info">
-                                              {t("Application_Ativos")}
-                                            </span>
-                                          );
-                                        } else if (data.status == 1) {
-                                          return (
-                                            <span className="badge badge-success">
-                                              {t("Application_Aguardando")}
-                                            </span>
-                                          );
-                                        } else if (data.status == 2) {
-                                          return (
-                                            <span className="badge badge-warning">
-                                              {t("Application_Finalizado")}
-                                            </span>
-                                          );
-                                        } else if (data.status == 3) {
-                                        } else {
-                                          return (
-                                            <span className="badge badge-info">
-                                              {t("Application_Outros")}
-                                            </span>
-                                          );
-                                        }
-                                      })()}
-                                    </td>
-                                    <td className="text-left">
-                                      {(() => {
-                                        if (data.tipo == 1) {
-                                          return (
-                                            <span className="badge badge-success">
-                                              {t("Application_Gain")}{" "}
-                                              <i className="fa fa-arrow-up"></i>
-                                            </span>
-                                          );
-                                        } else if (data.tipo == 2) {
-                                          return (
-                                            <span className="badge badge-danger">
-                                              {t("Application_Loss")}{" "}
-                                              <i className="fa fa-arrow-down"></i>
-                                            </span>
-                                          );
-                                        }
-                                      })()}
-                                    </td>
-                                    <td className="text-left">
-                                      {data.hashTransaction.substring(0, 32)}
-                                    </td>
-                                    {/*<td>
+                                  <td className="text-left">
+                                    {(() => {
+                                      if (data.status == 0) {
+                                        return (
+                                          <span className="badge badge-info">
+                                            {t("Application_Ativos")}
+                                          </span>
+                                        );
+                                      } else if (data.status == 1) {
+                                        return (
+                                          <span className="badge badge-success">
+                                            {t("Application_Aguardando")}
+                                          </span>
+                                        );
+                                      } else if (data.status == 2) {
+                                        return (
+                                          <span className="badge badge-warning">
+                                            {t("Application_Finalizado")}
+                                          </span>
+                                        );
+                                      } else if (data.status == 3) {
+                                      } else {
+                                        return (
+                                          <span className="badge badge-info">
+                                            {t("Application_Outros")}
+                                          </span>
+                                        );
+                                      }
+                                    })()}
+                                  </td>
+                                  <td className="text-left">
+                                    {(() => {
+                                      if (data.tipo == 1) {
+                                        return (
+                                          <span className="badge badge-success">
+                                            {t("Application_Gain")}{" "}
+                                            <i className="fa fa-arrow-up"></i>
+                                          </span>
+                                        );
+                                      } else if (data.tipo == 2) {
+                                        return (
+                                          <span className="badge badge-danger">
+                                            {t("Application_Loss")}{" "}
+                                            <i className="fa fa-arrow-down"></i>
+                                          </span>
+                                        );
+                                      }
+                                    })()}
+                                  </td>
+                                  <td className="text-left">
+                                    {data.hashTransaction.substring(0, 32)}
+                                  </td>
+                                  {/*<td>
                                     <Link
                                       to={`#`}
                                       class={"btn btn-sm btn-dark"}
@@ -497,11 +491,8 @@ function Exchange() {
                                       <i className="fa fa-eye"></i>{" "}
                                     </Link>
                                   </td>*/}
-
-                                  </tr>
-                                ));
-                                return display;
-                              })()}
+                                </tr>
+                              ))}
                             </tbody>
                           </Table>
                         </div>
@@ -509,7 +500,6 @@ function Exchange() {
                     </div>
                   </div>
                 </div>
-
                 <Dialog className='dialog' open={isDialogOpen} onClose={closeDialog}>
                   <div className='dialog-content'>
                     <DialogTitle> {
@@ -611,15 +601,20 @@ function Exchange() {
                   </Modal.Footer>
                 </Modal>
               </div>
+
+              {/* Adicione a componente de paginação */}
+              <div className="col-md-12">
+                
+              <CustomPagination pageCount={pageCount} onPageChange={handlePageChange} />
+              </div>
+
             </div>
           </div>
         </div>
       )}
       <BottomBar selectedIcon="markets" />
-
     </>
   );
 }
 
 export default Exchange;
-

@@ -18,7 +18,7 @@ const TradingViewWidget2 = (props) => {
                 "height": "100%"
             });
         }
-    }, [props.symbol]); // Use props.symbol como dependência
+    }, [props.symbol],[props.id]); // Use props.symbol como dependência
 
     return (
         <div className="">

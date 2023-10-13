@@ -1,12 +1,5 @@
 /*
-    Name: Tradio
-    Author: Quixlab
-    Portfolio : https://themeforest.net/user/quixlab/portfolio
-    Email: quixlab.com@gmail.com
-    Skype: sporsho9 
-
-
-    Table of Content: 
+  Table of Content: 
 
     1. Abstract
     2. Bootstrap CSS
@@ -76,7 +69,7 @@ html {
   font-family: sans-serif;
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: #121212;
 }
 
 article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
@@ -4483,6 +4476,10 @@ input[type="button"].btn-block {
   list-style: none;
 }
 
+.nav :hover{
+  color: #0029e6;
+}
+
 .nav-link {
   display: block;
   padding: 0.5rem 1rem;
@@ -4490,6 +4487,8 @@ input[type="button"].btn-block {
 
 .nav-link:hover, .nav-link:focus {
   text-decoration: none;
+  color:red;
+
 }
 
 .nav-link.disabled {
@@ -14838,7 +14837,7 @@ label.error {
 }
 
 .profile_log .dropdown-menu .dropdown-item:hover, .profile_log .dropdown-menu .dropdown-item:focus, .profile_log .dropdown-menu .dropdown-item.active {
-  background-color: transparent;
+  background-color: #181A20;
 }
 
 .page-title {
@@ -14897,6 +14896,9 @@ label.error {
   box-shadow: 0 10px 30px 0 rgba(82, 63, 105, 0.08);
 }
 
+.sidebar:hover{
+  background-color: #0029e6;
+}
 .menu {
   margin-top: 100px;
 }
@@ -14914,7 +14916,7 @@ label.error {
 }
 
 .menu ul li a:hover, .menu ul li a:focus, .menu ul li a:active {
-  background: #FFC107;
+  background: #ffc107;
 }
 
 .menu ul li a:hover i, .menu ul li a:focus i, .menu ul li a:active i {
@@ -14922,7 +14924,7 @@ label.error {
 }
 
 .menu ul li a.active {
-  background: #FFC107;
+  background: #ffc107;
 }
 
 .menu ul li a.active i {

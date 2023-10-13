@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "../../services/index";
 import { useDispatch } from "react-redux";
@@ -14,22 +14,33 @@ import LogoHeader from "../../images/brand/logoHeader.png";
 import ButtonPrimary from "../../components/button/primary";
 import { ButtonSubmit } from "../../components/button/submit";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
 function Signin() {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [show, setShow] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [hashUser, setHashUser] = useState("");
   const [operationProps] = useState({});
   const [dispatchUser, setDispatchUser] = useState();
   const [disabledButton, setDisabledButton] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const history = useHistory();
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (rememberMe) {
+      localStorage.setItem("savedLogin", login);
+      localStorage.setItem("savedPassword", password);
+    }
+
     try {
       setDisabledButton(true);
       const user = (await axios.post("/login", { login, password })).data;
@@ -84,10 +95,39 @@ function Signin() {
     }
   };
 
+  const handleRememberMeClick = () => {
+    if (!rememberMe) {
+      // Se "Lembrar-me" estava marcado e foi desmarcado, apague as informações do localStorage
+      localStorage.removeItem("savedLogin");
+      localStorage.removeItem("savedPassword");
+    }
+    setRememberMe(!rememberMe);
+  };
+
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+
+
   function validateEmail(email) {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
+
+  useEffect(() => {
+    const savedLogin = localStorage.getItem("savedLogin");
+    const savedPassword = localStorage.getItem("savedPassword");
+    if (savedLogin && savedPassword) {
+      setLogin(savedLogin);
+      setPassword(savedPassword);
+      setRememberMe(true);
+      setDisabledButton(false); // Liberar o botão
+    }
+  }, []);
+
+
+
 
   return (
     <>
@@ -159,22 +199,33 @@ function Signin() {
                 </div>
                 <div className="form-group">
                   <label>{t("Password")}</label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    placeholder={t("Password")}
-                    name="password"
-                    maxLength="32"
-                    value={password}
-                    onChange={(e) =>
-                      checkValue(login, e.target.value.replace(" ", ""))
-                    }
-                  />
+                  <div className="input-group">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className="form-control"
+                      placeholder={t("Password")}
+                      name="password"
+                      maxLength="32"
+                      value={password}
+                      onChange={(e) => checkValue(login, e.target.value.replace(" ", ""))}
+                    />
+                    <div className="input-group-append">
+                      <span className="input-group-text" onClick={handleTogglePassword}>
+                        {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                      </span>
+                    </div>
+                  </div>
                 </div>
+
                 <div className="form-row d-flex w-100 justify-content-between mt-4 mb-2">
                   <div className="form-group mb-0">
                     <label className="toggle">
-                      <input className="toggle-checkbox" type="checkbox" />
+                      <input
+                        className="toggle-checkbox"
+                        type="checkbox"
+                        checked={rememberMe}
+                        onChange={handleRememberMeClick}
+                      />
                       <span
                         style={{ border: "1px solid #9396a2" }}
                         className="toggle-switch"

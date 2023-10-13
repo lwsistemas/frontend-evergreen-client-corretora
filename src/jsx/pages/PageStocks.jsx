@@ -168,7 +168,7 @@ function Mercados() {
                                                             <Link
                                                                 className="btn btn-outline-primary btn-lg"
                                                                 style={{ width: '100%' }}
-                                                                to={`/robots/Stocks/${coin.ticker}`}
+                                                                to={`/robots/Stocks/${coin.ticker}/${coin.composite_figi}`}
                                                             >
                                                                 {t('Application_StartMarketStocks')}&nbsp;<i className="fa fa-bar-chart-o"></i>
                                                             </Link>
@@ -188,58 +188,7 @@ function Mercados() {
 
 
                         </div>
-                        {/* <div class="row">
-                            <div className="col-xl-12 col-lg-12 col-md-12">
-                                <div className="card">
-                                    <div className="card-header">
-                                        <h4 className="card-title">FAQ</h4>
-                                    </div>
-                                    <div className="card-body">
-                                        <Accordion defaultActiveKey="0" id="accordion-faq" className="accordion">
-                                            <Card>
-                                                <Accordion.Toggle as={Card.Header} eventKey="0">
-                                                    <h5>{t('What_Shipping')}</h5>
-                                                </Accordion.Toggle>
-                                                <Accordion.Collapse eventKey="0">
-                                                    <Card.Body>Anim pariatur cliche reprehenderit, enim eiusmod high
-                                                        life accusamus terry richardson ad squid. 3 wolf moon officia aute,
-                                                        non
-                                                        cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
-                                                        laborum
-                                                        eiusmod.</Card.Body>
-                                                </Accordion.Collapse>
-                                            </Card>
-                                            <Card>
-                                                <Accordion.Toggle as={Card.Header} eventKey="1">
-                                                    <h5>{t('How_Long')}</h5>
-                                                </Accordion.Toggle>
-                                                <Accordion.Collapse eventKey="1">
-                                                    <Card.Body>Anim pariatur cliche reprehenderit, enim eiusmod high
-                                                        life accusamus terry richardson ad squid. 3 wolf moon officia aute,
-                                                        non
-                                                        cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
-                                                        laborum
-                                                        eiusmod.</Card.Body>
-                                                </Accordion.Collapse>
-                                            </Card>
-                                            <Card>
-                                                <Accordion.Toggle as={Card.Header} eventKey="2">
-                                                    <h5>{t('How_Do_I_Track')}</h5>
-                                                </Accordion.Toggle>
-                                                <Accordion.Collapse eventKey="2">
-                                                    <Card.Body>Anim pariatur cliche reprehenderit, enim eiusmod high
-                                                        life accusamus terry richardson ad squid. 3 wolf moon officia aute,
-                                                        non
-                                                        cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
-                                                        laborum
-                                                        eiusmod.</Card.Body>
-                                                </Accordion.Collapse>
-                                            </Card>
-                                        </Accordion>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> */}
+                        
                     </div>
                 </div>
             )}

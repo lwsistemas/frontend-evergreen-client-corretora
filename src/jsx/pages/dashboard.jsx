@@ -31,6 +31,7 @@ import "../../css/dashboard/select.css";
 import BottomBar from "../layout/sidebar/bottom-bar";
 
 function Dashboard() {
+  
   const { t } = useTranslation();
   const user = useSelector((state) => state.user);
   const [ConteudoBlogs, setConteudoBlogs] = useState([]);
@@ -347,7 +348,7 @@ function Dashboard() {
     await validUser();
     let response = await getPrices2(currency);
     setActive("BTC");
-  }, []);
+  }, [secondary]); //eslint-disable-line
 
   const getBalances = async (currency) => {
     try {

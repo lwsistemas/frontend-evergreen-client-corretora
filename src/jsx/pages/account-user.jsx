@@ -40,7 +40,8 @@ function UserData() {
     const [city, setCity] = useState(user.city ?? "")
     const [state, setState] = useState(user.state ?? "")
     const [country, setCountry] = useState(user.country ?? "")
-    const [idDocument, setIdDocument] = useState(user.idDocument?? "")
+    const [date_of_birth, setdate_of_birth] = useState(user.date_of_birth ?? "")
+    const [idDocument, setIdDocument] = useState(user.idDocument ?? "")
     const [rg, setRg] = useState(user.rg ?? "")
     const [rgIssuer, setRgIssuer] = useState(user.rgIssuer ?? "")
     const [rgUf, setRgUf] = useState(user.rgUf ?? "")
@@ -63,6 +64,7 @@ function UserData() {
     const [messageRg, setMessageRg] = useState("")
     const [messageRgIssuer, setMessageRgIssuer] = useState("")
     const [messageRgUF, setMessageRgUF] = useState("")
+    const [messagedate_of_birth, setMessagedate_of_birth] = useState("")
 
     const [erroTelephone, setErroTelephone] = useState(false)
     const [erroMobile, setErrorMobile] = useState(false)
@@ -82,6 +84,7 @@ function UserData() {
     const [erroRgUF, setErrorRgUF] = useState(false)
     const [erroFatherName, setErrorFatherName] = useState(false)
     const [erroMotherName, setErrorMotherName] = useState(false)
+    const [errodate_of_birth, setErrordate_of_birth] = useState(false)
 
     const [ulrImage, setUrlimage] = useState('')
     const [isFile, setIsFile] = useState(false)
@@ -91,6 +94,37 @@ function UserData() {
     const [sucessDisplay, setSucessDisplay] = useState('none')
     const [firstAcess, setFirstAcess] = useState(true)
     const zipCodeCleaned = zipCode.replace(/\D/g, '');
+
+    const estadosBrasileiros = [
+        { nomeCompleto: "Acre", sigla: "AC" },
+        { nomeCompleto: "Alagoas", sigla: "AL" },
+        { nomeCompleto: "Amapá", sigla: "AP" },
+        { nomeCompleto: "Amazonas", sigla: "AM" },
+        { nomeCompleto: "Bahia", sigla: "BA" },
+        { nomeCompleto: "Ceará", sigla: "CE" },
+        { nomeCompleto: "Distrito Federal", sigla: "DF" },
+        { nomeCompleto: "Espírito Santo", sigla: "ES" },
+        { nomeCompleto: "Goiás", sigla: "GO" },
+        { nomeCompleto: "Maranhão", sigla: "MA" },
+        { nomeCompleto: "Mato Grosso", sigla: "MT" },
+        { nomeCompleto: "Mato Grosso do Sul", sigla: "MS" },
+        { nomeCompleto: "Minas Gerais", sigla: "MG" },
+        { nomeCompleto: "Pará", sigla: "PA" },
+        { nomeCompleto: "Paraíba", sigla: "PB" },
+        { nomeCompleto: "Paraná", sigla: "PR" },
+        { nomeCompleto: "Pernambuco", sigla: "PE" },
+        { nomeCompleto: "Piauí", sigla: "PI" },
+        { nomeCompleto: "Rio de Janeiro", sigla: "RJ" },
+        { nomeCompleto: "Rio Grande do Norte", sigla: "RN" },
+        { nomeCompleto: "Rio Grande do Sul", sigla: "RS" },
+        { nomeCompleto: "Rondônia", sigla: "RO" },
+        { nomeCompleto: "Roraima", sigla: "RR" },
+        { nomeCompleto: "Santa Catarina", sigla: "SC" },
+        { nomeCompleto: "São Paulo", sigla: "SP" },
+        { nomeCompleto: "Sergipe", sigla: "SE" },
+        { nomeCompleto: "Tocantins", sigla: "TO" },
+      ];
+      
 
 
     //====================== API ========================
@@ -160,7 +194,8 @@ function UserData() {
                 rgUf: rgUf,
                 rgIssuer: rgIssuer,
                 fatherName: fatherName,
-                motherName: motherName
+                motherName: motherName,
+                date_of_birth: date_of_birth
             }
             try {
                 if (isFile) {
@@ -184,6 +219,7 @@ function UserData() {
                     formData.append('firstName', firstName)
                     formData.append('secondName', secondName)
                     formData.append('idDocument', idDocument)
+                    formData.append('date_of_birth', date_of_birth)
                     formData.append('rg', rg)
                     formData.append('rguf', rgUf)
                     formData.append('rgIssuer', rgIssuer)
@@ -393,23 +429,24 @@ function UserData() {
 
     const handleIdDocument = async () => {
         if (idDocument.length == 11) {
-                setErrorIdDocument(false)
-                try {
-                    const response = await axios.put('/user/valid/idDocument', { idDocument: idDocument, authKey: user.authKey })
-                    if (response.data.isValid == true) {
-                        setErrorIdDocument(false)
-                        return true
-                    } else {
-                        setErrorIdDocument(true)
-                        setMessageIdDocument("CPF já cadastrado")
-                        return false
-                    }
-                } catch (error) {
+            setErrorIdDocument(false)
+            try {
+                const response = await axios.put('/user/valid/idDocument', { idDocument: idDocument, authKey: user.authKey })
+               
+                if (response.data.isValid == true) {
+                    setErrorIdDocument(false)
+                    return true
+                } else {
                     setErrorIdDocument(true)
-                    setMessageIdDocument("Erro ao validar CPF. Por favor, tente novamente")
+                    setMessageIdDocument("CPF já cadastrado")
                     return false
                 }
-            
+            } catch (error) {
+                setErrorIdDocument(true)
+                setMessageIdDocument("Erro ao validar CPF. Por favor, tente novamente")
+                return false
+            }
+
         } else {
             setErrorIdDocument(true)
             setMessageIdDocument("CPF inválido")
@@ -447,9 +484,9 @@ function UserData() {
             setErrorSecondName(false)
             return true
         }
-     }
+    }
 
-    const handleRg = () => { 
+    const handleRg = () => {
         // if (rg == null || rg == "") {
         //     if (firstAcess == false) {
         //         setErrorRg(true)
@@ -466,7 +503,7 @@ function UserData() {
         return true
     }
 
-    const handleRgIssuer = () => { 
+    const handleRgIssuer = () => {
         // if (rgIssuer == null || rgIssuer == "") {
         //     if (firstAcess == false) {
         //         setErrorRgIssuer(true)
@@ -483,7 +520,7 @@ function UserData() {
         return true
     }
 
-    const handleRgUF = () => { 
+    const handleRgUF = () => {
         // if (rgUf == null || rgUf == "") {
         //     if (firstAcess == false) {
         //         setErrorRgUF(true)
@@ -500,7 +537,7 @@ function UserData() {
         return true
     }
 
-    const handleFatherName = () => { 
+    const handleFatherName = () => {
         // if (fatherName == null || fatherName == "") {
         //     if (firstAcess == false) {
         //         setErrorFatherName(true)
@@ -517,7 +554,23 @@ function UserData() {
         return true
     }
 
-    const handleMotherName = () => { 
+    const handleMotherName = () => {
+        // if (motherName == null || motherName == "") {
+        //     if (firstAcess == false) {
+        //         setErrorMotherName(true)
+        //         setMessageMotherName("Nome do pai obrigatório")
+        //         return false
+        //     } else {
+        //         setErrorMotherName(false)
+        //         return true
+        //     }
+        // } else {
+        //     setErrorMotherName(false)
+        //     return true
+        // }
+        return true
+    }
+    const handledate_of_birth = () => {
         // if (motherName == null || motherName == "") {
         //     if (firstAcess == false) {
         //         setErrorMotherName(true)
@@ -586,9 +639,9 @@ function UserData() {
     const isValidate = async () => {
         if (await handleLogin() == false || await handleEmail() == false || await handleZipCode() == false ||
             await handleStreet() == false || await handleNeighborhood() == false || await handleCity() == false ||
-            await handleState() == false || await handleCountry() == false || await handleIdDocument() == false || await handleFirstName() ==false ||
-            await handleSecondName() ==false || await handleRg() ==false || await handleRgIssuer() ==false || await handleRgUF()==false ||
-            await handleFatherName()==false || await handleMotherName()==false) {
+            await handleState() == false || await handleCountry() == false || await handleIdDocument() == false || await handleFirstName() == false ||
+            await handleSecondName() == false || await handleRg() == false || await handleRgIssuer() == false || await handleRgUF() == false ||
+            await handleFatherName() == false || await handleMotherName() == false) {
             return false
         } else {
             return true
@@ -671,6 +724,9 @@ function UserData() {
     useEffect(() => {
         handleMotherName()
     }, [fatherName])
+    useEffect(() => {
+        handledate_of_birth()
+    }, [date_of_birth])
 
     return (
         <>
@@ -804,9 +860,20 @@ function UserData() {
                                                                     {messageCity}
                                                                 </div>
                                                             </Form.Group>
-                                                            <Form.Group as={Col} controlId="formGridFirsName">
+                                                            <Form.Group as={Col} controlId="formGridState">
                                                                 <Form.Label>{t("State")}</Form.Label>
-                                                                <Form.Control type="text" value={state} onChange={e => setState(e.target.value)} />
+                                                                <select
+                                                                    className="form-control"
+                                                                    value={state}
+                                                                    onChange={(e) => setState(e.target.value)}
+                                                                >
+                                                                    <option value="">Selecione um estado</option>
+                                                                    {estadosBrasileiros.map((estado, index) => (
+                                                                        <option key={index} value={estado.sigla}>
+                                                                            {estado.sigla}
+                                                                        </option>
+                                                                    ))}
+                                                                </select>
                                                                 <div className={"text-danger " + (!erroState ? "d-none" : "")}>
                                                                     {messageState}
                                                                 </div>
@@ -855,19 +922,40 @@ function UserData() {
                                                             </Form.Group>
                                                             <Form.Group controlId="formGridFirsName">
                                                                 <Form.Label>{t('State_issuance')}</Form.Label>
-                                                                <Form.Control type="text" value={rgUf} onChange={e => setRgUf(e.target.value)} />
+                                                                <select
+                                                                    className="form-control"
+                                                                    value={rgUf}
+                                                                    onChange={(e) => setRgUf(e.target.value)}
+                                                                >
+                                                                    <option value="">Selecione um estado</option>
+                                                                    {estadosBrasileiros.map((estado, index) => (
+                                                                        <option key={index} value={estado.sigla}>
+                                                                            {estado.sigla}
+                                                                        </option>
+                                                                    ))}
+                                                                </select>
                                                                 <div className={"text-danger " + (!erroRgUF ? "d-none" : "")}>
                                                                     {messageRgUF}
                                                                 </div>
                                                             </Form.Group>
                                                         </Form.Row>
-                                                        <Form.Group controlId="formGridFirsName">
-                                                            <Form.Label>{"CPF"}</Form.Label>
-                                                            <Form.Control type="text" value={idDocument} onChange={e => setIdDocument(e.target.value)} />
-                                                            <div className={"text-danger " + (!erroIdDocument ? "d-none" : "")}>
-                                                                {messageIdDocument}
-                                                            </div>
-                                                        </Form.Group>
+                                                        <Form.Row className="d-flex flex-lg-row flex-column ">
+                                                            <Form.Group controlId="formGridFirsName">
+                                                                <Form.Label>{t('Application_DataDeNascimento')}</Form.Label>
+                                                                <Form.Control type="date" value={date_of_birth} onChange={e => setdate_of_birth(e.target.value)} />
+                                                                <div className={"text-danger " + (!errodate_of_birth ? "d-none" : "")}>
+                                                                    {messagedate_of_birth}
+                                                                </div>
+                                                            </Form.Group>
+
+                                                            <Form.Group as={Col} controlId="formGridFirsName">
+                                                                <Form.Label>{"CPF"}</Form.Label>
+                                                                <Form.Control type="text" value={idDocument} onChange={e => setIdDocument(e.target.value)} />
+                                                                <div className={"text-danger " + (!erroIdDocument ? "d-none" : "")}>
+                                                                    {messageIdDocument}
+                                                                </div>
+                                                            </Form.Group>
+                                                        </Form.Row>
                                                         <Form.Row className="d-flex flex-lg-row flex-column">
                                                             <Form.Group as={Col} controlId="formGridFirsName">
                                                                 <Form.Label>{t('Father')}</Form.Label>
