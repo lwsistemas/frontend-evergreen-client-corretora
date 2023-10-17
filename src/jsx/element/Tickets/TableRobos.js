@@ -199,6 +199,7 @@ function TableTickets() {
           </div>
         );
       })}
+      <div className="col-md-12">
       <Pagination className="justify-content-center">
         <Pagination.Prev
           onClick={() => setCurrentPage(currentPage - 1)}
@@ -210,6 +211,7 @@ function TableTickets() {
           disabled={endIndex >= Tickets.length}
         />
       </Pagination>
+      </div>
     </>
   );
 }

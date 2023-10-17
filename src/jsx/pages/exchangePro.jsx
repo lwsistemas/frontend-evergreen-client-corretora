@@ -11,7 +11,7 @@ import CurrencyFormat from "react-currency-format";
 import Moment from "react-moment";
 import styled from "styled-components";
 import { Card, Button, Form, Row, Nav } from "react-bootstrap";
-import TradingViewWidget2 from '../element/dashboard/TradingViewWidget'; 
+import TradingViewWidget2 from '../element/dashboard/TradingViewWidget';
 
 //import Box from '@mui/material/Box';
 import Tab from "@material-ui/core/Tab";
@@ -202,6 +202,7 @@ function Dashboard() {
   const [maxSellbar, setMaxSellbar] = useState(0);
   const [walletPricesList, setWalletPricesList] = useState([]);
   const [firstAccess, setFirstAccess] = useState(true);
+  const [filterValue, setFilterValue] = useState('');
   //---------------------API------------
 
   const getWalletPrices = async () => {
@@ -652,23 +653,8 @@ function Dashboard() {
       return err;
     }
   };
-  const setIcon = async (icon) => {
-    switch (icon) {
-      case "ethIcon":
-        setCurrentIcon(ethIcon);
-        break;
-      case "ltcIcon":
-        setCurrentIcon(ltcIcon);
-        break;
-      case "bitcoinIcon":
-        setCurrentIcon(bitcoinIcon);
-        break;
-      case "usdIcon":
-        setCurrentIcon(usdIcon);
-        break;
-      default:
-        setCurrentIcon(idsuexIcon);
-    }
+  const setIcon = async (props) => {
+    setCurrentIcon(props)
   };
 
   const setSymbol = () => {
@@ -856,16 +842,29 @@ function Dashboard() {
             <div class="col-lg-3 col-md-4 col-xs-3">
               <div class="card" style={{ background: "transparent" }}>
                 <div class="card-header" style={{ marginBottom: "10px" }}>
-                  <h4 class="card-title">
-                    {" "}
-                    {t("Select your token")} -{" "}
-                    <Link
-                      class="btn btn-primary btn-xxs"
-                      to={"./user/mywallet"}
-                    >
-                      {t("My Wallet")} <i class="fa fa-credit-card"></i>{" "}
-                    </Link>{" "}
-                  </h4>
+                  <div className="row">
+                  <div className="col-md-5">
+                  
+                  {" "}
+                  <Link
+                    class="btn btn-primary btn-xxs"
+                    to={"./user/mywallet"}
+                  >
+                    {t("My Wallet")} <i class="fa fa-credit-card"></i>{" "}
+                  </Link>{" "}
+                
+                </div>
+                <div className="col-md-7">
+                <input
+                  type="text"
+                  value={filterValue}
+                  onChange={(e) => setFilterValue(e.target.value)}
+                  placeholder="Filtrar moedas"
+                  className="form-control input-group-text"
+                  style={{width:"100%"}}
+                />
+                </div>
+                  </div>
                 </div>
                 <PerfectScrollbar><div
                   class="column"
@@ -881,122 +880,167 @@ function Dashboard() {
                     overflowX: "hidden",
                   }}
                 >
-                  {coinPrices.map((coin) => {
-                    if (coin) {
-                      let colorpct = {};
-                      if (coin.pctChange < 0) {
-                        colorpct = {
-                          textDecoration: "none",
-                          color: "#e50202",
-                        };
-                      } else {
-                        colorpct = {
-                          textDecoration: "none",
-                          color: "rgb(16 216 118)",
-                        };
-                      }
+
+
+
+                  {coinPrices
+                    .filter((coin) => {
+                      // Verifica se o filtro está em branco ou se o código ou nome da moeda contém o filtro.
                       return (
-                        <div
-                          class="active"
-                          onClick={async () => {
-                            setAllValues(coin);
-                            setActive(coin.code);
-                            setCode(coin.code)
-                            // checkGraph(globalConfig.tokenGraf[coin.code])
-                          }}
-                        >
-                          <Card
-                            style={{
-                              marginRight: "5px",
-                              backgroundColor: "rgb(93 120 255) !important;",
-                              borderColor: "rgb(93 120 255) !important;",
-                              cursor: "pointer",
+                        filterValue === '' ||
+                        coin.code.toLowerCase().includes(filterValue.toLowerCase()) ||
+                        coin.name.toLowerCase().includes(filterValue.toLowerCase())
+                      );
+                    })
+                    .map((coin) => {
+                      // O restante do seu código permanece o mesmo
+                      // Certifique-se de adaptar essas mudanças ao seu código específico.
+
+                      if (coin) {
+                        let colorpct = {};
+                        if (coin.pctChange < 0) {
+                          colorpct = {
+                            textDecoration: "none",
+                            color: "#e50202",
+                          };
+                        } else {
+                          colorpct = {
+                            textDecoration: "none",
+                            color: "rgb(16 216 118)",
+                          };
+                        }
+                        return (
+                          <div
+                            class="active"
+                            onClick={async () => {
+                              setAllValues(coin);
+                              setActive(coin.code);
+                              setCode(coin.code)
+                              setIcon(coin.img)
+                              // checkGraph(globalConfig.tokenGraf[coin.code])
                             }}
                           >
-                            {
-                              <Card.Img
-                                variant="top"
-                                src={coin.img}
-                                style={{
-                                  width: "32px",
-                                  float: "left",
-                                  marginRight: "15px",
-                                  position: "absolute",
-                                  top: "20px",
-                                  left: "10px",
-                                }}
-                              />
-                            }
-                            <Card.Body
-                              class="card-not-select"
-                              id={coin.code}
+                            <Card
+                              style={{
+                                marginRight: "5px",
+                                backgroundColor: "rgb(93 120 255) !important;",
+                                borderColor: "rgb(93 120 255) !important;",
+                                cursor: "pointer",
+                              }}
                             >
-                              <div
-                                class="row"
-                                style={{ justifyContent: "space-between" }}
+                              {
+                                <Card.Img
+                                  variant="top"
+                                  src={coin.img}
+                                  style={{
+                                    width: "32px",
+                                    float: "left",
+                                    marginRight: "15px",
+                                    position: "absolute",
+                                    top: "20px",
+                                    left: "10px",
+                                  }}
+                                />
+                              }
+                              <Card.Body
+                                class="card-not-select"
+                                id={coin.code}
                               >
-                                <div>
-                                  <div
-                                    style={{
-                                      margin: "12px 20px 10px",
-                                      position: "relative",
-                                      left: "15px",
-                                    }}
-                                  >
-                                    <Card.Title>
-                                      {coin.code}{" "}
-                                      <small>({coin.name})</small>
-                                    </Card.Title>
+                                <div
+                                  class="row"
+                                  style={{ justifyContent: "space-between" }}
+                                >
+                                  <div>
+                                    <div
+                                      style={{
+                                        margin: "12px 20px 10px",
+                                        position: "relative",
+                                        left: "15px",
+                                      }}
+                                    >
+                                      <Card.Title>
+                                        {coin.code}{" "}
+                                        <small>({coin.name})</small>
+                                      </Card.Title>
+                                    </div>
+                                    <div style={{ display: "flex" }}>
+                                      <Card.Text>
+                                        {t("Balance")}:{" "}
+                                        <strong>
+                                          <CurrencyFormat
+                                            value={walletPricesList.find((item) => item.type === coin.coin)?.balance || 0}
+                                            displayType="text"
+                                            thousandSeparator={true}
+                                            renderText={(formattedValue) => {
+                                              let minimumFractionDigits = 6;
+                                              let maximumFractionDigits = 6;
+                                              let currencySymbol = ''; // Símbolo da moeda, vazio para criptomoeda
+
+                                              if (coin.coin === 825) {
+                                                minimumFractionDigits = 4;
+                                                maximumFractionDigits = 6;
+                                              } else if (coin.coin === 3) {
+                                                minimumFractionDigits = 2;
+                                              }
+
+                                              const formattedValueOptions = {
+                                                minimumFractionDigits,
+                                                maximumFractionDigits,
+                                              };
+
+                                              // Se for criptomoeda, não aplique o Intl.NumberFormat
+                                              const formattedCurrency = currencySymbol
+                                                ? new Intl.NumberFormat("en-US", {
+                                                  style: "currency",
+                                                  currency: currencySymbol,
+                                                  formattedValueOptions,
+                                                }).format(formattedValue)
+                                                : formattedValue;
+
+                                              return formattedCurrency;
+                                            }}
+                                          />
+
+
+
+                                          {" "}
+                                          {coin.code}
+                                        </strong>{" "}
+                                      </Card.Text>
+                                    </div>
                                   </div>
-                                  <div style={{ display: "flex" }}>
+                                  <div style={{ textAlign: "right", fontSize: "16px" }}>
                                     <Card.Text>
-                                      {t("Balance")}:{" "}
-                                      <strong>
-                                        <CurrencyFormat
-                                          value={
-                                            (walletPricesList.find((item) => item.type === coin.coin)?.balance || 0)
-                                          }
-                                          displayType={"text"}
-                                          thousandSeparator={true}
-                                          renderText={(formattedValue) => {
-                                            const internationalValue = parseFloat(formattedValue).toLocaleString("pt", {
-                                              minimumFractionDigits: 2,
-                                              maximumFractionDigits: 6,
-                                            });
-                                            return internationalValue;
-                                          }}
-                                        />{" "}
-                                        {coin.code}
-                                      </strong>{" "}
+                                      <strong style={{ textAlign: "right" }}>
+                                        {coin.coin === 825 ? (
+                                          Intl.NumberFormat("en-US", {
+                                            style: "currency",
+                                            currency: "USD",
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 6,
+                                          }).format(coin.ask)
+                                        ) : (
+                                          formatNumberWithTwoDecimalPlaces(coin.ask)
+                                        )}
+
+                                      </strong>
+                                    </Card.Text>
+                                    <Card.Text>
+                                      {" "}
+                                      24h{" "}
+                                      <strong style={colorpct}>
+                                        {coin.pctChange}%
+                                      </strong>
                                     </Card.Text>
                                   </div>
                                 </div>
-                                <div style={{textAlign:"right",fontSize:"16px"}}>
-                                  <Card.Text>
-                                    <strong style={{textAlign:"right"}}>
-                                      {Intl.NumberFormat("EN-US", {
-                                        style: "currency",
-                                        currency: "USD",
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 6,
-                                      }).format(formatNumberWithTwoDecimalPlaces(coin.ask))}
-                                    </strong>
-                                  </Card.Text>
-                                  <Card.Text>
-                                    {" "}
-                                    24h{" "}
-                                    <strong style={colorpct}>
-                                      {coin.pctChange}%
-                                    </strong>
-                                  </Card.Text>
-                                </div>
-                              </div>
-                            </Card.Body>
-                          </Card>
-                        </div>
-                      );
-                    }
-                  })}
+                              </Card.Body>
+                            </Card>
+                          </div>
+                        );
+                      }
+                    })
+                  }
                 </div>
                 </PerfectScrollbar>
               </div>

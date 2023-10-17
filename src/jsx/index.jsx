@@ -50,6 +50,7 @@ import DepositCripo from './pages/deposit-cripto'
 import BlogAtualisys from './pages/blog';
 import PageStocks from './pages/PageStocks'
 import PageRoboStock from './pages/robotsStocks'
+import PageEmprestimos from './pages/emprestimos'
 
 
 
@@ -132,6 +133,7 @@ class Index extends Component {
                             <Route path="/deposit-cripto/receive/:Strid" exact={true} component={DepositCripo} isPrivate={true} redirectTo="/"/>
                             <Route path="/account-deposit-fiat" exact={true} component={AccountDepositFiat} isPrivate={true} redirectTo="/"/>
                             <Route path="/blog/id/:id" exact={true} component={BlogAtualisys} isPrivate={true} redirectTo="/"/>
+                            <Route path="/emprestimos" exact={true} component={PageEmprestimos} isPrivate={true} redirectTo="/"/>
                         </Switch>
                     </div>
                 </BrowserRouter>

@@ -53,6 +53,7 @@ function Exchange() {
     const [mediasMoveisError, setMediasMoveisError] = useState('');
     const [codBankError, setCodBankError] = useState('');
     const [passcodError, setPasscodError] = useState('');
+    const [isButtonDisabled, setisButtonDisabled] = useState(false)
     const dispatch = useDispatch();
     const handleSharesChange = (e) => {
         const newShares = e.target.value;
@@ -195,6 +196,7 @@ function Exchange() {
         const posicaoValid = handleModel(Posicao)
 
         if (sharesValid && volumeValid && rsiValid && mediasMoveisValid && codBankValid && passcodValid && posicaoValid) {
+            setisButtonDisabled(true)
             handleSubmitData();
         }
     };
@@ -216,14 +218,16 @@ function Exchange() {
         };
         try {
             const response = (await axios.post('marketinvestment/Stocks', requestForm)).data;
-            if(response.status === 'success'){
-                openDialog();    
+            if (response.success === true) {
+                openDialog();
+                console.log(response.success)
             }
-            
+
         } catch (error) {
             setErroToken(true);
             setMessageToken(t('Message_Invalide_Token'));
             console.log(error);
+            setisButtonDisabled(false)
         }
     };
 
@@ -375,7 +379,7 @@ function Exchange() {
                                                             type="text"
                                                             name="volumestock"
                                                             className="form-control"
-                                                            
+
                                                             inputMode="decimal" // Define o modo de entrada como decimal
                                                             pattern="[0-9]*" // Aceita números, pontos e vírgulas
                                                             onKeyPress={e => {
@@ -397,7 +401,7 @@ function Exchange() {
                                                             type="text"
                                                             name="balance"
                                                             className="form-control"
-                                                            
+
                                                             readOnly={false}
                                                             value={Intl.NumberFormat('en', {
                                                                 style: 'currency',
@@ -425,7 +429,7 @@ function Exchange() {
                                                                 type="text"
                                                                 name="rsistock"
                                                                 className="form-control"
-                                                                
+
                                                                 inputMode="decimal" // Define o modo de entrada como decimal
                                                                 pattern="[0-9]*" // Aceita números, pontos e vírgulas
                                                                 onKeyPress={e => {
@@ -438,8 +442,8 @@ function Exchange() {
                                                                 onChange={e => setRsiStock(e.target.value)}
                                                             />
                                                             <div className={'text-danger ' + (validateRSI ? '' : 'd-none')}>
-                                                            {rsiError}
-                                                        </div>
+                                                                {rsiError}
+                                                            </div>
                                                         </div>
                                                         <div className="col-md-4">
                                                             <label className="mr-sm-2">{t('Application_MediasMoveis')}</label>
@@ -447,7 +451,7 @@ function Exchange() {
                                                                 type="text"
                                                                 name="mediamoveis"
                                                                 className="form-control"
-                                                                
+
                                                                 onKeyPress={e => {
                                                                     const keyCode = e.which || e.keyCode;
                                                                     const keyValue = String.fromCharCode(keyCode);
@@ -458,8 +462,8 @@ function Exchange() {
                                                                 onChange={e => setMediaMoveis(e.target.value)}
                                                             />
                                                             <div className={'text-danger ' + (validateMediasMoveis ? '' : 'd-none')}>
-                                                            {mediasMoveisError}
-                                                        </div>
+                                                                {mediasMoveisError}
+                                                            </div>
                                                         </div>
                                                         <div className="col-md-4">
                                                             <label className="mr-sm-2">{t('Application_Posicao')}</label>
@@ -487,7 +491,7 @@ function Exchange() {
                                                                 type="text"
                                                                 name="CodBank"
                                                                 className="form-control"
-                                                                
+
                                                                 value={Compositefigi}
                                                                 readOnly={false}
                                                                 onKeyPress={e => {
@@ -500,8 +504,8 @@ function Exchange() {
                                                                 onChange={e => setCompositefigi(e.target.value)}
                                                             />
                                                             <div className={'text-danger ' + (validateCodBank ? '' : 'd-none')}>
-                                                            {codBankError}
-                                                        </div>
+                                                                {codBankError}
+                                                            </div>
                                                         </div>
                                                         <div className="col-md-4">
                                                             <label className="mr-sm-2">{t('Application_PassCod')}</label>
@@ -509,7 +513,7 @@ function Exchange() {
                                                                 type="text"
                                                                 name="token"
                                                                 className="form-control"
-                                                                
+
                                                                 onKeyPress={e => {
                                                                     const keyCode = e.which || e.keyCode;
                                                                     const keyValue = String.fromCharCode(keyCode);
@@ -522,11 +526,15 @@ function Exchange() {
                                                             <div className={'text-danger ' + (validatePasscod ? '' : 'd-none')}>
                                                                 {passcodError}
                                                             </div>
+                                                            <div className={"text-danger " + (!erroToken ? "d-none" : "")}>
+                                                                {messageToken}
+                                                            </div>
                                                         </div>
                                                         <div className="col-md-4">
                                                             <div style={{ marginTop: '36px' }}>
                                                                 <button
                                                                     type="submit"
+                                                                    disabled={isButtonDisabled}
                                                                     className={`btn btn-success ${isCheckboxChecked ? '' : 'disabled'}`}
                                                                     onClick={(e) => {
                                                                         if (!isCheckboxChecked) {

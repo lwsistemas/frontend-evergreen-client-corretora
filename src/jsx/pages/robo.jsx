@@ -175,7 +175,7 @@ function Exchange() {
     //    console.log(`user.id: ${user.id}`);
     try {
       const userID = (
-        await axios.get(`/user/view/${user.id}`, { authKey: user.authKey })
+        await axios.post(`/user/view/`, { authKey: user.authKey, id:user.id })
       ).data;
       setuserID(userID);
       return userID;
@@ -372,7 +372,7 @@ function Exchange() {
                               {displayedTickets.map((data) => (
                                 <tr key={data.id}>
                                   <td className="text-left">
-                                    <Moment format="DD/MM/YY - HH:mm">
+                                    <Moment format="DD/MM/YY - HH:mm:ss">
                                       {data.createdAt}
                                     </Moment>
                                   </td>
@@ -410,7 +410,7 @@ function Exchange() {
                                             {" "}
                                             <CurrencyFormat
                                               value={data.resultValue}
-                                              decimalScale={6}
+                                              decimalScale={8}
                                               displayType={"text"}
                                               thousandSeparator={true}
                                             />{" "}

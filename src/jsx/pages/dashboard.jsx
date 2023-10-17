@@ -480,13 +480,10 @@ function Dashboard() {
                           /> Depositar</Link>
                           <Link to="/account-withdraw-fiat" class="btn btn-outline-primary m-1"><WithoutFiatIcon
                             color={"#FFC107"} /> Sacar</Link>
-                          {
-                            /*
+                          
                             <Link to="/emprestimos" class="btn btn-outline-primary m-1"><EmprestimoIcon
                             color={"#FFC107"}
                           /> Empréstimo</Link>
-                           */
-                          }
                           <Link to="/account-withdraw-cripto" class="btn btn-outline-primary m-1"> <i className="fa fa-bitcoin"></i> {t('Withdraw crypto')}</Link>
                         </div>
                       </div>

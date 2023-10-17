@@ -5,6 +5,10 @@ import Cookies from 'universal-cookie'
 const resources = {
     pt: {
         translation: {
+            "Application_Emprestimos":"Empréstimos",
+            "Application_SolicitarEmprestimo":"Solicitar Empréstimo",
+            "Application_MargemEmprestimo": "Margem para empréstimo",
+            "Application_Score": "Score",
             "Application_Shares": "SHARES",
             "Application_VolumeStock": "VOLUME",
             "Application_RSIStock": "RSI",
@@ -176,7 +180,7 @@ const resources = {
             "Application_ContractID": "Contrato Ref",
             "Application_Visualizar": "Visualizar",
             "Application_RelatorioGanhos": "Relatório de ganhos",
-            "Application_Ativos": "Ativos",
+            "Application_Ativos": "Ativo",
             "Application_Aguardando": "Aguardando",
             "Application_Finalizado": "Finalizado",
             "Application_ContratoAtual": "Contrato Hash",
@@ -730,7 +734,7 @@ const resources = {
             "Application_ContractID": "Contract Ref",
             "Application_Visualizar": "To view",
             "Application_RelatorioGanhos": "Earnings report",
-            "Application_Ativos": "Actives",
+            "Application_Ativos": "Active",
             "Application_Finalizado": "Finished",
             "Application_ContratoAtual": "Contract Hash",
             "Application_HashTransaction": "Hash Transaction",
@@ -1320,7 +1324,7 @@ const resources = {
             "Application_ContractID": "Referencia del contrato",
             "Application_Visualizar": "Para ver",
             "Application_RelatorioGanhos": "Informe de ganancias",
-            "Application_Ativos": "Activos",
+            "Application_Ativos": "Activo",
             "Application_Finalizado": "Finalizado",
             "Application_ContratoAtual": "Contrato Hash",
             "Application_HashTransaction": "Hash Transação",
