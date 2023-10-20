@@ -5723,6 +5723,38 @@ a.badge-dark:focus, a.badge-dark.focus {
   transition: width 0.6s ease;
 }
 
+/* Estilo da barra de progresso com sucesso (verde) */
+.progress-bar-success {
+  background-color: #28a745;
+}
+
+/* Estilo da barra de progresso com alerta (amarelo) */
+.progress-bar-alert {
+  background-color: #ffc107;
+}
+
+/* Estilo da barra de progresso com perigo (vermelho) */
+.progress-bar-danger {
+  background-color: #dc3545;
+}
+
+/* Estilo da barra de progresso com informação (azul) */
+.progress-bar-info {
+  background-color: #17a2b8;
+}
+
+/* Estilo da barra de progresso com aviso (laranja) */
+.progress-bar-warning {
+  background-color: #fd7e14;
+}
+
+/* Estilo da barra de progresso escura (background escuro) */
+.progress-bar-dark {
+  background-color: #343a40;
+  color: #ffffff; /* Cor do texto */
+}
+
+
 @media (prefers-reduced-motion: reduce) {
   .progress-bar {
     transition: none;
@@ -16181,5 +16213,137 @@ label.error {
 .search-results p:hover {
   background-color: #444; /* Cor de fundo destacada quando pairado */
 }
+.slider-container {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.slider-card {
+  width: 100%;
+  text-align: center;
+  padding: 20px;
+  background-color: #3498db;
+  color: #fff;
+  font-size: 18px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.slick-dots li button:before {
+  font-size: 14px;
+}
+
+.status-timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center;
+  margin: 1px 0;
+}
+
+.status-badge {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+.status-badge.active {
+  background-color: #4CAF50; /* Verde quando ativo */
+  }
+.status-badge.active.find {
+  animation: radar 1.5s infinite linear; /* Adiciona a animação "radar" apenas para elementos ativos com a classe .find */
+}
+
+.status-badge.inactive {
+  background-color: #ccc; /* Cinza claro quando inativo */
+}
+
+.status-badge.warning {
+  background-color: #FFD700; /* Amarelo para status de aviso */
+}
+
+.status-badge.info {
+  background-color: #007BFF; /* Azul para status de informação */
+}
+
+.status-badge.danger {
+  background-color: #FF0000; /* Vermelho para status de perigo */
+}
+
+.status-description {
+  margin-left: 10px; /* Espaçamento entre o círculo e a descrição */
+  font-weight: bold;
+  font-size: 11px;
+  color: #333; /* Cor do texto da descrição */
+}
+
+.active .status-description {
+  color: #4CAF50; /* Verde quando ativo */
+}
+
+.find .status-description {
+  font-size: 14px;
+}
+
+.active-description{
+  font-size:12px;
+  font-weight: 800;
+  color : #4CAF50;
+}
+
+.status-line {
+  width: 2px;
+  height: 100%;
+  background-color: #fff;
+  margin-left: 10px; /* Espaçamento entre a linha e o círculo */
+}
+
+@keyframes radar {
+  0% {
+    box-shadow: 0 0 1px 3px rgba(255, 255, 255, 0.5); /* Branco */
+  }
+  50% {
+    box-shadow: 0 0 18px 11px rgba(50, 50, 50, 0.5); /* Cinza escuro */
+  }
+}
+
+.custom-modal-dark {
+  background-color: #000; /* Cor de fundo escura */
+  color: #fff; /* Cor do texto clara */
+  
+}
+
+.custom-modal-header-dark {
+  background-color: #000000; /* Cor de fundo escura para o cabeçalho */
+  border: none; /* Remover a borda do cabeçalho */
+}
+
+.custom-modal-title-dark {
+  color: #fff; /* Cor do título clara */
+}
+
+.custom-modal-body-dark {
+  background-color: #333; /* Cor de fundo escura para o corpo */
+}
+
+.custom-modal-footer-dark {
+  background-color: #222; /* Cor de fundo escura para o rodapé */
+}
+
+
+
+
+
 
 /*# sourceMappingURL=style.css.map */

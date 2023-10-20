@@ -420,12 +420,30 @@ function Dashboard() {
   useEffect(() => {
   }, [coinPrices, currentHistory, history, balance, currency]);
 
-  useEffect(async () => {
-    setInterval(async () => {
-      const prices = (await axios.get(`/price/prices`)).data;
-      setCoinPrices(prices);
-    }, 3000);
+  useEffect(() => {
+    let interval;
+  
+    const fetchPricesPeriodically = async () => {
+      interval = setInterval(async () => {
+        try {
+          const response = await axios.get(`/price/prices`);
+          const prices = response.data;
+          setCoinPrices(prices);
+        } catch (error) {
+          console.error('Erro ao buscar preços periódicos:', error);
+        }
+      }, 3000);
+    };
+  
+    // Chame a função que lida com a busca de preços periódicos
+    fetchPricesPeriodically();
+  
+    // Lide com a limpeza correta do intervalo quando o componente for desmontado
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
+  
 
   const getHistory = async () => {
     try {

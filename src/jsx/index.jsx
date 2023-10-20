@@ -51,6 +51,7 @@ import BlogAtualisys from './pages/blog';
 import PageStocks from './pages/PageStocks'
 import PageRoboStock from './pages/robotsStocks'
 import PageEmprestimos from './pages/emprestimos'
+import EmprestimosPayouts from './pages/EmprestimosPayouts'
 
 
 
@@ -134,6 +135,7 @@ class Index extends Component {
                             <Route path="/account-deposit-fiat" exact={true} component={AccountDepositFiat} isPrivate={true} redirectTo="/"/>
                             <Route path="/blog/id/:id" exact={true} component={BlogAtualisys} isPrivate={true} redirectTo="/"/>
                             <Route path="/emprestimos" exact={true} component={PageEmprestimos} isPrivate={true} redirectTo="/"/>
+                            <Route path="/emprestimos/payout/:id" exact={true} component={EmprestimosPayouts} isPrivate={true} redirectTo="/"/>
                         </Switch>
                     </div>
                 </BrowserRouter>

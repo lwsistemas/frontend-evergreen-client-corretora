@@ -9,8 +9,9 @@ import { useSelector, useDispatch } from "react-redux";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Table from "react-bootstrap/Table";
 import CurrencyFormat from "react-currency-format";
-import { User } from '../store/User/User.action'
 import Moment from "react-moment";
+import { User } from '../store/User/User.action'
+
 import BottomBar from "../layout/sidebar/bottom-bar";
 import { DialogContent, DialogTitle, DialogActions } from '@material-ui/core';
 import { Dialog } from '@mui/material';
@@ -43,7 +44,6 @@ const WithoutFiatIcon = (props) => (
     />
     <path
       fill-rule="evenodd"
-      clip-rule="evenodd"
       d="M17.0019 12.4091V18.4116C17.0019 19.5166 16.1061 20.4124 15.0011 20.4124H4.99583C4.46532 20.4122 3.95659 20.2014 3.58157 19.8261C3.20655 19.4509 2.99595 18.9421 2.99609 18.4116V12.408C2.99624 11.8774 3.20712 11.3687 3.58235 10.9937C3.95758 10.6187 4.46642 10.4081 4.99693 10.4082H15.0022C15.5327 10.4084 16.0414 10.6192 16.4164 10.9945C16.7915 11.3697 17.0021 11.8785 17.0019 12.4091Z"
       stroke={props.color}
       stroke-width="1.5"
@@ -219,12 +219,34 @@ function Exchange() {
     await getRobot();
   }, []);
 
-  useEffect(async () => {
-    await getUser();
-    const interval = setInterval(async () => {
-      await getTickets();
-      await getRobot();
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        await getUser();
+      } catch (error) {
+        console.error('Erro ao buscar dados do usuário:', error);
+      }
+    };
+  
+    const fetchTicketAndRobotData = async () => {
+      try {
+        await getTickets();
+        await getRobot();
+      } catch (error) {
+        console.error('Erro ao buscar dados de tickets e robôs:', error);
+      }
+    };
+  
+    // Chame as funções no início.
+    fetchUserData();
+    fetchTicketAndRobotData();
+  
+    // Agende as chamadas posteriores a cada 5 segundos.
+    const interval = setInterval(() => {
+      fetchTicketAndRobotData();
     }, 5000);
+  
+    // Lide com a limpeza correta do intervalo.
     return () => {
       clearInterval(interval);
     };

@@ -650,7 +650,6 @@ function UserData() {
 
     //==========================Effect=====================================
     useEffect(async () => {
-        console.log(user)
         await validUser()
     }, [user]);
 

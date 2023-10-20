@@ -108,12 +108,14 @@ function Mercados() {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            getPrices();
+          getPrices();
         }, 12000);
+        
         return () => {
-            clearInterval(interval);
+          clearInterval(interval);
         };
-    }, []);
+      }, []);
+      
 
     useEffect(() => {
         filterCoins();

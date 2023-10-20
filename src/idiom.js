@@ -5,10 +5,23 @@ import Cookies from 'universal-cookie'
 const resources = {
     pt: {
         translation: {
+            "Application_ValorContrato": "Valor do contrato",
+            "Application_AguardandoEmprestimo": "Em análise",
+            "Application_Aprovado":"Aprovado",
+            "Application_Liberado":"Liberado",
+            "Application_Cancelado":"Cancelado",
+            "Application_MsgEmprestimo": "Sua margem para solicitação de empréstimo é de até {{margemEmprestimo}} USD e você poderá efetuar o pagamento em no máximo {{qtdParcel}}x de {{ValorParcel}}",
             "Application_Emprestimos":"Empréstimos",
             "Application_SolicitarEmprestimo":"Solicitar Empréstimo",
             "Application_MargemEmprestimo": "Margem para empréstimo",
             "Application_Score": "Score",
+            'Application_DadosInexistentes': "Dados Inexistentes ou não existe contratos para você",
+            "Application_ContratoN": "Contrato Nº",
+            "Application_QtdParcelas": "Qtd Parcelas",
+            "Application_Opcoes":"Opções",
+            "Application_informacao": "Informação",
+            "Application_Contrato": "CONTRATO N",
+            "Application_DetalhesPagamentos": "Detalhes de pagamento de parcelas do contrato N",
             "Application_Shares": "SHARES",
             "Application_VolumeStock": "VOLUME",
             "Application_RSIStock": "RSI",
@@ -595,6 +608,16 @@ const resources = {
     en: {
         translation: {
             //pagina index
+            "Application_Emprestimos": "Loans",
+            "Application_SolicitarEmprestimo": "Request Loan",
+            "Application_MargemEmprestimo": "Loan Margin",
+            "Application_Score": "Score",
+            "Application_DadosInexistentes": "No Data or no contracts for you",
+            "Application_ContratoN": "Contract No.",
+            "Application_QtdParcelas": "Qty of Installments",
+            "Application_Opcoes": "Options",
+            "Application_informacao": "Information",
+
             "Application_Capital": "BALANCE",
             "Application_SaldoStock": "BALANCE",
             "Application_SetupStocks": "Set Up Your Software",
@@ -1166,6 +1189,15 @@ const resources = {
     },
     es: {
         translation: {
+            "Application_Emprestimos": "Préstamos",
+            "Application_SolicitarEmprestimo": "Solicitar Préstamo",
+            "Application_MargemEmprestimo": "Márgen de Préstamo",
+            "Application_Score": "Puntuación",
+            "Application_DadosInexistentes": "Datos inexistentes o no hay contratos para ti",
+            "Application_ContratoN": "Contrato Nº",
+            "Application_QtdParcelas": "Cantidad de Cuotas",
+            "Application_Opcoes": "Opciones",
+            "Application_informacao": "Información",
             "Application_Shares": "ACCIONES",
             "Application_VolumeStock": "VOLUMEN",
             "Application_RSIStock": "RSI",

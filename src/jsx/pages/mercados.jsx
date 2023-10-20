@@ -70,17 +70,17 @@ function Mercados() {
     }, [mercados]) //eslint-disable-line
 
 
-    useEffect(async () => {
+    useEffect(() => {
         const interval = setInterval(async () => {
-            await getPrices()
-            // setmercados(mercados + 1);
-            // console.log(mercados)
-            }, 4000);
+          await getPrices();
+          // setMercados(mercados + 1);
+          // console.log(mercados);
+        }, 4000);
+    
         return () => {
-            clearInterval(interval);
+          clearInterval(interval);
         };
-
-    }, [mercados]); //eslint-disable-line
+      }, []);
 
     return (
         <>

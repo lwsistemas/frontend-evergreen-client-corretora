@@ -1,0 +1,50 @@
+.mega-menu {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: inline-block;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    position: relative;
+    top: 100%; /* Coloque o menu abaixo do elemento pai */
+    left: 0;
+    z-index: 1000; 
+  }
+  
+  .categories {
+    list-style: none;
+    padding: 0;
+    display: flex;
+  }
+  
+  .categories li {
+    margin-right: 20px;
+    position: relative;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  
+  .subcategories {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+  }
+  
+  .categories li:hover .subcategories {
+    display: block;
+  }
+
+  
+  

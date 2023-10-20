@@ -3,6 +3,11 @@ import { Card, Button, Form, Row, Col, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import CurrencyFormat from 'react-currency-format';
+import axios from '../../../services/index'
+import { Dialog } from '@mui/material';
+import { DialogContent, DialogTitle, DialogActions, DialogContentText } from '@mui/material';
+import Slide from '@mui/material/Slide';
+
 
 function formatIdDocument(idDocument) {
     idDocument = idDocument.toString().replace(/[^\d]/g, '');
@@ -29,12 +34,41 @@ function AddPix({ valorParaAddPix, QtdParcelas, taxaJuros }) {
     const [ValorParcela, setValorParcela] = useState(0);
     const [erroValor, setErroValor] = useState(false);
     const [confirmado, setConfirmado] = useState(false);
-
+    const [ButtonDisabled, setisButtonDisabled] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const [isDialogOpen, setDialogOpen] = useState(false);
 
-    const handleShowModal = (e) => {
+
+
+
+    const openDialog = () => {
+        setDialogOpen(true);
+    };
+
+    const closeDialog = () => {
+        setDialogOpen(false);
+        window.location.href = '/emprestimos';
+    };
+
+    const handleShowModal = async (e) => {
         e.preventDefault(); // Isso impede o envio do formulário
-        setShowModal(true);
+        //setShowModal(true);
+        setisButtonDisabled(true)
+
+        const data = {
+
+            uid: user.id, Valor, Parcelas, authKey: user.authKey, confirmado
+
+        }
+        try {
+            const response = (await axios.post('emprestimos/solicitacao', data)).data
+            if (response.status == 'success') {
+                openDialog()
+            }
+
+        } catch (err) {
+            setisButtonDisabled(false)
+        }
     };
 
     const handleCloseModal = () => {
@@ -66,6 +100,7 @@ function AddPix({ valorParaAddPix, QtdParcelas, taxaJuros }) {
 
     const handleConfirmacaoChange = (e) => {
         setConfirmado(e.target.checked);
+        setisButtonDisabled(false)
     }
     const handleValorChange = (e) => {
         const novoValor = e.target.value;
@@ -95,8 +130,45 @@ function AddPix({ valorParaAddPix, QtdParcelas, taxaJuros }) {
         return options;
     };
 
+    const Transition = React.forwardRef(function Transition(props, ref) {
+        return <Slide direction="up" ref={ref} {...props} />;
+    });
+
+
+
     return (
+
+
         <Card.Body>
+
+            <Dialog className='dialog' open={isDialogOpen} onClose={closeDialog}
+                keepMounted
+                aria-describedby="alert-dialog-slide-description"
+                TransitionComponent={Transition}
+            >
+                <div className='dialog-content'>
+                    <DialogTitle>
+                        <div className='text-justify'>
+                            <h2 className='text-success text-center'>Contrato solicitado</h2>
+                        </div>
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-slide-description" className='text-success'>
+                            <div>Recebemos com sucesso sua solicitação de empréstimo em nosso sistema.</div>
+                            <p>Aguarde nossos time entrar em contato para liberar seu valor.</p>
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+
+                        <Button onClick={closeDialog}
+                            color="primary" autoFocus>
+                            Fechar
+                        </Button>
+                    </DialogActions>
+                </div>
+            </Dialog>
+
+
             <Form>
                 <Row>
                     <Col md={6}>
@@ -165,23 +237,23 @@ function AddPix({ valorParaAddPix, QtdParcelas, taxaJuros }) {
                         </Form.Group>
                     </Col>
                 </Row>
-
-
-
                 <div className='text-right m-2'>
                     <div style={{ fontSize: '22px', color: "#FF9800" }}>Valor Solicitado <CurrencyFormat value={Valor} displayType={'text'} thousandSeparator={true} prefix={'$'} /></div>
-                    <div>Parcelas: {Parcelas}</div>
-                    <div>Taxa: {Taxa}% ao mês</div>
-                    <div>Valor da Parcelas: <CurrencyFormat value={ValorParcela} displayType={'text'} thousandSeparator={true} prefix={'$'} decimalScale={2} /></div>
+                    <div>
+                        {Parcelas == 1 ? 'Parcela: ' : 'Parcelas: '}
+                        {Parcelas}
+                    </div>
+                    {/* <div>Taxa: {Taxa}% ao mês</div> */}
+                    <div>{Parcelas == 1 ? 'Valor da Parcela: ' : 'Valor das Parcelas: '}  <CurrencyFormat value={ValorParcela} displayType={'text'} thousandSeparator={true} prefix={'$'} decimalScale={2} /></div>
                     <Button
                         variant="primary"
                         type="submit"
-                        disabled={!Valor || erroValor || !confirmado}
+                        disabled={!Valor || erroValor || !confirmado || ButtonDisabled}
                         onClick={handleShowModal}
-
                     >
                         {t('Application_SolicitarEmprestimo')}
                     </Button>
+
                 </div>
 
             </Form>
