@@ -8,6 +8,9 @@ import CurrencyFormat from "react-currency-format";
 import Moment from "react-moment";
 import AlertCom from "../element/dashboard/alertaCom";
 
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
+
 
 import {
   useGmailTabsStyles,
@@ -32,7 +35,7 @@ import "../../css/dashboard/select.css";
 import BottomBar from "../layout/sidebar/bottom-bar";
 
 function Dashboard() {
-  
+
   const { t } = useTranslation();
   const user = useSelector((state) => state.user);
   const [ConteudoBlogs, setConteudoBlogs] = useState([]);
@@ -107,8 +110,8 @@ function Dashboard() {
   );
 
   const EmprestimoIcon = (props) => (
-   
-    <RequestQuoteIcon/>
+
+    <RequestQuoteIcon />
     // <svg width="20"
     //   height="19"
     //   viewBox="0 0 24 25"
@@ -353,6 +356,20 @@ function Dashboard() {
     setActive("BTC");
   }, [secondary]); //eslint-disable-line
 
+  useEffect(() => {
+    const disableZoom = (event) => {
+      if (event.touches.length > 1) {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener('touchmove', disableZoom, { passive: false });
+
+    return () => {
+      document.removeEventListener('touchmove', disableZoom);
+    };
+  }, []);
+
   const getBalances = async (currency) => {
     try {
       const balance = (await axios.put(`/wallet/0`, { authKey: user.authKey }))
@@ -392,7 +409,7 @@ function Dashboard() {
   const getBlog = async () => {
     try {
       const ConteudoBlogs = await axios.get(`/blog/all`);
-      setConteudoBlogs(ConteudoBlogs.data.reverse());
+      setConteudoBlogs(ConteudoBlogs.data);
       return ConteudoBlogs;
     } catch (err) {
       return err.response;
@@ -410,6 +427,17 @@ function Dashboard() {
     setIsLoading(false);
   }, []);
 
+  function criarSlug(titulo) {
+    // Remove caracteres especiais e espaços em branco
+    const slug = titulo
+      .toLowerCase()
+      .replace(/[^a-zA-Z0-9\s]/g, '') // Remove caracteres especiais
+      .replace(/\s+/g, '-') // Substitui espaços por hífens
+      .trim(); // Remove espaços extras no início e no final
+  
+    return slug;
+  }
+
   return (
     <>
       <div
@@ -426,7 +454,76 @@ function Dashboard() {
         <div style={{ display: "flex", flex: 1 }}>
           <Sidebar selectedItem="home" />
           {isLoading ? (
-            <Loader />
+            <div
+              className="main-content"
+              style={{ flex: 1, display: "flex", justifyContent: "center" }}
+            >
+              <div class="content-body" id="dashboard">
+                <div class="container-fluid">
+
+                  <Stack spacing={1} width="100%">
+
+
+                    <div style={{ width: "100%" }}>
+                      <Skeleton variant="text" sx={{ fontSize: '16px', backgroundColor: '#1E2026' }} />
+                    </div>
+
+
+                    <Skeleton variant="rectangular" sx={{
+                      backgroundColor: '#1E2026',
+                      minWidth: "1219px",
+                      height: '270px',
+                      "@media (max-width: 767px)": {
+                        display: 'none' // Oculta para dispositivos móveis
+                      }
+                    }} />
+
+                    <Skeleton variant="rectangular" sx={{
+                      backgroundColor: '#1E2026',
+                      minWidth: "1219px",
+                      height: '230px',
+                      "@media (max-width: 767px)": {
+                        display: 'none' // Oculta para dispositivos móveis
+                      }
+                    }} />
+
+                    <Skeleton variant="rectangular" sx={{
+                      backgroundColor: '#1E2026',
+                      minWidth: "1219px",
+                      height: '170px',
+                      "@media (max-width: 767px)": {
+                        display: 'none' // Oculta para dispositivos móveis
+                      }
+                    }} />
+
+                    <Skeleton variant="rectangular" sx={{
+                      backgroundColor: '#1E2026',
+                      minWidth: "360px",
+                      height: "275px",
+                      "@media (min-width: 768px)": {
+                        display: 'none' // Oculta para desktops
+                      }
+                    }} />
+
+                    <Skeleton variant="rectangular" sx={{
+                      backgroundColor: '#1E2026',
+                      minWidth: "360px",
+                      height: "205px",
+                      "@media (min-width: 768px)": {
+                        display: 'none' // Oculta para desktops
+                      }
+                    }} />
+
+                    <Skeleton variant="rounded" sx={{ backgroundColor: '#1E2026' }} />
+
+                  </Stack>
+
+
+
+                </div>
+              </div>
+            </div>
+
           ) : (
             <div
               className="main-content"
@@ -439,7 +536,17 @@ function Dashboard() {
                       <div class="card">
                         <div class="card-header">
                           <h4 class="card-title" style={{ marginLeft: '25px' }}>
-                            Olá {user.firstName}&nbsp;{user.secondName}
+                            {
+                              isLoading ? (
+                                <Skeleton variant="text" sx={{ fontSize: '1rem', color: 'gray', backgroundColor: 'gray' }} />
+
+
+                              ) : (
+                                <div>
+                                  Olá {user.firstName}&nbsp;{user.secondName}
+                                </div>
+                              )
+                            }
                           </h4>
 
                           {(() => {
@@ -483,8 +590,8 @@ function Dashboard() {
                           /> Depositar</Link>
                           <Link to="/account-withdraw-fiat" class="btn btn-outline-primary m-1"><WithoutFiatIcon
                             color={"#FFC107"} /> Sacar</Link>
-                          
-                            <Link to="/emprestimos" class="btn btn-outline-primary m-1"><EmprestimoIcon
+
+                          <Link to="/emprestimos" class="btn btn-outline-primary m-1"><EmprestimoIcon
                             color={"#FFC107"}
                           /> Empréstimo</Link>
                           <Link to="/account-withdraw-cripto" class="btn btn-outline-primary m-1"> <i className="fa fa-bitcoin"></i> {t('Withdraw crypto')}</Link>
@@ -598,7 +705,7 @@ function Dashboard() {
                                   alt=""
                                 />
                                 <div className="card-body">
-                                  <Link to={"/blog/id/" + blog.id}>
+                                  <Link to={`/blog/id/${blog.id}/${criarSlug(blog.Titulo)}`}>
                                     <h4 className="card-title">{blog.Titulo}</h4>
                                   </Link>
                                 </div>

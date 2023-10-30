@@ -18,7 +18,6 @@ import { useDispatch } from 'react-redux';
 import { User } from '../store/User/User.action'
 import Moment from "react-moment";
 
-
 function Contratos() {
     const { t } = useTranslation()
     const [prices, setPrices] = useState([])
@@ -30,10 +29,70 @@ function Contratos() {
     const [disabledbutton, setDisabledbutton] = useState(true);
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch()
+    const [resposta, setResposta] = useState(''); // Estado para armazenar a resposta
+    const [submitting, setSubmitting] = useState(false); // Estado para controlar o envio
+    const [responseMessage, setResponseMessage] = useState(''); // Estado para mostrar uma mensagem de resposta
+    const [text, setText] = useState('');
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Impede que a tecla "Enter" crie uma nova linha no <textarea>
+            setText(text + '\n'); // Adiciona uma quebra de linha ao texto no estado
+        }
+    };
+
+    // ...
+
+    const handleRespostaSubmit = async (e) => {
+        e.preventDefault();
+
+        if (resposta === '') {
+            setResponseMessage('Por favor, insira uma resposta antes de enviar.');
+            return;
+        }
+
+        setSubmitting(true);
+
+        try {
+            // Faça uma solicitação ao servidor para enviar a resposta usando Axios ou outra biblioteca
+            const response = await axios.post('/tickets/reply/create', {
+                resposta: resposta,
+                authKey: user.authKey,
+                ticketID: ticket.nticket
+                // outros dados necessários, como o número do ticket
+            });
+
+            if (response.status === 200) {
+                setResponseMessage('Resposta enviada com sucesso!');
+                setResposta('')
+                await getTicketResposta()
+                await getTicket()
+                setResponseMessage("")
+                Header2.getNotifications();
+            }
+        } catch (error) {
+            setResponseMessage('Erro ao enviar a resposta. Por favor, tente novamente.');
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const handleRespostaChange = (e) => {
+        const respostaText = e.target.value;
+        setResposta(respostaText);
+    };
+
+    useEffect(() => {
+        if (resposta === '') {
+            setDisabledbutton(true);
+        } else {
+            setDisabledbutton(false);
+        }
+    }, [resposta]);
 
     const validateData = (e) => {
         e.preventDefault();
+        // Coloque aqui a lógica para enviar a resposta
     }
 
     const validUser = async () => {
@@ -70,7 +129,6 @@ function Contratos() {
         try {
             const ticketresposta = (
                 await axios.post(`/tickets/view/respostas`, { nticket: ContratoAtual, authKey: user.authKey }));
-            //console.log(ticketresposta.data.success)
             setTicketResposta(ticketresposta.data.reverse());
         } catch (err) {
             return err.response;
@@ -85,16 +143,13 @@ function Contratos() {
 
     const novaPergunta = ticket.pergunta ? ticket.pergunta.replace(/\n/g, "<br/>") : '';
 
-
     return (
         <>
             <Header2 />
             <Sidebar selectedItem={"suporte"} />
 
-
             <div class="content-body">
                 <div class="container">
-
                     <div>
                         <ButtonsTickets />
                     </div>
@@ -105,11 +160,8 @@ function Contratos() {
                                 <div className="card-header">
                                     <h3>{t('Data_Ticket') + " # " + ContratoAtual}</h3>
                                 </div>
-
-
                             </div>
                         </div>
-
 
                         <div className={"col-md-4 "}>
                             <div className="card">
@@ -138,7 +190,6 @@ function Contratos() {
                                                             }
                                                         })()
                                                         }
-
                                                     </h4>
                                                 </div>
                                                 <div>
@@ -163,7 +214,7 @@ function Contratos() {
                                                             } else if (ticket.status == 2) {
                                                                 return <span className="badge badge-warning">{t('Application_AguardandoStaff')}</span>
                                                             } else if (ticket.status == 3) {
-                                                                return <span className="badge badge-warning">{t('Application_AguardandoMembro')}</span>
+                                                                return <span className="badge badge-success">{t('Application_AguardandoMembro')}</span>
                                                             } else if (ticket.status == 4) {
                                                                 return <span className="badge badge-warning">{t('Application_Aguardando')}</span>
                                                             } else if (ticket.status == 5) {
@@ -191,16 +242,11 @@ function Contratos() {
                                                             }
                                                         })()
                                                         }
-
                                                     </h4>
                                                 </div>
-
                                             </div>
-
-
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -211,67 +257,57 @@ function Contratos() {
                                     <div class={"card-body"}>
                                         <h3>{ticket.assunto}</h3>
                                         <div className='divider'></div>
-                                        {novaPergunta}
-
-
-
-                                        {/* {ticket.pergunta && typeof ticket.pergunta === 'string' ? (
-                                            ticket.pergunta.split(' \n ').map((paragraph, index) => (
-                                                <p key={index}>{paragraph}</p>
-                                            ))
-                                        ) : (
-                                            <p>Pergunta não disponível ou inválida.</p>
-                                        )} */}
-
+                                        <div dangerouslySetInnerHTML={{ __html: novaPergunta }}></div>
                                     </div>
                                 </div>
                             </div>
-                            {ticketResposta.length > 0 ? (
-                                ticketResposta.map((data, index) => (
-                                    <div className={"col-md-12"} key={index}>
-                                        <div className="card">
-                                            <div
-                                                className={`card-header ${index % 2 === 0 ? "even-header" : "odd-header"
-                                                    }`}
-                                            >
-                                                <div>
-                                                    {t("Application_Data")} :{" "}
-                                                    <Moment format="DD/MM/YY - HH:mm">{data.createdAt}</Moment>
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;{t("Application_Assinado")} :{" "}
-                                                    {data.assinado} {t("Application_Nivel")} : {data.nivel}
+                            <div className="" style={{ maxHeight: '450px', overflow: 'auto' }}>
+                                <PerfectScrollbar>
+
+                                    {ticketResposta.length > 0 ? (
+                                        ticketResposta.map((data, index) => (
+                                            <div className={"col-md-12"} key={index} >
+                                                <div className="card-ticket">
+                                                    <div
+                                                        className={`card-ticket-header ${index % 2 === 0 ? "even-header" : "odd-header"}`}
+                                                    >
+                                                        <div>
+                                                            {t("Application_Data")} :{" "}
+                                                            <Moment format="DD/MM/YY - HH:mm">{data.createdAt}</Moment>
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;{t("Application_Assinado")} :{" "}
+                                                            {data.assinado} {t("Application_Nivel")} : {data.nivel}
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        className={`${index % 2 === 0 ? "bg-reply-one" : "bg-reply-two"}`}
+                                                        style={{ borderRadius: "0px" }}
+                                                    >
+                                                        <div dangerouslySetInnerHTML={{ __html: data.resposta }}></div>
+
+                                                        
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div
-                                                className={`card-body ${index % 2 === 0 ? "bg-light text-dark" : "bg-dark text-light"
-                                                    }`}
-                                                style={{ borderRadius: "0px" }}
-                                            >
-                                                {data.resposta}
+                                        ))
+                                    ) : (
+                                        <div className={"col-md-12"}>
+                                            <div className="card">
+                                                <div className={"card-body text-center"}>
+                                                    {t("No_Response_Found")}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <div className={"col-md-12"}>
-                                    <div className="card">
-                                        <div className={"card-body text-center"}>
-                                            {t("No_Response_Found")}
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
+                                    )}
+                                </PerfectScrollbar>
+                            </div>
                             <div className={"col-md-12"}>
                                 <div className="card">
                                     <div class={"card-body"}>
-
                                         <form method="post" name="myform" className="currency_validate">
                                             <div className="col-md-12">
                                                 <div className="card">
                                                     <div className="card-body">
                                                         <div className="row">
-
-
                                                             <div className="col-md-12">
                                                                 <label className="mr-sm-2">
                                                                     {t("Application_Responder")}
@@ -281,35 +317,29 @@ function Contratos() {
                                                                     name="conteudo"
                                                                     id="conteudo"
                                                                     cols="30"
-                                                                    rows="5"
+                                                                    rows="5" // Defina o número de linhas que deseja exibir
                                                                     required={true}
-                                                                // onChange={(e) => {
-                                                                //     const conteudoValue = e.target.value;
-                                                                //     setConteudo(conteudoValue);
-
-                                                                //     if (conteudoValue.trim() === '') {
-                                                                //         setErroConteudo(true);
-                                                                //         setDisabledbutton(true);
-                                                                //     } else if (conteudoValue.length < 1) {
-                                                                //         setErroConteudo(false);
-                                                                //         setDisabledbutton(true);
-                                                                //     } else {
-                                                                //         setErroConteudo(false);
-                                                                //         setDisabledbutton(false);
-                                                                //     }
-                                                                // }}
+                                                                    value={resposta}
+                                                                    onChange={handleRespostaChange}
                                                                 />
-                                                            </div>
 
+
+                                                            </div>
                                                             <div className='col-md-6 mt-3'>
                                                                 <button
                                                                     type="submit"
                                                                     className="btn btn-success"
-                                                                    onClick={validateData}
-                                                                    disabled={disabledbutton}                  >
-                                                                    {loading ? t("Sending_Reply") : t("Send_Reply_Support")}
+                                                                    onClick={handleRespostaSubmit}
+                                                                    disabled={submitting}
+                                                                >
+                                                                    {submitting ? t("Sending_Reply") : t("Send_Reply_Support")}
                                                                 </button>
                                                             </div>
+                                                            {responseMessage && (
+                                                                <div className="col-md-12 mt-3 text-center">
+                                                                    <p>{responseMessage}</p>
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -324,8 +354,8 @@ function Contratos() {
             </div>
 
             <BottomBar selectedIcon={"suporte"} />
-
         </>
     )
 }
+
 export default Contratos;

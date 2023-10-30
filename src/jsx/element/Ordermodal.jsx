@@ -9,15 +9,19 @@ function OrderModal(props) {
     zIndex: 999,
     marginLeft: 'auto',
     marginRight: 'auto',
-    top: 20,
-    left: 0,
-    right: 0,
+    top: '50%', // Alterado para 50% para centralizar verticalmente
+    left: '50%', // Alterado para 50% para centralizar horizontalmente
+    transform: 'translate(-50%, -50%)', // Para ajustar a posição correta
     backgroundColor: color,
-    color: 'white'
+    color: 'white',
+    // Adicione largura e altura se necessário
+    width: '100%',
+    height: 'auto',
   }
+  
   return (
     <Toast onClose={false} show={props.show} delay={6000} autohide style={stilo}>
-      <Toast.Header closeButton={false}>
+      <Toast.Header closeButton={true}>
         <div>{props.operationProps.header}</div>
       </Toast.Header>
       <Toast.Body>{props.operationProps.body}</Toast.Body>

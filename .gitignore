@@ -11,6 +11,8 @@
 # production
 /build
 /build.rar
+/jsx/pages/backechag.jsx
+/backsss
 
 # misc
 .DS_Store

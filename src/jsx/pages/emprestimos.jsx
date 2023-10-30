@@ -220,6 +220,20 @@ function Emprestimos() {
 
         const color = getColorForValue(value);
 
+        useEffect(() => {
+            const disableZoom = (event) => {
+                if (event.touches.length > 1) {
+                    event.preventDefault();
+                }
+            };
+
+            document.addEventListener('touchmove', disableZoom, { passive: false });
+
+            return () => {
+                document.removeEventListener('touchmove', disableZoom);
+            };
+        }, []);
+
         return (
             <svg width="100" height="100">
                 <circle cx="50" cy="50" r={radius} fill="transparent" stroke="#ccc" strokeWidth="9" />
@@ -271,6 +285,9 @@ function Emprestimos() {
                     return { badgeColor: "success" };
                 case 3:
                     return { badgeColor: "danger" };
+                case 4:
+                    return { badgeColor: "danger" };
+
                 default:
                     return { badgeColor: "light" };
             }
@@ -279,7 +296,7 @@ function Emprestimos() {
 
         return (
             <div className="status-timeline">
-                {status !== 3 && [0, 1, 2].map((index) => (
+                {status !== 3 && status !== 4 && [0, 1, 2].map((index) => (
                     <div key={index} className={`timeline-item ${status >= index ? "active" : ""}`}>
                         <span className={`status-badge ${status >= index ? `active ${status === index ? "find" : ""} ${getStatusStyles(index).badgeColor}` : "inactive"}`}>
                             &nbsp;
@@ -289,6 +306,7 @@ function Emprestimos() {
                         </span>
                     </div>
                 ))}
+
                 {status === 3 && (
                     <div className={`timeline-item active`}>
                         <span className={`status-badge active find danger`}>
@@ -296,6 +314,16 @@ function Emprestimos() {
                         </span>
                         <span className="status-description text-danger active-description">
                             {getStatusText(3)}
+                        </span>
+                    </div>
+                )}
+                {status === 4 && (
+                    <div className={`timeline-item active`}>
+                        <span className={`status-badge active find danger`}>
+                            &nbsp;
+                        </span>
+                        <span className="status-description text-danger active-description">
+                            {getStatusText(4)}
                         </span>
                     </div>
                 )}
@@ -425,7 +453,7 @@ function Emprestimos() {
                                                         <th className="text-left">{t('Application_QtdParcelas')}</th>
                                                         <th className="text-center">{t('Application_Status')}</th>
                                                         <th className="text-left">{t('Application_Data')}</th>
-                                                        <th className="text-left">{t('Application_Hash')}</th>
+                                                        <th className="text-left hide-mobile hide-mobile d-none d-sm-table-cell">{t('Application_Hash')}</th>
                                                         <th>
                                                             {t('Application_Opcoes')}
                                                         </th>
@@ -461,7 +489,7 @@ function Emprestimos() {
                                                                     {data.createdAt}
                                                                 </Moment>
                                                             </td>
-                                                            <td className="text-left">{data.hash}</td>
+                                                            <td className="text-left hide-mobile hide-mobile d-none d-sm-table-cell">{data.hash}</td>
                                                             <td>
                                                                 <div>
 

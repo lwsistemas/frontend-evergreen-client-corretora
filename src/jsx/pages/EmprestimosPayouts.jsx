@@ -219,6 +219,8 @@ function getBadgeClass(status) {
       return 'danger';
     case 3:
       return 'warning';
+      case 4:
+      return 'danger';
     default:
       return 'secondary';
   }
@@ -234,6 +236,8 @@ function getStatusText(status) {
       return 'Vencido';
     case 3:
       return 'Parcialmente Pago';
+      case 4:
+      return 'Cancelado';
     default:
       return 'Desconhecido';
   }

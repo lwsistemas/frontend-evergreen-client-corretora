@@ -57,7 +57,7 @@ function AddPix({ valorParaAddPix, QtdParcelas, taxaJuros }) {
 
         const data = {
 
-            uid: user.id, Valor, Parcelas, authKey: user.authKey, confirmado
+            uid: user.id, Valor, Parcelas, authKey: user.authKey, confirmado, Taxa
 
         }
         try {

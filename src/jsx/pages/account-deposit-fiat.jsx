@@ -59,7 +59,7 @@ function AccountWithdraw(props) {
 
   const getPrices = async () => {
     try {
-      const prices = (await axios.get(`/price/symbol/825`)).data;
+      const prices = (await axios.get(`/price/symbol/8250`)).data;
 
       // console.log(prices.price)
       valorUsd = (parseFloat(prices.price) + 0.22);
@@ -494,7 +494,8 @@ function AccountWithdraw(props) {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  {histore !== []
+                                  
+                                  {histore.length !== 0
                                     ? histore.map((deposit) => (
                                       <tr>
                                         <th scope="row">

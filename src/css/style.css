@@ -27,6 +27,10 @@
 @import url("../icons/material-design-iconic-font/css/materialdesignicons.min.css");
 @import url("../icons/flag-icon-css/flag-icon.min.css");
 
+@viewport {
+  zoom: 1.0 !important;
+}
+
 :root {
   --blue: #007bff;
   --indigo: #6610f2;
@@ -85,6 +89,7 @@ body {
   color: #a1a0a7;
   text-align: left;
   background: #0B0C0F; 
+  touch-action: manipulation;
 }
 
 [tabindex="-1"]:focus:not(:focus-visible) {
@@ -12484,6 +12489,7 @@ label.error {
   position: relative;
   height: 400px;
   margin-bottom: 10px;
+  font-size: 11px;
 }
 
 .price-pair,
@@ -14637,6 +14643,23 @@ label.error {
   }
 }
 
+.header.exchanged {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 999;
+  padding: 5px 10px;
+  background: #292828 !important;
+  width: calc(100% - 0px);
+  height: 60px;
+  transition: box-shadow 0.3s ease;
+}
+
+.header.dashboard.exchanged {
+  background: #121318 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .header.dashboard {
   position: fixed;
   top: 0;
@@ -14829,8 +14852,10 @@ label.error {
 
 .profile_log .dropdown-menu .user-balance {
   display: flex;
-  justify-content: space-around;
+  justify-content: left;
   margin-bottom: 15px;
+  margin-left: 10px;
+  
 }
 
 .profile_log .dropdown-menu .user-balance p {
@@ -14926,11 +14951,28 @@ label.error {
   height: 100%;
   top: 0;
   box-shadow: 0 10px 30px 0 rgba(82, 63, 105, 0.08);
+  transition: width 0.5s; /* Reduzi o tempo de transição para 0.5 segundos */
+
 }
 
 .sidebar:hover{
-  background-color: #0029e6;
+  background-color: #131722;
 }
+
+.sidebar.open {
+  width: 260px;
+  /* Outros estilos da barra lateral quando aberta */
+}
+
+.toggle-button {
+  cursor: pointer;
+  transition: background-color 0.5s; /* Transição de cor de fundo de 0.5 segundos */
+}
+
+.toggle-button:hover {
+  background-color: #222; /* Cor de fundo quando o botão é hover (passe o mouse por cima) */
+}
+
 .menu {
   margin-top: 100px;
 }
@@ -16342,7 +16384,365 @@ label.error {
 }
 
 
+@keyframes fadeLoop {
+  0% { opacity: 0; }
+  50% { opacity: 1; } 
+  100% { opacity: 0; }
+}
 
+
+
+.bell-icon {
+  animation: swing 1s infinite;
+  transform-origin: 50% 50%;
+  padding: 3px;
+  cursor: pointer;
+}
+.bell-icon-zero {
+  padding: 3px;
+  color: #fff;
+}
+
+
+@keyframes swing {
+  0% {
+    transform: rotate(0deg);
+  }
+  10% {
+    transform: rotate(10deg);
+  }
+  20% {
+    transform: rotate(-10deg);
+  }
+  30% {
+    transform: rotate(10deg);
+  }
+  40% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+  60% {
+    transform: rotate(-10deg);
+  }
+  70% {
+    transform: rotate(10deg);
+  }
+  80% {
+    transform: rotate(-10deg);
+  }
+  90% {
+    transform: rotate(10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.header-notifications {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #282828;
+  padding: 00px;
+  border-bottom: 1px #181e2c;
+  color: #fff;
+  position: relative;
+
+}
+
+.header-notifications-left {
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+}
+
+.header-notifications-right {
+  font-size: 18px;
+  color: #fff;
+}
+
+
+
+
+/* Estilo do menu dropdown de notificações */
+.notification-menu {
+  background-color: #282828;
+  border: 1px solid #181e2c;
+  border-radius: 10px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.7);
+  
+  width: 420px;
+  padding: 10px;
+  font-size: 12px;
+  cursor: grabbing;
+}
+
+/* Estilo para os links de notificações */
+.notification-link {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  color: #333;
+  text-decoration: none;
+  font-size: 12px;
+  height: auto;
+  border-bottom: 1px solid #181e2c;
+}
+
+.notification-link-zero {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 12px;
+  height: auto;
+}
+
+.notification-icon-zero {
+  margin-right: 12px;
+  color: #fff; /* Cor do ícone de notificação */
+  font-size: 24px;
+}
+.notification-link:hover {
+  background-color: #3E3E3E;
+
+  border-radius: 5px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  
+}
+
+/* Estilo para o ícone de notificação */
+.notification-icon {
+  margin-right: 12px;
+  color: #fe800b; /* Cor do ícone de notificação */
+  font-size: 24px;
+}
+.notification-icon-notf {
+  margin-right: 12px;
+  color: #fe800b; /* Cor do ícone de notificação */
+  font-size: 18px;
+}
+/* Estilo para o contador de notificações */
+.badge-notify {
+  background-color: #fe800b; /* Cor do fundo do contador */
+  color: #ffffff; /* Cor do texto do contador */
+  border-radius: 50%;
+  padding: 8x 6px;
+  font-size: 14px;
+  margin-left: auto;
+  cursor: pointer;
+}
+
+
+/* Melhorias de estilo CSS */
+.card-ticket {
+  background-color: #1e1e1e; /* Alteração na cor de fundo */
+  border: 1px solid #181e2c;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); /* Sutil alteração no efeito de sombra */
+  width: 100%;
+  padding: 5px; /* Aumento do preenchimento para melhor legibilidade */
+  font-size: 14px; /* Aumento do tamanho da fonte para melhor legibilidade */
+  cursor: text; /* Alteração no cursor para indicar capacidade de arrastar */
+  margin-top: 5px;
+}
+
+.card-ticket-header {
+  background-color: #303030; /* Alteração na cor de fundo do cabeçalho */
+  border-radius: 1px; /* Aumento do raio da borda */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sutil alteração no efeito de sombra */
+  padding: 10px; /* Correção de um erro de digitação */
+  margin-bottom: 2px;
+}
+
+.bg-reply-one {
+  background-color: #272727; /* Alteração na cor de fundo */
+  padding: 15px; /* Aumento do preenchimento */
+  margin-bottom: 10px; /* Adição de margem inferior para separação entre respostas */
+  color:#fff;
+}
+
+.bg-reply-two {
+  background-color: #1e1e1e; /* Alteração na cor de fundo */
+  padding: 15px; /* Aumento do preenchimento */
+  margin-bottom: 10px; /* Adição de margem inferior para separação entre respostas */
+  color:#fff;
+}
+
+
+
+.card-news {
+  background-color: #1e1e1e;
+  border: 1px solid #1e1e1e;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.card-news-header {
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
+}
+
+.card-news-title {
+  font-size: 24px;
+  margin: 0;
+}
+
+.card-news-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.card-news-date {
+  margin-right: 10px;
+}
+
+.card-news-author {
+  color: #dfe4ff;
+}
+
+.card-news-content {
+  padding: 10px;
+}
+
+.card-news-image {
+  max-width: 100%; /* Alterado para 100% para que a imagem se ajuste automaticamente */
+  height: auto;
+  margin-right: 20px;
+  float: left;
+}
+
+
+.card-news-text {
+  font-size: 18px;
+  line-height: 1.6;
+  text-align: justify;
+  color: #fff;
+}
+
+/* Classe para estilizar o layout da fatura ou pedido */
+.invoice {
+  padding: 20px;
+}
+
+.invoice-header {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.invoice-header h2 {
+  color: #333;
+}
+
+.invoice-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.invoice-details p {
+  margin: 0;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.invoice-table th {
+  background-color: #f0f0f0;
+  padding: 10px;
+  text-align: left;
+}
+
+.invoice-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  text-align: left;
+}
+
+.invoice-total {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.invoice-total h4 {
+  margin: 0;
+  color: #333;
+}
+
+.invoice-button {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.invoice-button button {
+  background-color: #28a745;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.invoice-button button:hover {
+  background-color: #218838;
+}
+
+.invoice-note {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #999;
+}
+
+/* Classe para estilizar o QR Code */
+.qr-code {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Classe para estilizar os botões de cópia e envio */
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.copy-button, .send-button {
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.copy-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+}
+
+.send-button {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+}
+
+.copy-button:hover, .send-button:hover {
+  opacity: 0.8;
+}
 
 
 

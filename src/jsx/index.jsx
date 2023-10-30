@@ -31,6 +31,7 @@ import EditWallet from './pages/account-wallet';
 import mercados from "./pages/mercados";
 import robots from "./pages/robots"
 import exchangePro from './pages/exchangePro'
+import exchangeProBeta from './pages/exchangePro2'
 import contratos from './pages/contratos'
 import contrato from './pages/contrato'
 import tickets from './pages/support'
@@ -101,7 +102,8 @@ class Index extends Component {
                             <Route path='/otp-1' component={Otp1} redirectTo="/dashboard"/>
                             <Route path='/otp-2' component={Otp2} redirectTo="/dashboard" />
                             <Route path='/dashboard' component={DashBoard} isPrivate={true} redirectTo="/"/>
-                            <Route path='/exchangePro' component={exchangePro} isPrivate={true} redirectTo="/"/>
+                            <Route path='/exchangeProOld' component={exchangePro} isPrivate={true} redirectTo="/"/>
+                            <Route path='/exchangePro' component={exchangeProBeta} isPrivate={true} redirectTo="/"/>
                             <Route path='/failed'   component={Failed}redirectTo="/"/>
                             <Route path="/confirmEmail" component={ConfirmEmail} redirectTo="/dashboard" />
                             <Route path="/account-overview" component={AccountOverview} isPrivate={true} redirectTo="/"/>
@@ -133,7 +135,7 @@ class Index extends Component {
                             <Route path="/robos" exact={true} component={Robos} isPrivate={true} redirectTo="/"/>
                             <Route path="/deposit-cripto/receive/:Strid" exact={true} component={DepositCripo} isPrivate={true} redirectTo="/"/>
                             <Route path="/account-deposit-fiat" exact={true} component={AccountDepositFiat} isPrivate={true} redirectTo="/"/>
-                            <Route path="/blog/id/:id" exact={true} component={BlogAtualisys} isPrivate={true} redirectTo="/"/>
+                            <Route path="/blog/id/:id/:titulo" exact={true} component={BlogAtualisys} isPrivate={true} redirectTo="/"/>
                             <Route path="/emprestimos" exact={true} component={PageEmprestimos} isPrivate={true} redirectTo="/"/>
                             <Route path="/emprestimos/payout/:id" exact={true} component={EmprestimosPayouts} isPrivate={true} redirectTo="/"/>
                         </Switch>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import SidebarComponent from './sideBarhover'
+import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 
 const HomeIcon = (props) => (
   <svg
@@ -148,12 +150,24 @@ const ProfileIcon = (props) => (
   </svg>
 );
 
+const Tamanho = 480
+
 const BottomBar = ({ selectedIcon }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isBottomBarVisible, setIsBottomBarVisible] = useState(
-    window.innerWidth <= 480
+    window.innerWidth <= Tamanho
   );
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  const handleProfileIconClick = () => {
+    // Abra a barra lateral se ela estiver fechada e feche-a se estiver aberta
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const closeSidebar = () => {
+    // Feche a barra lateral
+    setIsSidebarOpen(false);
+  };
   const handleResize = () => {
     setWindowWidth(window.innerWidth);
   };
@@ -166,27 +180,32 @@ const BottomBar = ({ selectedIcon }) => {
   }, []);
 
   useEffect(() => {
-    setIsBottomBarVisible(windowWidth <= 480);
+    setIsBottomBarVisible(windowWidth <= Tamanho);
   }, [windowWidth]);
+  
 
   return (
     <>
       {isBottomBarVisible && ( // Only render the BottomBar if it's visible
         <footer
-          style={{
-            position: "fixed",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: "56px",
-            backgroundColor: "#121318",
-            display: "flex",
-            justifyContent: "space-around",
-            alignItems: "center",
-            color: "white",
-            fontSize: "24px",
-          }}
-        >
+        style={{
+          position: "fixed",
+          bottom: -3,
+          left: 0,
+          right: 0,
+          height: "56px",
+          backgroundColor: "rgba(18, 19, 24, 0.85)", // Adicione a transparência aqui
+          display: "flex",
+          justifyContent: "space-around",
+          alignItems: "center",
+          color: "white",
+          fontSize: "24px",
+          zIndex:99999
+        }}
+      >
+        
+      
+      
           <Link to="/">
             <HomeIcon color={selectedIcon === "home" ? "#FFC107" : "#C8C7C8"} />
           </Link>
@@ -199,12 +218,17 @@ const BottomBar = ({ selectedIcon }) => {
           <Link to="/user/mywallet">
             <WalletIcon color={selectedIcon === "wallet" ? "#FFC107" : "#C8C7C8"} />
           </Link>
-          <Link to="/user/editUser">
-            <ProfileIcon color={selectedIcon === "profile" ? "#FFC107" : "#C8C7C8"} />
-          </Link>
+          <div onClick={handleProfileIconClick}>
+        <ListOutlinedIcon
+            sx={{
+              color: isSidebarOpen ? "#FFC107" : "#C8C7C8",
+            }}
+          />
+      </div>
           
         </footer>
       )}
+      {isSidebarOpen && <SidebarComponent onClose={() => setIsSidebarOpen(false)} />}
     </>
   );
 };

@@ -236,7 +236,7 @@ export default function HistoryTable(props) {
                       color:
                         cell.row.values.type == "buy" ? "#28a745" : "#dc3545",
                      // borderBottom: "1px solid #000000",
-                      height: "auto"
+                      maxHeight: "160px"
                       //   border: 'solid 1px gray',
                     }}
                   >
