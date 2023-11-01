@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Header from "./home/components/header";
+import Header from "./home/HeaderMenu.jsx";
 import Footer1 from "../layout/footer1";
 import axios from "../../services/index";
 import Hero from "./home/components/hero";
-// import "../../css/home/prices.css";
 import CTA from "../pages/home/components/cta";
 import iconDown from "../../images/home/prices/down.png";
 import iconUp from "../../images/home/prices/up.png";

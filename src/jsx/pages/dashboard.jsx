@@ -1,5 +1,5 @@
 //================material=============
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef  } from "react";
 import { Link } from "react-router-dom";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { useSelector, useDispatch } from "react-redux";
@@ -22,7 +22,7 @@ import globalConfig from "../jsonConfig/globalConfig.json";
 
 import OrderModal from "../element/Ordermodal";
 import axios from "../../services/index";
-import Header2 from "../layout/header2";
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from "../layout/sidebar/sidebar";
 import { User } from "../store/User/User.action";
 import { Loader } from "./home/components/loader";
@@ -427,6 +427,23 @@ function Dashboard() {
     setIsLoading(false);
   }, []);
 
+  const fetchData = async () => {
+    await getBalances();
+    await getBalanceBTC();
+    await getBlog();
+  };
+
+  const fetchDataRef = useRef(fetchData);
+
+  useEffect(() => {
+    const fetchDataInterval = setInterval(fetchDataRef.current, 5000);
+
+    return () => {
+      clearInterval(fetchDataInterval);
+    };
+  }, []);
+  
+
   function criarSlug(titulo) {
     // Remove caracteres especiais e espaços em branco
     const slug = titulo
@@ -449,10 +466,10 @@ function Dashboard() {
         }}
       >
         <OrderModal show={show} operationProps={operationProps} />
-        <Header2 title={`Olá ${user.firstName + " " + user.secondName}`} balanceBRL={balanceBRL} />
+        <Header2 title={`Olá ${user.firstName + " " + user.secondName}`} balanceBRL={balance} />
 
         <div style={{ display: "flex", flex: 1 }}>
-          <Sidebar selectedItem="home" />
+          {/* <Sidebar selectedItem="home" /> */}
           {isLoading ? (
             <div
               className="main-content"

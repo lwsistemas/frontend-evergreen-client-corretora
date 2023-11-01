@@ -371,7 +371,7 @@ function Header2(props) {
                           {t("Application_Support")}
                         </Link>
                         <Link
-                          to="/"
+                          to="/signin"
                           onClick={() => {
                             dispatch(User(null));
                             handleSubmit();

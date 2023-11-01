@@ -82,8 +82,8 @@ class Index extends Component {
                 <BrowserRouter >
                     <div id="main-wrapper">
                         <Switch>
-                            <Route path='/' exact component={Homepage} redirectTo="/dashboard"/>
-                            <Route path='/index' exact component={Homepage} redirectTo="/dashboard"/>
+                            <Route path='/' exact component={Homepage} redirectTo="/dashboard" isPrivate={false}/>
+                            <Route path='/index' exact component={Homepage} redirectTo="/dashboard" isPrivate={false}/>
                             <Route path='/principal' exact component={Homepage} redirectTo="/dashboard"/>
                             <Route path='/policyandprivacy' exact component={PolicyAndPrivacy} redirectTo="/"/>
                             <Route path='/actives' exact component={Actives} redirectTo="/"/>
