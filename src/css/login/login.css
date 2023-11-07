@@ -139,18 +139,37 @@ border: 1px solid rgba(255, 255, 255, 0.2);
   background-color:#000;
 } */
 
-@media screen and (max-width: 824px) {
-  .content-banner {
-    display: none;
-  }
-}
-
 @media screen and (max-width: 678px) {
+  .body-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .content-banner {
+    text-align: center; /* Centralizar o conteúdo dentro do .content-banner */
+    padding: 15px 0; /* Remova o padding existente, se necessário */
+    margin-top: 150px;
+  }
+
   .painel-login {
-    position: absolute;
+    position: relative;
     width: 100%;
-    height: 100vh !important;
-    margin: 0px;
+    height: auto !important;
+    margin: 0;
+    display: flex;
+    flex-direction: column; /* Elementos dispostos verticalmente */
+    align-items: center; /* Centraliza os elementos verticalmente */
+    background-color: #1D1D1D;
+    border-radius: 4px;
+    min-width: 320px;
+    max-width: 8200px;
+    position: absolute;
+    padding: 24px;
+    transition-delay: 10ms;
+    color: #fff;
+    top: 40%;
+    
   }
   .card-content {
     min-width: 300px !important;

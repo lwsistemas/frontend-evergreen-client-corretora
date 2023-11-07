@@ -4,7 +4,7 @@ import { User } from "../store/User/User.action";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Row, Col, Card, Nav, Tab, Navbar, NavDropdown } from "react-bootstrap";
-import Header2 from "../layout/header2";
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from "../layout/sidebar/sidebar";
 import BottomBar from "../layout/sidebar/bottom-bar";
 import axios from "../../services";
@@ -129,9 +129,9 @@ function SuporteTicket() {
   return (
     <>
       <Header2 title={t("New_Support_Ticket")} />
-      <Sidebar selectedItem={"suporte"} />
+     
       <div className="content-body">
-        <div className="container">
+        <div className="container-fluid">
           <div>
             <ButtonsTickets />
           </div>

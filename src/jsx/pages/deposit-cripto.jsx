@@ -1,7 +1,6 @@
 import React, { useEffect, useState, comp } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import Header2 from '../layout/header2';
-import Sidebar from '../layout/sidebar/sidebar';
+import Header2 from "../pages/home/HeaderMenu";
 import { useTranslation } from "react-i18next";
 import axios from '../../services/index'
 import { useSelector, useDispatch } from 'react-redux'
@@ -129,11 +128,11 @@ function Security() {
         <>
             <Header2 title={t('Deposit crypto')} />
             <OrderModal show={show} operationProps={operationProps} />
-            <Sidebar selectedItem="deposito-crypto" />
+            
             <div className="content-body">
-                <div className="container">
+                <div className="container-fluid">
                     <div className="row justify-content-md-center">
-                        <div className="col-md-8">
+                        <div className="col-md-12">
                             <div className='card'>
                                 <div className='card-body'>
                                     <div className='card-title'>

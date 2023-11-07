@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import Header2 from "../layout/header2";
-import Sidebar from "../layout/sidebar/sidebar";
+import Header2 from "../pages/home/HeaderMenu";
 import { useTranslation } from "react-i18next";
 import TradingViewWidget2 from '../element/dashboard/TradingViewWidget';
 import axios from "../../services/index";
@@ -271,12 +270,12 @@ function Exchange() {
   return (
     <>
       <Header2 title={t("Hash") + " : " + ContratoAtual} />
-      <Sidebar selectedItem="markets" />
+      
       {isLoading ? (
         <Loader />
       ) : (
         <div className="content-body">
-          <div className="container">
+          <div className="container-fluid">
             <div className="row">
               <div className="col-xl-5 col-lg-5 col-md-5">
                 <div className="card">

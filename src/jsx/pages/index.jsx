@@ -28,12 +28,14 @@ function Homepage() {
     }
   };
 
-  useEffect(async () => {
-    if (isPrimeiraVez) {
-      await getPrices();
-      setIsPrimeiraVez(false);
-    }
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+        await getPrices();
+    }, 5000); // A cada 5 segundos
 
+    return () => {
+      clearInterval(intervalId); // Limpa o intervalo ao desmontar o componente
+    };
   }, []);
 
   return (

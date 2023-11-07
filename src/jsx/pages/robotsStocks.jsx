@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import TradingViewWidget2 from '../element/dashboard/TradingViewWidget';
 import { useSelector, useDispatch } from 'react-redux';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
-import Header2 from '../layout/header2';
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from '../layout/sidebar/sidebar';
 import Footer2 from '../layout/footer2';
 import axios from '../../services/index';
@@ -300,12 +300,11 @@ function Exchange() {
     return (
         <>
             <Header2 />
-            <Sidebar selectedItem="markets" />
             {isLoading ? (
                 <Loader />
             ) : (
                 <div className="content-body">
-                    <div className="container">
+                    <div className="container-fluid">
                         <div className="row">
                             <div className="col-xl-12 col-lg-12 col-md-12">
                                 <div className="card">

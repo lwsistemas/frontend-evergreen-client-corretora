@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useParams, Link } from 'react-router-dom';
-import Header2 from '../layout/header2';
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from '../layout/sidebar/sidebar';
 import axios from "../../services";
 import CurrencyFormat from "react-currency-format";
@@ -381,7 +381,7 @@ function Mercados() {
   return (
     <>
       <Header2 title={t('Application_Emprestimos')} />
-      <Sidebar selectedItem="loan" />
+     
 
       {isLoading ? (
         <Loader />
@@ -389,7 +389,7 @@ function Mercados() {
 
 
         <div className="content-body">
-          <div className="container">
+          <div className="container-fluid">
             <div className="card sub-menu">
               <div className="card-body">
                 <div className="row m-2">

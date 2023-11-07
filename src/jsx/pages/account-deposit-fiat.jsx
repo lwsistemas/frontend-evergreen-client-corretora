@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Header2 from "../layout/header2";
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from "../layout/sidebar/sidebar";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -277,7 +277,7 @@ function AccountWithdraw(props) {
     <>
       <Header2 title={t("Deposit Founds")} />
       <OrderModal show={show} operationProps={operationProps} />
-      <Sidebar selectedItem="deposito-fiat" />
+      
       <Dialog className="dialog" open={openModal} onClose={closeModal}>
         <div className="dialog-content">
           <DialogTitle>Por favor, adicione um CPF</DialogTitle>
@@ -290,7 +290,7 @@ function AccountWithdraw(props) {
       </Dialog>
       <Loading show={showLoad} />
       <div class="content-body">
-        <div class="container">
+        <div class="container-fluid h-100">
           <div class="row">
             <div class="col-xl-12">
               <div class="card">

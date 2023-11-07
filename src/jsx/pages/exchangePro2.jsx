@@ -24,7 +24,7 @@ import brlIcon from "../../images/profile/brl.png";
 import Charts from "../element/dashboard/Charts";
 import OrderModal from "../element/Ordermodal";
 import axios from "../../services/index";
-import HeaderExchangePro from "../layout/headerExchangePro";
+import HeaderExchangePro from "../pages/home/HeaderMenu";
 import Sidebar from "../layout/sidebar/sidebar";
 import animated from "../../images/animated-gif.gif";
 import HistoryTable from "../element/dashboard/historyTable";

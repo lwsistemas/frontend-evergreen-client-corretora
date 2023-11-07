@@ -7,7 +7,7 @@ import { User } from '../store/User/User.action'
 import { useHistory } from "react-router-dom";
 import { createUser } from '../store/Create/Create.action'
 import { useTranslation } from "react-i18next";
-import Header2 from '../layout/header2';
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from '../layout/sidebar/sidebar';
 import ButtonsUser from '../element/ButtonsUser'
 import Create2FA from '../element/user/security/Create2FA';
@@ -182,14 +182,13 @@ function Secutiry() {
     return (
         <>
             <Header2 title={t('Security')} />
-            <Sidebar selectedItem="profile" />
             <Loading show={showLoad} />
             <OrderModal show={show} operationProps={operationProps} />
             <Confirm2FA user={user} showPopupComfirm={showPopupComfirm} setShowPopupComfirm={setShowPopupComfirm}
                 setShowQrcode={setShowQrcode} setShowCancel={setShowCancel} />
             <ConfirmEmail user={user} showPopupComfirm={showEmailComfirm} setShowPopupComfirm={setShowEmailComfirm} newPassword={newPassword} />
             <div class="content-body">
-                <div class="container">
+                <div class="container-fluid">
                     <div class="row">
 
                         <div class="col-xl-12 col-lg-12 col-xxl-12">

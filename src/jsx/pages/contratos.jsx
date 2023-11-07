@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Row, Col, Card, Nav, Tab } from "react-bootstrap";
-import Header2 from "../layout/header2";
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from "../layout/sidebar/sidebar";
 import axios from "../../services";
 import { useTranslation } from "react-i18next";
@@ -64,9 +64,9 @@ function Contratos() {
   return (
     <>
       <Header2 title={t("Application_Seuscontratos")} />
-      <Sidebar selectedItem="markets" />
+      
       <div class="content-body">
-        <div class="container">
+        <div class="container-fluid h-100">
           <div style={{ paddingBottom: "15px;" }}>
             <ButtonsMarkets />
           </div>

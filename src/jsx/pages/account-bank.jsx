@@ -4,7 +4,7 @@ import AddBank from './bank/AddBank'
 import AllData from './bank/AllData'
 import { useTranslation } from "react-i18next";
 import axios from '../../services/index'
-import Header2 from '../layout/header2';
+import Header2 from "../pages/home/HeaderMenu";
 //import Sidebar from '../layout/sidebar';
 import Footer2 from '../layout/footer2';
 import ButtonsUser from '../element/ButtonsUser'
@@ -72,9 +72,8 @@ function Bank() {
     return (
         <>
             <Header2 />
-            <Sidebar selectedItem="profile" />
             <div class="content-body">
-                <div class="container">
+                <div class="container-fluid">
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-xxl-12">
                             <div class="card">

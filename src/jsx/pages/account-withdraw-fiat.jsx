@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Header2 from "../layout/header2";
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from "../layout/sidebar/sidebar";
 import Footer2 from "../layout/footer2";
 import WithdawTypeSelect from "../element/withdawTypeSelect";
@@ -228,7 +228,7 @@ function DebitCard() {
   return (
     <>
       <Header2 title={t("Insert your withdraw info")}/>
-      <Sidebar selectedItem="saque-fiat"/>
+      
       <Loading show={showLoad} />
       <div class="content-body">
         <div class="container-fluid h-100" >

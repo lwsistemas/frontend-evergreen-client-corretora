@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Header2 from "../layout/header2";
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from "../layout/sidebar/sidebar";
 import { useTranslation } from "react-i18next";
 import QRCode from "react-qr-code";
@@ -96,14 +96,14 @@ function AccountDeposit() {
 
 
       <Header2 title={t("Payment details") + " #" + Payment.code} />
-      <Sidebar selectedItem="deposito-fiat" />
+      
       <div class="content-body">
-        <div class="container">
+        <div class="container-fluid h-100">
 
          <div className="card">
           <div className="card-body">
           <div className="invoice">
-            <div className="container">
+            
               <div className="invoice-header">
                 <h2>{t("Payment details") + " #" + Payment.code}</h2>
               </div>
@@ -209,7 +209,7 @@ function AccountDeposit() {
          </div>
 
         </div>
-      </div>
+      
       <BottomBar />
 
       <Dialog className='dialog' open={isDialogOpen} onClose={closeDialog}>

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { User } from '../store/User/User.action';
 import axios from '../../services';
-import Header2 from '../layout/header2';
+import Header2 from "../pages/home/HeaderMenu";
 import HeaderMegaMenu from '../layout/headerMegaMenu';
 import Sidebar from '../layout/sidebar/sidebar';
 import BottomBar from '../layout/sidebar/bottom-bar';
@@ -338,14 +338,13 @@ function Emprestimos() {
     return (
         <>
             <Header2 title={t('Application_Emprestimos')} />
-            <Sidebar selectedItem="loan" />
-
+           
             {isLoading ? (
                 <Loader />
             ) : (
                 <ThemeProvider theme={darkTheme}>
                     <div className="content-body">
-                        <div className="container">
+                        <div className="container-fluid">
                             <div className="card sub-menu">
                                 <div className="card-body">
                                     <div className='row m-2'>

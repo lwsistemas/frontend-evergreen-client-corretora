@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 // import { Row, Col, Card } from 'react-bootstrap';
-import Header2 from '../layout/header2';
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from '../layout/sidebar/sidebar';
 import Footer2 from '../layout/footer2';
 import { useTranslation } from "react-i18next";
@@ -57,13 +57,13 @@ function Exchange() {
     return (
         <>
             <Header2 title={t("Your robots")} />
-            <Sidebar selectedItem="markets" />
+            
             <div className="content-body">
 
                 {isLoading ? (
                     <Loader />
                 ) : (
-                    <div className="container">
+                    <div className="container-fluid">
                         <div style={{ paddingBottom: "25px;" }}>
                             <ButtonsMarkets />
                         </div>

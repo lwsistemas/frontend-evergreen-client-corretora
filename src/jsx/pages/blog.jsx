@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Header2 from '../layout/header2';
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from '../layout/sidebar/sidebar';
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from 'react-redux';
@@ -61,7 +61,7 @@ function BlogAtualisys() {
   return (
     <>
       <Header2 title={t("Application_Blog")} />
-      <Sidebar selectedItem="blog" />
+      
       <div className="content-body">
         <div className="container">
           {isLoading ? (

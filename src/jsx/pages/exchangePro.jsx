@@ -35,7 +35,7 @@ import Charts from "../element/dashboard/Charts";
 import { User } from "../store/User/User.action";
 import OrderModal from "../element/Ordermodal";
 import axios from "../../services/index";
-import Header2 from "../layout/header2";
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from "../layout/sidebar/sidebar";
 import animated from "../../images/animated-gif.gif";
 import HistoryTable from "../element/dashboard/historyTable";

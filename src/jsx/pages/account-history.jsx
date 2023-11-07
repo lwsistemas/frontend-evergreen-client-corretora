@@ -7,7 +7,7 @@ import axios from '../../services/index'
 import { Tab, Nav } from 'react-bootstrap';
 import Moment from 'react-moment';
 import PerfectScrollbar from 'react-perfect-scrollbar'
-import Header2 from '../layout/header2';
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from '../layout/sidebar/sidebar';
 import ButtonsUser from '../element/ButtonsUser'
 import { User } from '../store/User/User.action'
@@ -66,14 +66,13 @@ function History() {
 
     return (
         <>
-            <Header2 title={t('Order History')}/>
-            <Sidebar selectedItem="profile" />
+            <Header2 title={t('Order History')} />
             <div class="content-body">
-                <div class="container">
+                <div class="container-fluid">
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-xxl-12">
                             <div class="card">
-            
+
                                 <div className="card-body">
                                     <ButtonsUser />
                                 </div>

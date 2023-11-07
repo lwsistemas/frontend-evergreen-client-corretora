@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
-import Header2 from '../layout/header2';
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from '../layout/sidebar/sidebar';
 import ButtonsUser from '../element/ButtonsUser'
 import PopoutDocuments from '../element/user/documents/popoutDocuments';
@@ -50,9 +50,8 @@ function Secutiry() {
     return (
         <>
             <Header2 title={t('My documents')} />
-            <Sidebar selectedItem="profile" />
             <div class="content-body">
-                <div class="container">
+                <div class="container-fluid">
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-xxl-12">
 

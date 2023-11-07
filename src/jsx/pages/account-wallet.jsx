@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Header2 from "../layout/header2";
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from "../layout/sidebar/sidebar";
 import ButtonsUser from "../element/ButtonsUser";
 import { useSelector, useDispatch } from "react-redux";
@@ -126,9 +126,9 @@ function MyWallet() {
       ) : (
         <>
           <Header2 title={t("Your wallet")}/>
-          <Sidebar selectedItem="profile" />
+          
           <div className="content-body">
-            <div className="container">
+            <div className="container-fluid">
               <div className="row">
                 <div className="col-xl-12 col-lg-12 col-xxl-12">
                   <div className="card">

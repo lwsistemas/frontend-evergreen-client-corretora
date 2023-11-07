@@ -44,23 +44,52 @@
   width: 100%;
   
 }
-.nav-links li{
+.nav-links li {
   list-style: none;
-  margin: 3x 2px;
-  
+  margin: 3px 2px 0px 0px; /* Corrigido '3x' para '3px' */
+  padding-left: 5px;
 }
-.nav-links li a{
+
+.nav-links li a {
   color: #f2f2f2;
   text-decoration: none;
   font-size: 14px;
-  font-weight: 300;
-  padding: 15px 8px 8px 8px;
+  font-weight: 100;
+  padding: 15px 8px 15px 8px;
   border-radius: 5px;
   transition: all 0.3s ease;
+  
 }
-.nav-links li a:hover{
+
+.nav-links li img {
+  width: 26px;
+  border: 3px solid #d3940b;
+  float: left;
+  padding: 1px;
+  margin-top: 50px;
+  margin-right: 15px;
+  margin-left: 5px;
+  border-radius: 10px;
+  transition: all 0.3s ease; /* Adicionado efeito de transição para a imagem */
+  transform: scale(1.5);
+  border-image: linear-gradient(to right, #0e0d0d, transparent, #d3940b); /* Adicionado efeito degradê na borda da imagem quando o mouse passa sobre o link <a> */
+  border-image-slice: 1; /* Certifica-se de que o degradê cubra toda a borda */
+}
+.nav-links li img:hover {
+  border-image: linear-gradient(to right, d3940b, transparent, #0e0d0d); /* Adicionado efeito degradê na borda da imagem quando o mouse passa sobre o link <a> */
+  border-image-slice: 1; /* Certifica-se de que o degradê cubra toda a borda */
+}
+
+.nav-links li a:hover {
   background: #3A3B3C;
 }
+
+.nav-links li :hover img {
+  transition: border 0.3s ease; /* Adicionado efeito de transição para a borda */
+  border-image: linear-gradient(to right, d3940b, transparent, #0e0d0d); /* Adicionado efeito degradê na borda da imagem quando o mouse passa sobre o link <a> */
+  border-image-slice: 1; /* Certifica-se de que o degradê cubra toda a borda */
+}
+
 .nav-links .mobile-item{
   display: none;
 }
@@ -68,13 +97,14 @@
   position: absolute;
   background: #242526;
   max-width: 300px;
-  line-height: 14px;
+  line-height: 15px;
   top: 85px;
   opacity: 0;
   visibility: hidden;
   box-shadow: 0 6px 10px rgba(0,0,0,0.15);
   border-bottom-right-radius: 10px;
   padding: 10px 5px 10px 5px;
+  text-align: justify;
   
 }
 .nav-links li:hover .drop-menu,
@@ -88,10 +118,13 @@
 .drop-menu li a{
   width: 100%;
   display: block;
-  padding-left: 5px;
+  padding-left: 35px;
+  padding-bottom: 1px;
   font-weight: 400;
   border-radius: 5px;
-  line-height: 10px;
+  line-height: 15px;
+  font-size: 18px;
+  
 }
 /* Ícone de seta */
 .desktop-item i {
@@ -99,10 +132,15 @@
     margin-left: 2px;
   }
 .drop-menu li a p{
-    margin-top: 10px;
+    margin-top: 0px;
+    padding-top: 10px;
     font-size: 11px;
     color: #dd9a08;
+    position: relative;
 }
+
+
+
 
 .desktop-item.focused i {
     /* Estilos para o ícone quando o elemento está com foco */
@@ -148,11 +186,15 @@ divider {
   }
 
   .nav-links-direito-logado {
-    left: 100px;
+    left: 76px;
     position: relative;
     display: flex;
-    align-items: baseline;
-    width: 350px;
+    align-items: center;
+    width: 260px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-evenly;
   }
   
 
@@ -217,7 +259,7 @@ divider {
     right: -300px; /* Inicialmente oculto à direita */
     transition: right 0.3s;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-    margin-top: 80px;
+    margin-top: 60px;
   }
 
 
@@ -242,10 +284,36 @@ divider {
 
   }
 
- 
-  
+  /* Use media queries para estilos específicos em telas menores */
+@media (max-width: 1110px) {
+  .navMenu .wrapper {
+    padding: 0 2%; /* Reduza o preenchimento em telas menores */
+  }
+
+  .wrapper .logo img a {
+    font-size: 1.5rem; /* Reduza o tamanho da fonte em telas menores */
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    padding: 2px 2px 2px 2px ;
+  }
+
+  .nav-links .mobile-item {
+    display: inline; /* Mostre os links em um menu móvel */
+  }
+  .menu-list {
+    max-height: 200px; /* Define a altura máxima */
+    overflow-y: auto; 
+    font-size: 12px;
+    
+  }
+
+
+}
   .menu-lateral.active {
     right: 0;
+    top:0;
   }
   
   .menu-toggle {
@@ -324,6 +392,7 @@ divider {
     padding: 0;
     margin: 10px 20px;
     
+    
   }
   
   .menu-link {
@@ -360,6 +429,33 @@ divider {
     padding: 5px 0; /* Espaçamento interno desejado */
   }
 
+
+  .BtnMenuWhats {
+    top: 55px; /* Alinha no fundo do menu lateral */
+    left: 0;
+    right: 0;
+    text-align: center; /* Centraliza o texto horizontalmente */
+    font-size: 12px; /* Define o tamanho da fonte para 12px */
+    background-color: #333; /* Cor de fundo desejada */
+    color: #fff; /* Cor do texto desejada */
+    padding: 5px 0; /* Espaçamento interno desejado */
+  }
+
+  .btn-atendimentoMenu {
+    background-color: #c7ab0c; /* Cor de fundo desejada */
+    color: #fff; /* Cor do texto desejada */
+    border: none;
+    padding: 10px 20px; /* Espaçamento interno desejado */
+    border-radius: 5px; /* Borda arredondada */
+    cursor: pointer;
+    transition: background-color 0.3s; /* Efeito de transição na mudança de cor de fundo */
+  }
+  
+  .btn-atendimentoMenu:hover {
+    background-color: #a08909; /* Nova cor de fundo ao passar o mouse */
+    color:#d9d9d9;
+  }
+  
   .btn-logout {
     background-color: #343a40; /* Cor de fundo desejada */
     color: #fff; /* Cor do texto desejada */

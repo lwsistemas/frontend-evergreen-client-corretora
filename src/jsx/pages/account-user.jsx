@@ -11,7 +11,7 @@ import { getCountries, getCountryCallingCode, parsePhoneNumber } from 'react-pho
 //===================class===============
 import axios from '../../services/index'
 import { User } from '../store/User/User.action'
-import Header2 from '../layout/header2';
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from '../layout/sidebar/sidebar';
 import ButtonsUser from '../element/ButtonsUser'
 import PhoneNumber from '../element/user/perfil/Phone';
@@ -731,9 +731,8 @@ function UserData() {
     return (
         <>
             <Header2 title={t('My data')} />
-            <Sidebar selectedItem="profile" />
-            <div class="content-body">
-                <div class="container">
+             <div class="content-body">
+                <div class="container-fluid">
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-xxl-12">
                             <div class="card">

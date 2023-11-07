@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Dialog } from '@mui/material';
 import { Button } from 'react-bootstrap';
 import { DialogContent, DialogTitle, DialogActions } from '@material-ui/core';
-import Header2 from '../layout/header2';
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from "../layout/sidebar/sidebar";
 import Footer2 from '../layout/footer2';
 import axios from '../../services/index'
@@ -194,11 +194,11 @@ function Exchange() {
     return (
         <>
             <Header2 />
-            <Sidebar selectedItem={"markets"} />
+           
             {isLoading ? (
                 <Loader />
             ) : (<div className="content-body">
-                <div className="container">
+                <div className="container-fluid">
                     <div className="row">
                         <div className="col-xl-4 col-lg-4 col-md-4">
                             <div className="card">

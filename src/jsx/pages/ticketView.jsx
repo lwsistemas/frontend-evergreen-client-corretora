@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col, Card, Nav, Tab, Navbar, NavDropdown } from 'react-bootstrap';
-import Header2 from '../layout/header2';
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from "../layout/sidebar/sidebar";
 import Footer2 from '../layout/footer2';
 import axios from "../../services";
@@ -146,10 +146,10 @@ function Contratos() {
     return (
         <>
             <Header2 />
-            <Sidebar selectedItem={"suporte"} />
+          
 
             <div class="content-body">
-                <div class="container">
+                <div class="container-fluid">
                     <div>
                         <ButtonsTickets />
                     </div>

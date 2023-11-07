@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import Header2 from '../layout/header2';
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from '../layout/sidebar/sidebar';
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from 'react-redux'
@@ -104,9 +104,9 @@ function Exchange() {
     return (
         <>
             <Header2 title={t("Your robots")} />
-            <Sidebar selectedItem="markets" />
+            
             <div className="content-body">
-                <div className="container">
+                <div className="container-fluid">
                     <div className="card">
                         <div className="col-xl-12 col-lg-12 col-md-12">
 

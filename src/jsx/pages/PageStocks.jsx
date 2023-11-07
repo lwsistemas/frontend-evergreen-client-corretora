@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef  } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import Header2 from '../layout/header2';
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from '../layout/sidebar/sidebar';
 import axios from "../../services";
 import { useTranslation } from "react-i18next";
@@ -129,13 +129,11 @@ function Mercados() {
     return (
         <>
             <Header2 title={t('Application_Mercados') + ' / Stocks'} />
-            <Sidebar selectedItem="markets" />
-
             {isLoading ? (
                 <Loader />
             ) : (
                 <div className="content-body">
-                    <div className="container">
+                    <div className="container-fluid">
                         <div className="card sub-menu">
                             <div className="card-body">
                                 <div>

@@ -11,6 +11,8 @@
     position: relative;
     height: auto;
     padding: 173px 0 120px 0;
+    border-bottom: 3px solid orange;
+    box-shadow: 0px 5px 15px rgba(207, 152, 2, 0.2);
   }
 
 

@@ -53,6 +53,8 @@ import PageStocks from './pages/PageStocks'
 import PageRoboStock from './pages/robotsStocks'
 import PageEmprestimos from './pages/emprestimos'
 import EmprestimosPayouts from './pages/EmprestimosPayouts'
+import NotFound from './pages/NotFound'
+import InternalServerError from './pages/NotFound';
 
 
 
@@ -82,8 +84,8 @@ class Index extends Component {
                 <BrowserRouter >
                     <div id="main-wrapper">
                         <Switch>
-                            <Route path='/' exact component={Homepage} redirectTo="/dashboard" isPrivate={false}/>
-                            <Route path='/index' exact component={Homepage} redirectTo="/dashboard" isPrivate={false}/>
+                            <Route path='/' exact component={Homepage} redirectTo="/dashboard" />
+                            <Route path='/index' exact component={Homepage} redirectTo="/dashboard"/>
                             <Route path='/principal' exact component={Homepage} redirectTo="/dashboard"/>
                             <Route path='/policyandprivacy' exact component={PolicyAndPrivacy} redirectTo="/"/>
                             <Route path='/actives' exact component={Actives} redirectTo="/"/>
@@ -138,6 +140,8 @@ class Index extends Component {
                             <Route path="/blog/id/:id/:titulo" exact={true} component={BlogAtualisys} isPrivate={true} redirectTo="/"/>
                             <Route path="/emprestimos" exact={true} component={PageEmprestimos} isPrivate={true} redirectTo="/"/>
                             <Route path="/emprestimos/payout/:id" exact={true} component={EmprestimosPayouts} isPrivate={true} redirectTo="/"/>
+                            <Route component={NotFound} />
+                            <Route component={InternalServerError} />
                         </Switch>
                     </div>
                 </BrowserRouter>
