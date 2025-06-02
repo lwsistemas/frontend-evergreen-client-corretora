@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import axios from "../../services/index";
 import { useDispatch } from "react-redux";
 import { User } from "../store/User/User.action";
@@ -16,13 +16,15 @@ import { ButtonSubmit } from "../../components/button/submit";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 function Signin() {
-    const parametros = useParams();
-    const [login, setLogin] = useState(parametros.usuario);
-    const [password, setPassword] = useState(parametros.password);
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
+
+    const [login, setLogin] = useState(params.get("usuario") || "");
+    const [password, setPassword] = useState(params.get("password") || "");
     const [show, setShow] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     const [hashUser, setHashUser] = useState("");
-    const [operationProps] = useState({});
+    const [operationProps, setOperationProps] = useState({});
     const [dispatchUser, setDispatchUser] = useState();
     const [disabledButton, setDisabledButton] = useState(true);
 
@@ -45,14 +47,14 @@ function Signin() {
                 }, 6000);
             } else {
                 if (user.emailValidate) {
-                    if (user.IsAuth != 0) {
-                        setHashUser(user.authKey);
-                        setDispatchUser(user);
-                        setShowPopup(true);
-                    } else {
+                    // if (user.IsAuth != 0) {
+                    //     setHashUser(user.authKey);
+                    //     setDispatchUser(user);
+                    //     setShowPopup(true);
+                    // } else {
                         dispatch(User(user));
                         history.push("/dashboard");
-                    }
+                    //}
                 } else {
                     dispatch(createUser(user));
                     history.push("/confirmEmail");

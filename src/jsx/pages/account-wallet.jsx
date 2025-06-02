@@ -26,59 +26,47 @@ function MyWallet() {
   const [history, setHistory] = useState([]);
   const [balance, setBalance] = useState([]);
   const [coinsByUser, setCoinsByUser] = useState();
-  const [saldo, setSaldo] = useState();
+  const [balanceCriptomoeda, setbalanceCriptomoeda] = useState();
+  const [dataCriptomoeda, setdataCriptomoeda] = useState();
   const [balanceBRL, setBalanceBRL] = useState();
   const [lastModifyBRL, setLastModifyBRL] = useState();
   const [lastModify, setLastModify] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch()
 
-  const getBalances = async () => {
-    try {
-      let _balance = [];
-      let _balanceUnique = {
-        balance: 0,
-        coin: "",
-        type: 0,
-        price: 0,
-      };
-      let _saldo = 0;
-      const _coinsByUser = await axios.get(`/wallet?uid=${user.id}`);
+  const [considerarSaldosZero, setConsiderarSaldosZero] = useState(false);
 
-      if (_coinsByUser.data != undefined) {
-        for (const coin of _coinsByUser.data) {
-          if (coin.type != 0 && coin.CoinName != "BRL") {
-            _balanceUnique = {
-              balance: 0,
-              coin: "",
-            };
-            const balanceUnique = (
-              await axios.put(`/wallet/${coin.type}`, { authKey: user.authKey })
-            ).data;
-            const priceCoin = (await axios.get(`/price/symbol/${coin.type}`))
-              .data;
-            _balanceUnique.balance = balanceUnique.wallet.balance;
-            _balanceUnique.coin = coin.CoinName;
-            _balanceUnique.type = coin.type;
-            _balanceUnique.price = priceCoin == null ? 0 : priceCoin.price;
-            _balanceUnique.img = priceCoin == null ? "" : priceCoin.img;
-            _saldo += balanceUnique.wallet.balance;
-            _balance.push(_balanceUnique);
-            console.log(_coinsByUser);
-          }
-        }
-      }
-      setSaldo(_saldo);
-      setCoinsByUser(_coinsByUser.data);
-      setBalance(_balance);
-      // setBalanceBRL(balance.walletBRL.balance)
-      // setLastModify(balance.wallet.updatedAt)
-      // setLastModifyBRL(balance.walletBRL.updatedAt)
-      return _balance;
+  const handleCheckboxChange = () => {
+    setConsiderarSaldosZero(!considerarSaldosZero);
+  };
+
+
+  const getBalanceAll = async () => {
+    try {
+      const balanceAtivos = (await axios.post(`/wallet/all`, { authKey: user.authKey }))
+        .data;
+      setbalanceCriptomoeda(balanceAtivos.totalBalanceUSD)
+      setdataCriptomoeda(balanceAtivos.wallets)
+      return balanceAtivos;
     } catch (err) {
+
       return err.response;
     }
   };
+
+  const getBalances = async (currency) => {
+    try {
+      const balance = (await axios.put(`/wallet/0`, { authKey: user.authKey }))
+        .data;
+      setBalance(balance.wallet.balance);
+      return balance;
+    } catch (err) {
+      //console.log("aqui");
+      return err.response;
+    }
+  };
+
+
 
   function formatNumberWithTwoDecimalPlaces(numberString) {
     let number = parseFloat(numberString);
@@ -111,13 +99,29 @@ function MyWallet() {
     }
   };
 
+  useEffect(() => {
+    // Montando o componente
+    const intervalId = setInterval(async () => {
+      await getBalanceAll();
+      await getBalances();
+    }, 5000);
+
+    return () => {
+      // Desmontando o componente
+      clearInterval(intervalId);
+    };
+  }, [considerarSaldosZero]); // A dependência vazia garante que este efeito seja executado apenas uma vez ao montar o componente
+
+
+
   useEffect(async () => {
-    await validUser()
+    setIsLoading(true);
+    await validUser();
+    await getBalanceAll();
     await getBalances();
-    setIsLoading(false)
+    setIsLoading(false);
   }, []);
 
-  useEffect(() => { console.log(balance) }, [coinsByUser, balance]);
 
   return (
     <>
@@ -125,8 +129,8 @@ function MyWallet() {
         <Loader />
       ) : (
         <>
-          <Header2 title={t("Your wallet")}/>
-          
+          <Header2 title={t("Your wallet")} />
+
           <div className="content-body">
             <div className="container-fluid">
               <div className="row">
@@ -139,6 +143,14 @@ function MyWallet() {
                           <ButtonsUser />
                         </div>
                         <div className="d-flex flex-column card-body py-4 align-items-center">
+                          <label>
+                            <input
+                              type="checkbox"
+                              checked={considerarSaldosZero}
+                              onChange={handleCheckboxChange}
+                            /> {" "}
+                            {t("Application_NaoMostrarSaldoZero")}
+                          </label>
                           <span className="text-center text-uppercase">
                             {t("Total wallet")}
                           </span>
@@ -147,61 +159,60 @@ function MyWallet() {
                               style: "currency",
                               currency: "USD",
                               minimumFractionDigits: 2,
-                            }).format(saldo)}
+                            }).format(balance + balanceCriptomoeda)}
                           </h3>
-                          <div className="d-flex mt-3" style={{ gap: "8px" }}>
+                          {/* <div className="d-flex mt-3" style={{ gap: "8px" }}>
                             <Link to="/exchangePro">
                               <button className="btn btn-success">{t("Application_exchangePro")}</button>
                             </Link>
                             <Link to="/deposit">
                               <button className="btn btn-primary">{t("Deposit fiat")}</button>
                             </Link>
-                          </div>
+                          </div> */}
                         </div>
                         <div className="card-body">
                           <div className="balance-list">
-                            {balance.filter((element) => element.img).map((element) => (
-                              <div
-                                className="card-body balance-card"
-                                style={{ background: "#191e2b" }}
-                              >
-                                <div className="balance-row" key={element.coin}>
-                                  <div className="d-flex content-icon">
-                                    <img src={element.img} />
-                                    <h4 className="coin">{element.coin}</h4>
-                                  </div>
-                                  <div
-                                    className="d-flex flex-column content-prices"
-                                    style={{ alignItems: "end" }}
-                                  >
-                                    <span
-                                      className="balance"
-                                      style={{ fontSize: "24px" }}
-                                    >
-                                      ${" "}
-                                      <CurrencyFormat
-                                        value={element.balance.toFixed(2)}
-                                        decimalScale={2}
-                                        displayType={"text"}
-                                        thousandSeparator={true}
-                                      />
-                                    </span>
-                                    <span
-                                      className="text-bold text-white"
 
+
+
+                            {dataCriptomoeda
+                              .filter(data => !considerarSaldosZero || data.balance !== 0)
+                              .filter(data => ![12341, 12342, 123413, 123414, 12345, 12343].includes(data.type))
+                              .sort((a, b) => b.balance - a.balance) // Agora ordena do menor para o maior
+                              .map((data) => (
+                                <div
+                                  className="card-body balance-card"
+                                  style={{ background: "#191e2b" }}
+                                  key={data.name}
+                                >
+                                  <div className="balance-row">
+                                    <div className="d-flex content-icon">
+                                      <img src={`https://infinitycapital.global/${data.walletImg}`} alt={data.name} />
+                                      <h4 className="coin">{data.name}</h4>
+                                    </div>
+
+                                    <div
+                                      className="d-flex flex-column content-prices"
+                                      style={{ alignItems: "end" }}
                                     >
-                                      ${" "}
-                                      <CurrencyFormat
-                                        value={formatNumberWithTwoDecimalPlaces(element.price)}
-                                        decimalScale={2}
-                                        displayType={"text"}
-                                        thousandSeparator={true}
-                                      />
-                                    </span>
+                                      <span className="balance" style={{ fontSize: "18px" }}>
+                                        {data.balance.toFixed(6)}
+                                      </span>
+                                      <span className="text-bold text-white">
+                                        ≅ {" "}
+                                        <CurrencyFormat
+                                          value={data.balanceUSD.toFixed(2)}
+                                          decimalScale={2}
+                                          displayType={"text"}
+                                          thousandSeparator={true}
+                                        /> {" "} USD
+                                      </span>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            ))}
+                              ))}
+
+
                           </div>
                         </div>
                       </div>
@@ -211,7 +222,7 @@ function MyWallet() {
               </div>
             </div>
           </div>
-                     <BottomBar selectedIcon="wallet" />
+          <BottomBar selectedIcon="wallet" />
         </>
       )}
     </>

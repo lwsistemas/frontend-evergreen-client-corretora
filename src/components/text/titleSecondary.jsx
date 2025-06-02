@@ -18,7 +18,7 @@ const TitleSecondary = ({ children }) => {
       <h1
         className="font-weight-bold"
         style={{
-          fontSize: isSmallerThan992 ? "32px" : "28px",
+          fontSize: isSmallerThan992 ? "42px" : "28px",
         }}
       >
         {children}

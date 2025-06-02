@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef  } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from '../layout/sidebar/sidebar';
@@ -25,6 +25,7 @@ function Mercados() {
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredPrices, setFilteredPrices] = useState([]);
     const [showSearchResults, setShowSearchResults] = useState(false);
+    const [type, setType] = useState('STOCKS');
     const searchResultsRef = useRef(null);
 
     useEffect(() => {
@@ -56,7 +57,14 @@ function Mercados() {
             const tickerLower = coin.ticker ? coin.ticker.toLowerCase() : '';
             const mshIdLower = coin.msh_id ? coin.msh_id.toLowerCase() : '';
             const descriptionLower = coin.description ? coin.description.toLowerCase() : '';
-            return tickerLower.includes(query) || mshIdLower.includes(query) || descriptionLower.includes(query);
+            //const marketsLower = coin.market ? coin.market.toLowerCase() : ''; // Adicione esta linha
+
+            return (
+                tickerLower.includes(query) ||
+                mshIdLower.includes(query) ||
+                descriptionLower.includes(query)
+                // (marketsLower.includes(query) && coin.market === "STOCKS") // Adicione esta condição para o novo filtro
+            );
         });
         setFilteredPrices(filtered);
 
@@ -65,10 +73,22 @@ function Mercados() {
     };
 
 
-
-    const getPrices = async () => {
+    const handleTypeChange = async (newType) => {
+        setType(newType);
+        setIsLoading(true);
+    
         try {
-            const pricesData = (await axios.get(`/price/Stocks`)).data;
+            await getPrices(newType);
+        } catch (error) {
+            console.error('Erro ao definir o tipo ou obter preços:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const getPrices = async (type) => {
+        try {
+            const pricesData = (await axios.get(`/price/Stocks/${type}`)).data;
             setPrices(pricesData.reverse());
             setFilteredPrices(pricesData.reverse());
         } catch (err) {
@@ -102,20 +122,20 @@ function Mercados() {
     useEffect(() => {
         setIsLoading(true);
         validUser()
-            .then(() => getPrices())
+            .then(() => getPrices(type))
             .then(() => setIsLoading(false));
     }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
-          getPrices();
+            getPrices(type);
         }, 12000);
-        
+
         return () => {
-          clearInterval(interval);
+            clearInterval(interval);
         };
-      }, []);
-      
+    }, [type]);
+
 
     useEffect(() => {
         filterCoins();
@@ -128,7 +148,7 @@ function Mercados() {
 
     return (
         <>
-            <Header2 title={t('Application_Mercados') + ' / Stocks'} />
+            <Header2 title={t('Application_Mercados') + ' / ' + type} />
             {isLoading ? (
                 <Loader />
             ) : (
@@ -144,8 +164,25 @@ function Mercados() {
 
                         <div className="card sub-menu">
                             <div className="card-body">
-                                <div>
-                                    <ButtonsMarketsIndices />
+                                <div className="flex-row" role="group" style={{ display: 'flex', float: 'right' }}>
+                                    <button
+                                        className="btn btn-outline-primary m-1"
+                                        onClick={() => handleTypeChange('index')}
+                                    >
+                                        {t('Application_Indices')}&nbsp;<i className="mdi mdi-reload"></i>
+                                    </button>
+                                    <button
+                                        className="btn btn-outline-primary m-1"
+                                        onClick={() => handleTypeChange('stocks')}
+                                    >
+                                        {t('Application_Stock')}&nbsp;<i className="mdi mdi-finance"></i>
+                                    </button>
+                                    <button
+                                        className="btn btn-outline-primary m-1"
+                                        onClick={() => handleTypeChange('fx')}
+                                    >
+                                        {t('Application_Comodites')}&nbsp;<i className="mdi mdi-reload"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -288,7 +325,7 @@ function Mercados() {
                                                     </div>
                                                 </div>
                                                 <div className="col-md-8 mt-2" style={{ minHeight: '400px' }}>
-                                                    <TradingViewWidget2 symbol={coin.ticker} id={coin.ticker} />
+                                                    <TradingViewWidget2 symbol={coin.ticker.replace(/\^/g, '')} id={coin.ticker} />
                                                 </div>
                                             </div>
                                         </div>

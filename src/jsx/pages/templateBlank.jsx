@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { Link , useParams} from 'react-router-dom';
 // import { Row, Col, Card } from 'react-bootstrap';
-import Header2 from '../layout/header2';
+import Header2 from "../pages/home/HeaderMenu";
 import Sidebar from '../layout/sidebar/sidebar';
 import globalConfig from '../jsonConfig/globalConfig.json';
 import { Accordion, Card } from 'react-bootstrap';
@@ -84,13 +84,13 @@ function Mercados() {
     return (
         <>
             <Header2 title={t('Application_Mercados')} />
-            <Sidebar selectedItem="markets" />
+            
 
             {isLoading ? (
                 <Loader />
             ) : (
                 <div class="content-body">
-                    <div class="container">
+                    <div className="container-fluid">
 
                         <div className="card sub-menu">
                             <div className="card-body">

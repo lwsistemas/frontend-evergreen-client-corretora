@@ -20,6 +20,7 @@ import { Loader } from "./home/components/loader";
 
 
 
+
 function Exchange() {
     const { t } = useTranslation()
     const parametros = useParams();
@@ -57,7 +58,7 @@ function Exchange() {
     return (
         <>
             <Header2 title={t("Your robots")} />
-            
+
             <div className="content-body">
 
                 {isLoading ? (
@@ -67,6 +68,8 @@ function Exchange() {
                         <div style={{ paddingBottom: "25px;" }}>
                             <ButtonsMarkets />
                         </div>
+
+                        
 
                         <div className="row mt-3">
                             <TableRobos />

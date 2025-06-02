@@ -7,14 +7,14 @@ import { persistStore, persistReducer} from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 const persistConfig = {
-    key: 'root',
-    storage
+  key: 'root',
+  storage
 }
 const router = combineReducers({
-    create:createReducer,
-    user:userReducer,
-    reset:resetReducer,
-    
+  create:createReducer,
+  user:userReducer,
+  reset:resetReducer,
+
 })
 const persistedReducer = persistReducer(persistConfig, router)
 const store = createStore(persistedReducer)

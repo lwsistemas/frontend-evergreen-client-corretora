@@ -69,7 +69,7 @@ function AlertaCom() {
         )}
       </>
     );
-  } else if(status == 2) {
+  } else if (status == 2) {
     return (
       <div className="card-body" id="Mdiv">
         <div className="alert alert-warning text-center">
@@ -80,7 +80,19 @@ function AlertaCom() {
       </div>
     );
   }
-  else if(status == 1) {
+  else if (status == 10 ||  status == 11 || status == 12) {
+    return (
+      <div className="card-body" id="Mdiv">
+        <div className="alert alert-warning text-center">
+          <h5 style={{ color: "orange" }}>
+            {t("Application_UserSuspense")} <i class="fa fa-warning"></i>
+          </h5>
+        </div>
+      </div>
+    );
+}
+
+  else if (status == 1) {
     return (
       <span></span>
     );

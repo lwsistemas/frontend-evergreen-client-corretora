@@ -46,8 +46,8 @@ function SelectLanguage() {
   };
 
   return (
-    
-   <>
+
+    <>
       <FontAwesomeIcon
         icon={faGlobe}
         className="icone-mundo"
@@ -55,20 +55,20 @@ function SelectLanguage() {
       />
       {showLanguageSelector && (
         <div className="language-selector-container">
-        <div className="language-list">
-          <div className="textSelecione">Selecione seu idioma</div>
+          <div className="language-list">
+            <div className="textSelecione">Selecione seu idioma</div>
             {LANGUAGE_OPTIONS.map((option) => (
               <div key={option.language} onClick={() => updateLanguage(option.language, option.flag)} className="botaoLanguagem">
                 <div className="textLanguagem">
-                <img src={option.flag} alt={option.label} /> {t(option.label)}</div>
+                  <img src={option.flag} alt={option.label} /> {t(option.label)}</div>
               </div>
             ))}
-          
-        </div>
+
+          </div>
         </div>
       )}
-      </>
-    
+    </>
+
   );
 }
 

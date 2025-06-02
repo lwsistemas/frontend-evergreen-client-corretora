@@ -24,7 +24,7 @@ import AccountDeposit from './pages/account-deposit';
 import AccountDepositDetail from './pages/account-deposit-detail';
 import EditUser from './pages/account-user'
 import EditSecutiry from './pages/account-security'
-import EditHistory  from './pages/account-history'
+import EditHistory from './pages/account-history'
 import EditBank from './pages/account-bank'
 import EditDocument from './pages/account-document'
 import EditWallet from './pages/account-wallet';
@@ -55,6 +55,11 @@ import PageEmprestimos from './pages/emprestimos'
 import EmprestimosPayouts from './pages/EmprestimosPayouts'
 import NotFound from './pages/NotFound'
 import InternalServerError from './pages/NotFound';
+import MercadosIPO from './pages/mercados-ipo';
+import mtapp from './pages/mt-app';
+import withdrawalreportboot from './pages/withdrawal-report-boot'
+import termosdeaceitacao from './pages/termos-de-aceitacao'
+
 
 
 
@@ -63,14 +68,14 @@ class Index extends Component {
         let language = navigator.language.substring(0, 2)
         let image = ""
 
-        if(language=="pt"){
+        if (language === "pt") {
             image = '/static/media/ptbr.12727422.png'
             language = "pt"
         }
-        else if(language=="es"){
+        else if (language === "es") {
             image = '/static/media/esp.f242dccf.png'
             language = "es"
-        } else{
+        } else {
             image = '/static/media/eng.2949adaf.png'
             language = "en"
         }
@@ -78,69 +83,74 @@ class Index extends Component {
 
 
         cookies.set('lg', image, { path: '/' })
-                    cookies.set('lgs', language, { path: '/' })
+        cookies.set('lgs', language, { path: '/' })
         return (
             <>
                 <BrowserRouter >
                     <div id="main-wrapper">
                         <Switch>
                             <Route path='/' exact component={Homepage} redirectTo="/dashboard" />
-                            <Route path='/index' exact component={Homepage} redirectTo="/dashboard"/>
-                            <Route path='/principal' exact component={Homepage} redirectTo="/dashboard"/>
-                            <Route path='/policyandprivacy' exact component={PolicyAndPrivacy} redirectTo="/"/>
-                            <Route path='/actives' exact component={Actives} redirectTo="/"/>
-                            <Route path='/historic' exact component={Historic} redirectTo="/"/>
-                            <Route path='/ourhistory' exact component={OurHistory} redirectTo="/"/>
-                            <Route path='/howworks' exact component={HowWorks} redirectTo="/"/>
-                            <Route path='/termsofuse' exact component={TermsOfUse} redirectTo="/"/>
-                            <Route path='/sponser/:IdSponser' exact component={Homepage} redirectTo="/dashboard"/>
-                            <Route path='/signin' component={Signin} redirectTo="/mercados"/>
-                            <Route path='/efetuarLoginAdm/usuario/:usuario/password/:password' component={efetuarLoginAdm} redirectTo="/mercados"/>
-                            <Route path='/signup/createUser' component={Signup1} redirectTo="/dashboard"/>
-                            <Route path='/signup/personaldetails' component={Signup2} redirectTo="/dashboard"/>
+                            <Route path='/index' exact component={Homepage} redirectTo="/dashboard" />
+                            <Route path='/principal' exact component={Homepage} redirectTo="/dashboard" />
+                            <Route path='/policyandprivacy' exact component={PolicyAndPrivacy} redirectTo="/" />
+                            <Route path='/actives' exact component={Actives} redirectTo="/" />
+                            <Route path='/historic' exact component={Historic} redirectTo="/" />
+                            <Route path='/ourhistory' exact component={OurHistory} redirectTo="/" />
+                            <Route path='/howworks' exact component={HowWorks} redirectTo="/" />
+                            <Route path='/termsofuse' exact component={TermsOfUse} redirectTo="/" />
+                            <Route path='/sponser/:IdSponser' exact component={Homepage} redirectTo="/dashboard" />
+                            <Route path='/signin' component={Signin} redirectTo="/dashboard" />
+                            <Route path='/efetuarLoginAdm/usuario/:usuario/password/:password' component={efetuarLoginAdm} redirectTo="/dashboard" />
+                            <Route path='/efetuarLoginAdm' component={efetuarLoginAdm} redirectTo="/dashboard" />
+                            <Route path='/signup/createUser' component={Signup1} redirectTo="/dashboard" />
+                            <Route path='/signup/personaldetails' component={Signup2} redirectTo="/dashboard" />
                             <Route path='/forgot' component={Forgot} />
-                            <Route path='/confirmDataReset' component={Reset} redirectTo="/dashboard"/>
-                            <Route path='/reset' component={Reset2} redirectTo="/dashboard"/>
-                            <Route path='/otp-1' component={Otp1} redirectTo="/dashboard"/>
+                            <Route path='/confirmDataReset' component={Reset} redirectTo="/dashboard" />
+                            <Route path='/reset' component={Reset2} redirectTo="/dashboard" />
+                            <Route path='/otp-1' component={Otp1} redirectTo="/dashboard" />
                             <Route path='/otp-2' component={Otp2} redirectTo="/dashboard" />
-                            <Route path='/dashboard' component={DashBoard} isPrivate={true} redirectTo="/"/>
-                            <Route path='/exchangeProOld' component={exchangePro} isPrivate={true} redirectTo="/"/>
-                            <Route path='/exchangePro' component={exchangeProBeta} isPrivate={true} redirectTo="/"/>
-                            <Route path='/failed'   component={Failed}redirectTo="/"/>
+                            <Route path='/dashboard' component={DashBoard} isPrivate={true} redirectTo="/" />
+                            <Route path='/exchangeProOld' component={exchangePro} isPrivate={true} redirectTo="/" />
+                            <Route path='/exchangePro' component={exchangeProBeta} isPrivate={true} redirectTo="/" />
+                            <Route path='/failed' component={Failed} redirectTo="/" />
                             <Route path="/confirmEmail" component={ConfirmEmail} redirectTo="/dashboard" />
-                            <Route path="/account-overview" component={AccountOverview} isPrivate={true} redirectTo="/"/>
-                            <Route path="/deposit" component={AccountDepositFiat} isPrivate={true} redirectTo="/"/>
-                            <Route path="/account-deposit-cripto" component={AccountDepositCripto} isPrivate={true} redirectTo="/"/>
-                            <Route path="/account-withdraw-cripto" component={AccountWithdrawCripto} isPrivate={true} redirectTo="/"/>
-                            <Route path="/account-deposit" component={AccountDeposit} isPrivate={true} redirectTo="/"/>
-                            <Route path="/deposit-detail/:code" component={AccountDepositDetail} isPrivate={true} redirectTo="/"/>
-                            <Route path="/account-withdraw-fiat" component={AccountWithdrawFiat} isPrivate={true} redirectTo="/"/>
-                            <Route path="/account-intern-transfer" component={AccountInternTransfer} isPrivate={true} redirectTo="/"/>
-                            <Route path="/user/editUser" component={EditUser} isPrivate={true} redirectTo="/"/>
-                            <Route path="/user/history" component={EditHistory} isPrivate={true} redirectTo="/"/>
-                            <Route path="/user/mywallet" component={EditWallet} isPrivate={true} redirectTo="/"/>
-                            <Route path="/user/mydocuments" component={EditDocument} isPrivate={true} redirectTo="/"/>
-                            <Route path="/user/bank" component={EditBank} isPrivate={true} redirectTo="/"/>
-                            <Route path="/user/secutiry" component={EditSecutiry} isPrivate={true} redirectTo="/"/>
-                            <Route path="/mercados" component={mercados} isPrivate={true} redirectTo="/"/>
-                            <Route path="/Stocks" component={PageStocks} isPrivate={true} redirectTo="/"/>                            
-                            <Route path="/robots/:Strid" exact={true} component={robots} isPrivate={true} redirectTo="/"/>
-                            <Route path="/robots/Stocks/:Strid/:id" exact={true} component={PageRoboStock} isPrivate={true} redirectTo="/"/>
-                            <Route path="/robo/stop/:id/:idmkt" exact={true} component={RoboStop} isPrivate={true} redirectTo="/"/>
-                            <Route path="/robots/" exact={true} component={robots} isPrivate={true} redirectTo="/"/>
-                            <Route path="/contratos/" exact={true} component={contratos} isPrivate={true} redirectTo="/"/>
-                            <Route path="/contrato/id/:idContract" exact={true} component={contrato} isPrivate={true} redirectTo="/"/>
-                            <Route path="/support" exact={true} component={tickets} isPrivate={true} redirectTo="/"/>
-                            <Route path="/ticket/add" exact={true} component={ticketCreat} isPrivate={true} redirectTo="/"/>
-                            <Route path="/support/ticket/:idTicket" exact={true} component={ticketView} isPrivate={true} redirectTo="/"/>
-                            <Route path="/robo/contract/:id/:idmkt" exact={true} component={Robo} isPrivate={true} redirectTo="/"/>
-                            <Route path="/robos" exact={true} component={Robos} isPrivate={true} redirectTo="/"/>
-                            <Route path="/deposit-cripto/receive/:Strid" exact={true} component={DepositCripo} isPrivate={true} redirectTo="/"/>
-                            <Route path="/account-deposit-fiat" exact={true} component={AccountDepositFiat} isPrivate={true} redirectTo="/"/>
-                            <Route path="/blog/id/:id/:titulo" exact={true} component={BlogAtualisys} isPrivate={true} redirectTo="/"/>
-                            <Route path="/emprestimos" exact={true} component={PageEmprestimos} isPrivate={true} redirectTo="/"/>
-                            <Route path="/emprestimos/payout/:id" exact={true} component={EmprestimosPayouts} isPrivate={true} redirectTo="/"/>
-                            <Route component={NotFound} />
+                            <Route path="/account-overview" component={AccountOverview} isPrivate={true} redirectTo="/" />
+                            <Route path="/deposit" component={AccountDepositFiat} isPrivate={true} redirectTo="/" />
+                            <Route path="/account-deposit-cripto" component={AccountDepositCripto} isPrivate={true} redirectTo="/" />
+                            <Route path="/account-withdraw-cripto" component={AccountWithdrawCripto} isPrivate={true} redirectTo="/" />
+                            <Route path="/account-deposit" component={AccountDeposit} isPrivate={true} redirectTo="/" />
+                            <Route path="/deposit-detail/:code" component={AccountDepositDetail} isPrivate={true} redirectTo="/" />
+                            <Route path="/account-withdraw-fiat" component={AccountWithdrawFiat} isPrivate={true} redirectTo="/" />
+                            <Route path="/account-intern-transfer" component={AccountInternTransfer} isPrivate={true} redirectTo="/" />
+                            <Route path="/user/editUser" component={EditUser} isPrivate={true} redirectTo="/" />
+                            <Route path="/user/history" component={EditHistory} isPrivate={true} redirectTo="/" />
+                            <Route path="/user/mywallet" component={EditWallet} isPrivate={true} redirectTo="/" />
+                            <Route path="/user/mydocuments" component={EditDocument} isPrivate={true} redirectTo="/" />
+                            <Route path="/user/bank" component={EditBank} isPrivate={true} redirectTo="/" />
+                            <Route path="/user/secutiry" component={EditSecutiry} isPrivate={true} redirectTo="/" />
+                            <Route path="/mercados" component={mercados} isPrivate={true} redirectTo="/" />
+                            <Route path="/mercados-ipo" component={MercadosIPO} isPrivate={true} redirectTo="/" />
+                            <Route path="/Stocks" component={PageStocks} isPrivate={true} redirectTo="/" />
+                            <Route path="/robots/:Strid" exact={true} component={robots} isPrivate={true} redirectTo="/" />
+                            <Route path="/robots/Stocks/:Strid/:id" exact={true} component={PageRoboStock} isPrivate={true} redirectTo="/" />
+                            <Route path="/withdrawal-report-boot/:id/:idmkt" exact={true} component={withdrawalreportboot} isPrivate={true} redirectTo="/" />
+                            <Route path="/robo/stop/:id/:idmkt" exact={true} component={RoboStop} isPrivate={true} redirectTo="/" />
+                            <Route path="/robots/" exact={true} component={robots} isPrivate={true} redirectTo="/" />
+                            <Route path="/contratos/" exact={true} component={contratos} isPrivate={true} redirectTo="/" />
+                            <Route path="/contrato/id/:idContract" exact={true} component={contrato} isPrivate={true} redirectTo="/" />
+                            <Route path="/support" exact={true} component={tickets} isPrivate={true} redirectTo="/" />
+                            <Route path="/ticket/add" exact={true} component={ticketCreat} isPrivate={true} redirectTo="/" />
+                            <Route path="/support/ticket/:idTicket" exact={true} component={ticketView} isPrivate={true} redirectTo="/" />
+                            <Route path="/robo/contract/:id/:idmkt" exact={true} component={Robo} isPrivate={true} redirectTo="/" />
+                            <Route path="/robos" exact={true} component={Robos} isPrivate={true} redirectTo="/" />
+                            <Route path="/deposit-cripto/receive/:Strid" exact={true} component={DepositCripo} isPrivate={true} redirectTo="/" />
+                            <Route path="/account-deposit-fiat" exact={true} component={AccountDepositFiat} isPrivate={true} redirectTo="/" />
+                            <Route path="/blog/id/:id/:titulo" exact={true} component={BlogAtualisys} isPrivate={true} redirectTo="/" />
+                            <Route path="/emprestimos" exact={true} component={PageEmprestimos} isPrivate={true} redirectTo="/" />
+                            <Route path="/mt-app" exact={true} component={mtapp} isPrivate={true} redirectTo="/" />
+                            <Route path="/termos-de-aceitacao" exact={true} component={termosdeaceitacao} isPrivate={true} redirectTo="/" />
+                            <Route path="/emprestimos/payout/:id" exact={true} component={EmprestimosPayouts} isPrivate={true} redirectTo="/" />
+                            <Route component={NotFound} isPrivate={true} />
                             <Route component={InternalServerError} />
                         </Switch>
                     </div>

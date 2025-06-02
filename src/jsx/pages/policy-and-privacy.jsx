@@ -17,17 +17,17 @@ function PolicyAndPrivacy() {
                 {t("Title_Page_Policy_And_Privacy")}
               </Title>
             </div>
-            <span className="mt-2">{t("Last_Update")}2023/07/23</span>
+            <span className="mt-2">{t("Last_Update")}2023/12/23</span>
           </div>
-          <h3>{t("Thankyou_Choosing_Infinity_Capital_Global")}</h3>
+          <h3>{t("Thankyou_Choosing")}</h3>
 
           <h3 className="mt-5">1. Informações de Identificação</h3>
           <ul className="mt-3">
             <li>
-              <b>Nome da Empresa:</b> Infinity Capital
+              <b>Nome da Empresa:</b> Capitex Brockers
             </li>
             <li>
-              <b>Email:</b> contato@infinitycapital.global
+              <b>Email:</b> contato@capitexbrockers.com
             </li>
             <li>
               <b>Global Endereço:</b> 83 Clemenceau Ave, 8nd Floor - Singapore
@@ -43,7 +43,7 @@ function PolicyAndPrivacy() {
 
           <h3 className="mt-5">3. {t('About_The_Company')}</h3>
           <p className="mt-3">
-            {t('Infinity_Capital_Global_Is_A_Financial_Platform')}
+            {t('Ccapitex_Brockers_Global_Is_A_Financial_Platform')}
           </p>
 
           <h3 className="mt-5">4. {t('Data_Collect')}</h3>
@@ -58,7 +58,7 @@ function PolicyAndPrivacy() {
 
           <h3 className="mt-5">6. {t('Data_Sharing')}</h3>
           <p className="mt-3">
-            {t('Infinity_Capital_Global_Will_Not_Share')}
+            {t('Ccapitex_Brockers_Global_Will_Not_Share')}
           </p>
 
           <h3 className="mt-5">7. {t('Data_Security')}</h3>
@@ -85,7 +85,7 @@ function PolicyAndPrivacy() {
             11. {t('Application_O_Seriousness')}
           </h3>
           <p className="mt-3">
-           {t('At_Infinity_Capital_Global')}
+           {t('At_Ccapitex_Brockers_Global')}
           </p>
 
           <h3 className="mt-5">12. {t('Changes_To_The_Privacy_Policy')}</h3>

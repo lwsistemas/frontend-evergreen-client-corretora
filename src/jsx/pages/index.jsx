@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Header from "./home/HeaderMenu.jsx";
+import Header from "./home/HeaderIndex.jsx";
 import Footer1 from "../layout/footer1";
 import axios from "../../services/index";
 import Hero from "./home/components/hero";
@@ -10,11 +10,12 @@ import { Loader } from "./home/components/loader";
 import { MarketPrices } from "./home/components/market-prices";
 import { About } from "./home/components/about";
 import NoticiasHome from '../pages/home/components/NoticiasHome'
+import FAQ from "./home/components/faq-home.jsx";
 
 function Homepage() {
-  
+
   const [prices, setPrices] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isPrimeiraVez, setIsPrimeiraVez] = useState(true);
 
   const getPrices = async () => {
@@ -30,8 +31,8 @@ function Homepage() {
 
   useEffect(() => {
     const intervalId = setInterval(async () => {
-        await getPrices();
-    }, 5000); // A cada 5 segundos
+      await getPrices();
+    }, 2000); // A cada 5 segundos
 
     return () => {
       clearInterval(intervalId); // Limpa o intervalo ao desmontar o componente
@@ -48,8 +49,9 @@ function Homepage() {
           <Hero />
           <MarketPrices prices={prices} />
           <About />
+          <FAQ />
           <CTA />
-          {/*<NoticiasHome/>*/} 
+          {/* <NoticiasHome/> */}
           <Footer1 />
         </>
       )}

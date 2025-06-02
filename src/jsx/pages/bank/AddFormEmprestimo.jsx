@@ -36,7 +36,8 @@ function AddPix({ valorParaAddPix, QtdParcelas, taxaJuros }) {
     const [confirmado, setConfirmado] = useState(false);
     const [ButtonDisabled, setisButtonDisabled] = useState(true);
     const [showModal, setShowModal] = useState(false);
-    const [isDialogOpen, setDialogOpen] = useState(false);
+    const [isDialogOpen, setDialogOpen] = useState(false); // Alterei 'none' para false
+
 
 
 
@@ -44,35 +45,32 @@ function AddPix({ valorParaAddPix, QtdParcelas, taxaJuros }) {
     const openDialog = () => {
         setDialogOpen(true);
     };
-
     const closeDialog = () => {
         setDialogOpen(false);
         window.location.href = '/emprestimos';
     };
 
     const handleShowModal = async (e) => {
-        e.preventDefault(); // Isso impede o envio do formulário
-        //setShowModal(true);
-        setisButtonDisabled(true)
+        e.preventDefault();
+        setisButtonDisabled(true);
 
         const data = {
+            uid: user.id,
+            Valor,
+            Parcelas,
+            authKey: user.authKey,
+            confirmado,
+            Taxa
+        };
 
-            uid: user.id, Valor, Parcelas, authKey: user.authKey, confirmado, Taxa
-
-        }
         try {
-            const response = (await axios.post('emprestimos/solicitacao', data)).data
-            if (response.status == 'success') {
-                openDialog()
+            const response = (await axios.post('emprestimos/solicitacao', data)).data;
+            if (response.status === 'success') {
+                openDialog(); // Alterei 'block' para a chamada da função openDialog
             }
-
         } catch (err) {
-            setisButtonDisabled(false)
+            setisButtonDisabled(false);
         }
-    };
-
-    const handleCloseModal = () => {
-        setShowModal(false);
     };
 
 
@@ -137,148 +135,126 @@ function AddPix({ valorParaAddPix, QtdParcelas, taxaJuros }) {
 
 
     return (
+        <>
 
-
-        <Card.Body>
-
-            <Dialog className='dialog' open={isDialogOpen} onClose={closeDialog}
-                keepMounted
-                aria-describedby="alert-dialog-slide-description"
-                TransitionComponent={Transition}
-            >
-                <div className='dialog-content'>
-                    <DialogTitle>
-                        <div className='text-justify'>
-                            <h2 className='text-success text-center'>Contrato solicitado</h2>
-                        </div>
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText id="alert-dialog-slide-description" className='text-success'>
-                            <div>Recebemos com sucesso sua solicitação de empréstimo em nosso sistema.</div>
-                            <p>Aguarde nossos time entrar em contato para liberar seu valor.</p>
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-
-                        <Button onClick={closeDialog}
-                            color="primary" autoFocus>
-                            Fechar
-                        </Button>
-                    </DialogActions>
-                </div>
-            </Dialog>
-
-
-            <Form>
-                <Row>
-                    <Col md={6}>
-                        <Form.Group controlId="fromGridUser">
-                            <Form.Label>{t('Application_Valor')} $</Form.Label>
-                            <Form.Control
-                                type="text"
-                                value={Valor}
-                                onChange={handleValorChange}
-                                onInput={(e) => {
-                                    e.preventDefault();
-                                }}
-                                onKeyDown={(e) => {
-                                    if (
-                                        (e.key === "." || e.key === ",") &&
-                                        e.target.value.indexOf(".") !== -1
-                                    ) {
+            <Card.Body>
+                <Form>
+                    <Row>
+                        <Col md={6}>
+                            <Form.Group controlId="fromGridUser">
+                                <Form.Label>{t('Application_Valor')} $</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    value={Valor}
+                                    onChange={handleValorChange}
+                                    onInput={(e) => {
                                         e.preventDefault();
-                                    }
-                                }}
-                                pattern="[0-9.,]*"
-                                inputMode="numeric"
-                                step="0.01"
-                            />
+                                    }}
+                                    onKeyDown={(e) => {
+                                        if (
+                                            (e.key === "." || e.key === ",") &&
+                                            e.target.value.indexOf(".") !== -1
+                                        ) {
+                                            e.preventDefault();
+                                        }
+                                    }}
+                                    pattern="[0-9.,]*"
+                                    inputMode="numeric"
+                                    step="0.01"
+                                />
 
-                            {erroValor && <span className="text-danger">O valor não pode ser maior que {valorParaAddPix}</span>}
-                        </Form.Group>
-                    </Col>
-                    <Col md={6}>
-                        <Form.Group controlId="fromGridParcelas">
-                            <Form.Label>{t('Parcelas')}</Form.Label>
-                            <Form.Control as="select" value={Parcelas} onChange={handleParcelasChange}>
-                                {renderParcelasOptions()}
-                            </Form.Control>
-                        </Form.Group>
-                    </Col>
-                </Row>
+                                {erroValor && (
+                                    <span className="text-danger">
+                                        O valor não pode ser maior que {valorParaAddPix}. Por favor, insira um valor válido.
+                                    </span>
+                                )}
+                            </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                            <Form.Group controlId="fromGridParcelas">
+                                <Form.Label>{t('Parcelas')}</Form.Label>
+                                <Form.Control as="select" value={Parcelas} onChange={handleParcelasChange}>
+                                    {renderParcelasOptions()}
+                                </Form.Control>
+                            </Form.Group>
+                        </Col>
+                    </Row>
 
-                <Row>
-                    <Col>
-                        <Form.Group controlId="fromGridUserName">
-                            <Form.Label>{t('Holder name')}</Form.Label>
-                            <Form.Control type="text" value={nameUser} />
-                        </Form.Group>
-                    </Col>
-                </Row>
+                    <Row>
+                        <Col>
+                            <Form.Group controlId="fromGridUserName">
+                                <Form.Label>{t('Holder name')}</Form.Label>
+                                <Form.Control type="text" value={nameUser} />
+                            </Form.Group>
+                        </Col>
+                    </Row>
 
-                <Row>
-                    <Col>
-                        <Form.Group controlId="fromGridDocument">
-                            <Form.Label>{t('Document')}</Form.Label>
-                            <Form.Control type="text" value={idDocument} />
-                        </Form.Group>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Form.Group controlId="confirmacaoCheckbox">
-                            <Form.Check
-                                type="checkbox"
-                                label="Eu confirmo que as informações estão corretas."
-                                checked={confirmado}
-                                onChange={handleConfirmacaoChange}
+                    <Row>
+                        <Col>
+                            <Form.Group controlId="fromGridDocument">
+                                <Form.Label>{t('Document')}</Form.Label>
+                                <Form.Control type="text" value={idDocument} />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Form.Group controlId="confirmacaoCheckbox">
+                                <Form.Check
+                                    type="checkbox"
+                                    label="Eu confirmo que as informações estão corretas."
+                                    checked={confirmado}
+                                    onChange={handleConfirmacaoChange}
 
-                            />
-                        </Form.Group>
-                    </Col>
-                </Row>
-                <div className='text-right m-2'>
-                    <div style={{ fontSize: '22px', color: "#FF9800" }}>Valor Solicitado <CurrencyFormat value={Valor} displayType={'text'} thousandSeparator={true} prefix={'$'} /></div>
-                    <div>
-                        {Parcelas == 1 ? 'Parcela: ' : 'Parcelas: '}
-                        {Parcelas}
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <div className='text-right m-2'>
+                        <div style={{ fontSize: '22px', color: "#FF9800" }}>Valor Solicitado <CurrencyFormat value={Valor} displayType={'text'} thousandSeparator={true} prefix={'$'} /></div>
+                        <div>
+                            {Parcelas == 1 ? 'Parcela: ' : 'Parcelas: '}
+                            {Parcelas}
+                        </div>
+                        {/* <div>Taxa: {Taxa}% ao mês</div> */}
+                        <div>{Parcelas == 1 ? 'Valor da Parcela: ' : 'Valor das Parcelas: '}  <CurrencyFormat value={ValorParcela} displayType={'text'} thousandSeparator={true} prefix={'$'} decimalScale={2} /></div>
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            disabled={!Valor || erroValor || !confirmado || ButtonDisabled}
+                            onClick={handleShowModal}
+                        >
+                            {t('Application_SolicitarEmprestimo')}
+                        </Button>
+
                     </div>
-                    {/* <div>Taxa: {Taxa}% ao mês</div> */}
-                    <div>{Parcelas == 1 ? 'Valor da Parcela: ' : 'Valor das Parcelas: '}  <CurrencyFormat value={ValorParcela} displayType={'text'} thousandSeparator={true} prefix={'$'} decimalScale={2} /></div>
-                    <Button
-                        variant="primary"
-                        type="submit"
-                        disabled={!Valor || erroValor || !confirmado || ButtonDisabled}
-                        onClick={handleShowModal}
-                    >
-                        {t('Application_SolicitarEmprestimo')}
+
+                </Form>
+
+            </Card.Body>
+
+            <div className='dialogoEmprestimo' style={{ display: isDialogOpen ? 'block' : 'none' }}>
+                <div className='dialogoEmprestimo-content'>
+
+                    <div className='text-justify'>
+                        <h2 className='text-success text-center'>Contrato solicitado</h2>
+                    </div>
+
+
+                    <div id="alert-dialog-slide-description" className='text-success'>
+                        <div>Recebemos com sucesso sua solicitação de empréstimo em nosso sistema.</div>
+                        <p>Aguarde nosso time entrar em contato para liberar seu valor.</p>
+                    </div>
+
+
+                    <Button onClick={closeDialog} color="primary" autoFocus>
+                        Fechar
                     </Button>
 
                 </div>
+            </div>
 
-            </Form>
-
-            <Modal show={showModal} onHide={handleCloseModal} centered>
-                <Modal.Header closeButton className="bg-dark">
-                    <Modal.Title className="text-light">Contrato de empréstimos para ativos</Modal.Title>
-                </Modal.Header>
-                <Modal.Body className="bg-dark" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {/* Conteúdo do contrato */}
-                </Modal.Body>
-                <Modal.Footer className="bg-dark">
-                    <Button variant="default" onClick={handleCloseModal}>
-                        {t('Application_Fechar')}
-                    </Button>
-                    <Button variant="outline-primary" onClick={handleCloseModal}>
-                        {t('Application_Confirmar')}
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-
-
-
-
-        </Card.Body>
+        </>
     );
 }
 

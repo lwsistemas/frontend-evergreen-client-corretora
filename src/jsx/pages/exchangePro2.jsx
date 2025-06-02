@@ -287,8 +287,8 @@ function Dashboard() {
             setDisabledInput(false);
             setIsLoad("none");
         }
-    }; 
-    
+    };
+
     const setAwaithLoader = async (value) => {
         if (value) {
             setDisabledInput(true);
@@ -304,6 +304,22 @@ function Dashboard() {
         setnewValue(newValue);
     };
 
+    const checkGraph = async (value) => {
+        console.log("valor:", value)
+        if (value) {
+            setOffBinance('none')
+            setOnBinance('block')
+
+        } else {
+            setOnBinance('none')
+            setOffBinance('block')
+        }
+    }
+    useEffect(async () => {
+        await validUser()
+    }, [])
+
+
     const setAllValues = async (value) => {
         setCurrency(value.coin);
         getPrices2(value.coin);
@@ -317,11 +333,8 @@ function Dashboard() {
         setVar24h(value.pctChange);
         getCurrentHistory(value.coin);
         //getSymbol(value.coin)
-
-
-
-
         let coinAux = [];
+        checkGraph(coinAux.onBinance)
         coinPrices.map((coin) => {
             if (coin.coin == value.coin) {
                 coinAux = coin;
@@ -443,7 +456,7 @@ function Dashboard() {
                 setAwaithLoader(false);
                 return true;
             }
-            if (parseFloat(currencyBuy) > 0 && buyPrice > 0) {
+            if (parseFloat(currencyBuy) > 0.000000002 && buyPrice > 0.000000002) {
                 const data = {
                     description: `${e.target.value} ${code}`,
                     authKey: user.authKey,
@@ -495,9 +508,10 @@ function Dashboard() {
             }
         } catch (err) {
             console.log(err);
+            const errorMessage = err.response.data.error.mensagen || t("Insufficient funds");
             operationProps.operationStatus = false;
             operationProps.header = t("Order not placed");
-            operationProps.body = t("Insufficient funds");
+            operationProps.body = t(errorMessage);
             setShow(true);
             setTimeout(() => {
                 setShow(false);
@@ -578,9 +592,10 @@ function Dashboard() {
             }
         } catch (err) {
             console.log(err);
+            const errorMessage = err.response.data.error.mensagen || t("Insufficient funds");
             operationProps.operationStatus = false;
             operationProps.header = t("Order not placed");
-            operationProps.body = t("Insufficient funds");
+            operationProps.body = t(errorMessage);
             setShow(true);
             setTimeout(() => {
                 setShow(false);
@@ -652,8 +667,8 @@ function Dashboard() {
             const currentPrice = prices.find((e) => e.coin === id);
 
             if (currentPrice) {
-                setBuyPrice(formatNumberWithTwoDecimalPlaces(currentPrice.ask));
-                setSellPrice(formatNumberWithTwoDecimalPlaces(currentPrice.bid));
+                setBuyPrice((currentPrice.ask));
+                setSellPrice((currentPrice.bid));
                 setVar24h(currentPrice.pctChange);
                 setCoinPrices(prices);
             }
@@ -690,6 +705,20 @@ function Dashboard() {
         };
     }, [currency]); // Certifique-se de incluir 'currency' como dependência para atualizar periodicamente com base nela
 
+    function formatPrice(price) {
+        if (price < 0.01) {
+            // Formatando números pequenos para evitar notação científica
+            const formatter = new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 8, // Ajuste este número conforme necessário
+            });
+            return formatter.format(price);
+        } else {
+            // Para valores maiores ou iguais a 0.01, exibir com duas casas decimais
+            return price.toFixed(2);
+        }
+    }
+
 
 
     return (
@@ -697,7 +726,7 @@ function Dashboard() {
             <HeaderExchangePro balance={balance} balanceBRL={balanceBRL} title="Exchange Pro" />
             <OrderModal show={show} operationProps={operationProps} />
 
-            <div className="content" id="dashboard" style={{ margin: "5px", marginTop: "65px" }}>
+            <div className="content" id="dashboard" style={{ marginBottom: "175px", marginTop: "75px", padding: "10px" }}>
                 <div className="content">
                     <div className="row">
                         {isLoading ? (
@@ -920,14 +949,22 @@ function Dashboard() {
 
                                                 {coinPrices
                                                     .filter((coin) => {
-                                                        // Verifica se o filtro está em branco ou se o código ou nome da moeda contém o filtro.
                                                         return (
                                                             filterValue === '' ||
                                                             coin.code.toLowerCase().includes(filterValue.toLowerCase()) ||
                                                             coin.name.toLowerCase().includes(filterValue.toLowerCase())
                                                         );
                                                     })
+                                                    .sort((a, b) => {
+                                                        // Ordene com base no saldo em ordem decrescente
+                                                        const balanceA = walletPricesList.find((item) => item.type === a.coin)?.balance || 0;
+                                                        const balanceB = walletPricesList.find((item) => item.type === b.coin)?.balance || 0;
+
+                                                        return balanceB - balanceA;
+                                                    })
                                                     .map((coin) => {
+                                                        const SaldoBalanceUSD = (walletPricesList.find((item) => item.type === coin.coin)?.balance || 0);
+
                                                         // O restante do seu código permanece o mesmo
                                                         // Certifique-se de adaptar essas mudanças ao seu código específico.
 
@@ -959,27 +996,33 @@ function Dashboard() {
                                                                 >
 
                                                                     <div className="market-item" id={coin.code}>
-                                                                        <div className="favorite-icon">
+                                                                        <div className={SaldoBalanceUSD > 0 ? "favorite-icon-selected" : "favorite-icon"}>
                                                                             &#9733;
-                                                                            <img src={`https://infinitycapital.global/${coin.img}`} alt={coin.name} />
+                                                                            <img src={`https://evergreenbroker.co.uk/${coin.img}`} alt={coin.name} />
                                                                         </div>
                                                                         <div className="market-info">
-                                                                            <div className="market-name"> {coin.code}<small>/USD</small></div>
+                                                                            <div className="market-name"> {coin.code}<small> / {parseFloat(SaldoBalanceUSD * coin.ask).toFixed(2)}{" "}≅</small></div>
+
+
                                                                             <div className="market-value">
                                                                                 <div>
-                                                                                    $
-                                                                                    {coin.coin === 825 ? (
+                                                                                    $ {parseFloat(coin.ask).toFixed(
+                                                                                        coin.coin === 124 || coin.coin === 198 || coin.coin === 115 || coin.coin === 182 || coin.coin === 192 ? 8 : 2
+                                                                                    )}
+
+                                                                                    {/* {coin.coin === 825 ? (
                                                                                         Intl.NumberFormat("en-US", {
                                                                                             currency: "USD",
-                                                                                            minimumFractionDigits: 2,
+                                                                                            minimumFractionDigits: 6,
                                                                                             maximumFractionDigits: 6,
                                                                                         }).format(coin.ask)
                                                                                     ) : (
                                                                                         formatNumberWithTwoDecimalPlaces(coin.ask)
-                                                                                    )}
+                                                                                    )} */}
                                                                                 </div>
                                                                                 <div className="market-change" style={colorpct}>{`${coin.pctChange}% (24h)`}</div>
                                                                             </div>
+
                                                                             {/* <div className="market-change">{`${coin.pctChange}% (24h)`}</div> */}
 
                                                                         </div>
@@ -1043,9 +1086,9 @@ function Dashboard() {
                                     </Stack>
                                 ) : (
                                     <div>
-                                        <div className="tradingview-widget-container card" style={{ height: "460px", display: offBinance }}>
+                                        {/* <div className="tradingview-widget-container card" style={{ height: "460px", display: offBinance }}>
                                             <Charts currency={currency} dataUprice={dataUprice} />
-                                        </div>
+                                        </div> */}
                                         <div className="tradingview-widget-container card" style={{ position: 'relative', height: '460px' }}>
                                             <img
                                                 src={LogoHeader}
@@ -1133,11 +1176,10 @@ function Dashboard() {
                                                                 <div>
                                                                     {t("Buy") + " " + code}
                                                                     <div style={{ fontSize: "11px", marginTop: "-5px" }}>
-                                                                        ${parseFloat(buyPrice).toFixed(2)}
+                                                                        ${formatPrice(parseFloat(buyPrice))}
                                                                     </div>
                                                                 </div>
                                                             }
-
                                                         />
                                                         <Tab
                                                             disableTouchRipple
@@ -1165,7 +1207,7 @@ function Dashboard() {
                                                             <div className="col-md-12">
                                                                 <span style={{ color: "#585E69", margin: "3px", fontSize: "14px" }} >Disponível {" "}
                                                                     <CurrencyFormat value={balanceBRL}
-                                                                        decimalScale={2}
+                                                                        decimalScale={6}
                                                                         displayType={"text"}
                                                                         thousandSeparator={true} />
                                                                 </span>
@@ -1185,7 +1227,7 @@ function Dashboard() {
                                                                         value={currencyBuyBR}
                                                                         maxlength="30"
                                                                         disabled={disabledInput}
-                                                                        style={{color:"green"}}
+                                                                        style={{ color: "green" }}
                                                                         onValueChange={(val, name) => {
                                                                             if (val == undefined) {
                                                                                 setCurrencyBuyBR("0");
@@ -1226,7 +1268,7 @@ function Dashboard() {
                                                                             <span className="input-group-text">
                                                                                 <img src={`https://infinitycapital.global/${currentIcon}`}
                                                                                     style={{ width: "25px", height: "25px" }} />
-                                                                                <div style={{ marginLeft: "5px", style:"green" }}>
+                                                                                <div style={{ marginLeft: "5px", style: "green" }}>
                                                                                     {" "}
                                                                                     {code}
                                                                                 </div>
@@ -1244,7 +1286,7 @@ function Dashboard() {
                                                                             value={currencyBuy}
                                                                             maxlength="30"
                                                                             disabled={disabledInput}
-                                                                            style={{color:"green"}}
+                                                                            style={{ color: "green" }}
                                                                             onValueChange={(val, name) => {
                                                                                 if (val == undefined) {
                                                                                     setCurrencyBuy("0");
@@ -1288,14 +1330,14 @@ function Dashboard() {
                                                                     {t("Buy Now") + " " + code}
 
                                                                 </button>
-                                                                {isLoadingUi ?(
+                                                                {isLoadingUi ? (
                                                                     <Loader />
 
-                                                                ):(
+                                                                ) : (
                                                                     <div></div>
 
                                                                 )};
-                                                                
+
                                                             </div>
 
                                                         </div>
@@ -1307,11 +1349,7 @@ function Dashboard() {
 
                                                             <div className="col-md-12">
                                                                 <span style={{ color: "#585E69", margin: "3px", fontSize: "14px" }} >Disponível {" "}
-                                                                    <CurrencyFormat value={balance}
-                                                                        decimalScale={6}
-                                                                        displayType={"text"}
-                                                                        thousandSeparator={true} />
-                                                                </span>
+                                                                    {parseFloat(balance).toFixed(6)}                                                                </span>
 
                                                             </div>
 
@@ -1322,7 +1360,7 @@ function Dashboard() {
                                                                             <span className="input-group-text">
                                                                                 <img src={currentIcon}
                                                                                     style={{ width: "25px", height: "25px" }} />
-                                                                                <div style={{ marginLeft: "5px", color:"red" }}>
+                                                                                <div style={{ marginLeft: "5px", color: "red" }}>
                                                                                     {" "}
                                                                                     {code}
                                                                                 </div>
@@ -1339,7 +1377,7 @@ function Dashboard() {
                                                                             value={currencySell}
                                                                             maxlength="30"
                                                                             disabled={disabledInput}
-                                                                            style={{color:"red"}}
+                                                                            style={{ color: "red" }}
                                                                             onValueChange={(val, name) => {
                                                                                 if (val == undefined) {
                                                                                     setCurrencySell("0");
@@ -1388,7 +1426,7 @@ function Dashboard() {
                                                                             value={currencySellBR}
                                                                             maxlength="30"
                                                                             disabled={disabledInput}
-                                                                            style={{color:"red"}}
+                                                                            style={{ color: "red" }}
                                                                             onValueChange={(val, name) => {
                                                                                 if (val == undefined) {
                                                                                     setCurrencySellBR("0");
@@ -1405,7 +1443,7 @@ function Dashboard() {
                                                                     </div>
                                                                     <div style={{ maxWidth: "100%", margin: "10px" }} className="row">
                                                                         <div>
-                                                                            <h6 className="card-title" style={{ fontSize: "22px", color:"red" }}>
+                                                                            <h6 className="card-title" style={{ fontSize: "22px", color: "red" }}>
                                                                                 ≅{" "}
                                                                                 <CurrencyFormat value={currencySellBR}
                                                                                     decimalScale={2}
@@ -1430,10 +1468,10 @@ function Dashboard() {
                                                                     onClick={handleSell}>
                                                                     {t("Sell Now") + " " + code}
                                                                 </button>
-                                                                {isLoadingUi ?(
+                                                                {isLoadingUi ? (
                                                                     <Loader />
 
-                                                                ):(
+                                                                ) : (
                                                                     <div></div>
 
                                                                 )};
@@ -1524,15 +1562,15 @@ function Dashboard() {
 
 
                             </div>
-                            <div className="col-md-12" style={{ marginTop: "-15px" }}>
-                                <PerfectScrollbar style={{ maxHeight: '213px' }}>
-                                    <div className="card">
-                                        <div className="card-body trade-history">
+                            <div className="col-md-12" style={{ marginTop: "-15px", maxHeight: "230px", overflow: "auto" }}>
+                                <div className="card">
+                                    <div className="card-body trade-history">
+                                        <PerfectScrollbar>
                                             <HistoryTable thisData={currentHistory} />
-                                        </div>
+                                        </PerfectScrollbar>
                                     </div>
-                                </PerfectScrollbar>
 
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -230,7 +230,7 @@ divider {
   
   /* Botão "Cadastrar-se" */
   .btn-cadastrar {
-    background-color: #ffc107; /* Cor de fundo laranja (#FFA500) */
+    background-color: #ad850d; /* Cor de fundo laranja (#FFA500) */
     color: #0f0f0f;
     padding: 5px 10px;
     border: none;
@@ -279,7 +279,7 @@ divider {
 
   .balance-menu .usd {
     padding-top: 25px;
-    font-size: 26px;
+    font-size: 22px;
     color:orange;
 
   }
@@ -540,5 +540,51 @@ divider {
   
   /* Adicione estilos adicionais conforme necessário */
   
-  /* Adicione estilos adicionais conforme necessário */
   
+  /* MobileMenu.css */
+
+.mobile-menu-x9 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 0px;
+  position: relative;
+  
+}
+
+.menu-toggle-x9 {
+  font-size: 28px;
+  cursor: pointer;
+  padding-left: 10px;
+  margin-top: -10px;
+
+}
+
+.nav-links_x9 {
+  list-style: none;
+  padding: 10ox;
+  margin: 10px;
+  display: none;
+}
+
+.nav-links_x9.open {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: #242526; /* Cor de fundo */
+  width: 200px;
+}
+
+.nav-links_x9.open a {
+  text-decoration: none;
+  color: #fff; /* Cor do texto */
+  font-size: 14px;
+  padding: 5px;
+  margin: 15px;
+  
+}
+
+.nav-links_x9 li:hover {
+  background-color: #555;
+  width: 200px;
+}

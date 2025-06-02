@@ -18,6 +18,8 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
 import { Loader } from "./home/components/loader";
 import CustomPagination from '../pages/home/components/CustomPagination';
+import moment from 'moment-timezone';
+import { green, red } from "@mui/material/colors";
 
 const WithoutFiatIcon = (props) => (
   <svg
@@ -85,45 +87,156 @@ function Exchange() {
   const [isValorMargem, setisValorMargem] = useState(0)
   const [inputValue, setInputValue] = useState(0);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(false);
   const [isValorSacado, setisValorSacado] = useState(0)
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch()
-  const mmzero = 0.02
+  const mmzero = 0.00
   const itemsPerPage = 20; // Defina o número de itens por página
   const [currentPage, setCurrentPage] = useState(0);
 
+  const [dataInicial, setDataInicial] = useState('');
+  const [dataFinal, setDataFinal] = useState('');
+  const [filtroAtivo, setFiltroAtivo] = useState(false);
+  const [lucroTotal, setLucroTotal] = useState(0);
+  const [ganhos, setGanhos] = useState(0); // Estado para armazenar os ganhos totais
+  const [perdas, setPerdas] = useState(0);
+
+  const handleFilterDates = () => {
+    const filteredData = Tickets.filter(ticket => {
+      const createdAt = moment(ticket.createdAt);
+      const startDate = moment(dataInicial);
+      const endDate = moment(dataFinal).endOf('day'); // Ajuste para incluir o dia inteiro no filtro
+
+      return createdAt.isSameOrAfter(startDate) && createdAt.isSameOrBefore(endDate);
+    });
+
+    setTickets(filteredData);
+    calculateTotalProfit(filteredData);
+    setFiltroAtivo(true);
+    setCurrentPage(0); // Redefine para a primeira página sempre que filtrar
+  };
+
+
+  const calculateTotalProfit = (filteredData) => {
+    let totalGanhos = 0;
+    let totalPerdas = 0;
+    filteredData.forEach(ticket => {
+      if (ticket.tipo === 1) {
+        totalGanhos += ticket.ganho; // Soma os ganhos
+      } else if (ticket.tipo === 2) {
+        totalPerdas += ticket.ganho; // Soma as perdas
+      }
+    });
+    const lucro = totalGanhos - totalPerdas;
+    setGanhos(totalGanhos);
+    setPerdas(totalPerdas);
+    setLucroTotal(lucro);
+  };
+
+  // Função para desativar o filtro e recarregar todos os dados
+  const handleResetFilter = () => {
+    setFiltroAtivo(false); // Desativa o filtro
+    // Carrega todos os dados novamente ou chama a função que faz isso
+  };
+
+
+
+  const renderDateFilter = () => (
+    <div className="col-md-12" id="MostraFiltro">
+      <Form>
+        <Form.Group controlId="dataInicial">
+          <Form.Label>Data Inicial</Form.Label>
+          <Form.Control
+            type="date"
+            value={dataInicial}
+            onChange={(e) => setDataInicial(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group controlId="dataFinal">
+          <Form.Label>Data Final</Form.Label>
+          <Form.Control
+            type="date"
+            value={dataFinal}
+            onChange={(e) => setDataFinal(e.target.value)}
+          />
+        </Form.Group>
+        <Button variant="primary" onClick={handleFilterDates}>Filtrar Datas</Button>
+        <Button variant="secondary" onClick={handleResetFilter} className="ml-2">Resetar Filtro</Button>
+      </Form>
+
+      {filtroAtivo && (
+        <>
+          <div className="m-3">
+            <div>Lucro Total no Período: ${lucroTotal.toFixed(2)}</div>
+            <div className="text-success">Ganhos no Período: ${ganhos.toFixed(2)}</div>
+            <div className="text-danger">Perdas no Período: ${perdas.toFixed(2)}</div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+
+
   const handlePageChange = ({ selected }) => {
-    setCurrentPage(selected);
+    if (selected < Math.ceil(Tickets.length / itemsPerPage)) {
+      setCurrentPage(selected);
+    } else {
+      setCurrentPage(0); // Redefine para a primeira página se a atual não for válida
+    }
   };
 
   const VerificarValores = () => {
-    //console.log(inputValue)
+    console.log(inputValue)
+    console.log(isValorMargem)
 
-    if (inputValue > parseFloat(isValorMargem)) {
+    if (parseFloat(inputValue > isValorMargem).toFixed) {
       setShowErrorMessage(true);
     } else {
       setShowErrorMessage(false);
     }
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Verificar se o valor a ser sacado não é maior do que o saldo disponível
+    if (parseFloat(inputValue) === 0) {
+      setShowErrorMessage(true);
+      return; // Impede o envio da solicitação de saque
+    }
 
     const data = {
       authKey: user.authKey,
       ValorRequisitado: inputValue,
       hash: Robot.hashTransaction,
-    }
+    };
 
-    const response = await axios.post('/marketinvestment/robo/withdraw', data)
-    if (response.data.status == 'success') {
-      openDialogSaque(true)
-      handleClose()
-      setisValorSacado(inputValue)
+    try {
+      const response = await axios.post('/marketinvestment/robo/withdraw', data);
+
+      if (response.data.status === 'success') {
+        openDialogSaque(true);
+        handleClose();
+        setisValorSacado(inputValue);
+        setShowErrorMessage(false);
+      }
+
+      if (response.data.status === 'error') {
+        setShowErrorMessage(true);
+        setErrorMessage(response.data.message); // Define a mensagem de erro
+      }
+    } catch (error) {
+      console.error('Erro ao processar a solicitação de saque:', error);
+      setShowErrorMessage(true);
+      setErrorMessage('Ocorreu um erro ao processar a solicitação. Por favor, tente novamente mais tarde.');
     }
 
     //handleClose();
   };
+
+
 
   const openDialog = (e) => {
     e.preventDefault();
@@ -174,7 +287,7 @@ function Exchange() {
     //    console.log(`user.id: ${user.id}`);
     try {
       const userID = (
-        await axios.post(`/user/view/`, { authKey: user.authKey, id:user.id })
+        await axios.post(`/user/view/`, { authKey: user.authKey, id: user.id })
       ).data;
       setuserID(userID);
       return userID;
@@ -185,13 +298,26 @@ function Exchange() {
 
   const getTickets = async (idps) => {
     try {
-      const Tickets = await axios.get(`/marketinvestment/robo/all/${CodeID}`);
-      setTickets(Tickets.data.reverse());
-      return Tickets;
+      let tickets = await axios.get(`/marketinvestment/robo/all/${CodeID}`);
+      tickets = tickets.data.sort((a, b) => {
+        // Compara primeiro pelos IDs
+        if (a.id < b.id) return 1;
+        if (a.id > b.id) return -1;
+
+        // Se os IDs forem iguais, compara pelas datas
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return dateB - dateA; // Ordenação decrescente por data
+      });
+
+      setTickets(tickets);
+      return tickets;
     } catch (err) {
       return err.response;
     }
   };
+
+
 
   const validUser = async () => {
     try {
@@ -226,7 +352,7 @@ function Exchange() {
         console.error('Erro ao buscar dados do usuário:', error);
       }
     };
-  
+
     const fetchTicketAndRobotData = async () => {
       try {
         await getTickets();
@@ -235,21 +361,20 @@ function Exchange() {
         console.error('Erro ao buscar dados de tickets e robôs:', error);
       }
     };
-  
+
     // Chame as funções no início.
     fetchUserData();
     fetchTicketAndRobotData();
-  
+
     // Agende as chamadas posteriores a cada 5 segundos.
-    const interval = setInterval(() => {
-      fetchTicketAndRobotData();
-    }, 5000);
-  
-    // Lide com a limpeza correta do intervalo.
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+    const intervalId = setInterval(() => {
+      if (!filtroAtivo) {
+        fetchTicketAndRobotData();
+      }
+    }, 60000);
+
+    return () => clearInterval(intervalId);
+  }, [filtroAtivo]);
 
   useEffect(async () => {
     await getTickets();
@@ -270,106 +395,114 @@ function Exchange() {
   return (
     <>
       <Header2 title={t("Hash") + " : " + ContratoAtual} />
-      
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <div className="content-body">
-          <div className="container-fluid">
-            <div className="row">
-              <div className="col-xl-5 col-lg-5 col-md-5">
-                <div className="card">
-                  <div className="card-body">
-                    <div> </div>
-                    <h5 className="text-gray">
-                      {t("Application_Investimento")}{" "}
-                      {Intl.NumberFormat("en", {
-                        style: "currency",
-                        currency: "USD",
-                      }).format(Robot.valor)}{" "}
-                    </h5>
-                    <h5 className="text-gray">
-                      {" "}
-                      {t("Application_Retorno")}
-                      {Intl.NumberFormat("en", {
-                        style: "currency",
-                        currency: "USD",
-                      }).format(Robot.ganho)}{" "}
-                    </h5>
 
-                    <h5 className="text-gray">
-                      {t("Application_Available")}{" "}
-                      {(() => {
-                        if (Robot.disponivel > 0) {
-                          return (
-                            <span className="text-gray">
-                              {Intl.NumberFormat("en", {
-                                style: "currency",
-                                currency: "USD",
-                              }).format(Robot.disponivel)}
-                            </span>
-                          );
-                        } else {
-                          return (
-                            <span className="text-danger">
-                              $&nbsp;
-                              {Intl.NumberFormat("en", {
-                                maximumSignificantDigits: 4,
-                              }).format(0.0)}
-                            </span>
-                          );
-                        }
-                      })()}
-                    </h5>
-                    <div>
-                      {(() => {
-                        if (Robot.status == 0) {
-                          return (
 
-                            <Link class="btn btn-outline-primary  btn-xxs"
-                              onClick={openDialog}>
-                              {t('Application_BtnSacarDisponivel')}&nbsp;<WithoutFiatIcon
-                                color={"#FFC107"} /></Link>
+      <div className="content-body">
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-xl-5 col-lg-5 col-md-5">
+              <div className="card">
+                <div className="card-body">
+                  <div> </div>
+                  <h5 className="text-gray">
+                    {t("Application_Investimento")}{" "}
+                    {Intl.NumberFormat("en", {
+                      style: "currency",
+                      currency: "USD",
+                    }).format(Robot.valor)}{" "}
+                  </h5>
+                  <h5 className="text-gray">
+                    {" "}
+                    {t("Application_Retorno")}
+                    {Intl.NumberFormat("en", {
+                      style: "currency",
+                      currency: "USD",
+                    }).format(Robot.ganho)}{" "}
+                  </h5>
 
-                          );
-                        } else {
-                          return (
+                  <h5 className="text-gray">
+                    {t("Application_Available")}{" "}
+                    {(() => {
+                      if (Robot.disponivel > 0) {
+                        return (
+                          <span className="text-gray">
+                            {Intl.NumberFormat("en", {
+                              style: "currency",
+                              currency: "USD",
+                            }).format(Robot.disponivel)}
+                          </span>
+                        );
+                      } else {
+                        return (
+                          <span className="text-danger">
+                            $&nbsp;
+                            {Intl.NumberFormat("en", {
+                              maximumSignificantDigits: 4,
+                            }).format(0.0)}
+                          </span>
+                        );
+                      }
+                    })()}
+                  </h5>
 
-                            <Link class="btn btn-outline-primary  btn-xxs disabled"
-                              disabled>
-                              {t('Application_BtnSacarDisponivel')}&nbsp;<WithoutFiatIcon
-                                color={"#FFC107"} /></Link>
+                  <div>
+                    {(() => {
+                      if (Robot.status == 0) {
+                        return (
 
-                          );
-                        }
-                      })()}
-                    </div>
+                          <Link class="btn btn-outline-primary  btn-xxs"
+                            onClick={openDialog}>
+                            {t('Application_BtnSacarDisponivel')}&nbsp;<WithoutFiatIcon
+                              color={"#FFC107"} /></Link>
 
+                        );
+                      } else {
+                        return (
+
+                          <Link class="btn btn-outline-primary  btn-xxs disabled"
+                            disabled>
+                            {t('Application_BtnSacarDisponivel')}&nbsp;<WithoutFiatIcon
+                              color={"#FFC107"} /></Link>
+
+                        );
+                      }
+                    })()}
+
+                    <Link class="btn btn-outline-primary  btn-xxs m-2"
+                      to={`/withdrawal-report-boot/${ContratoAtual}/${CodeID}`}>
+                      {t('Application_RelatorioSaqueRobo')}&nbsp;<i className="fa fa-history"></i> </Link>
+                  </div>
+
+                  {renderDateFilter()}
+
+                </div>
+              </div>
+            </div>
+            <div className="col-xl-7 col-lg-7 col-md-7">
+              <div className="card">
+                <div className="card-header">
+                  <h4 className="card-title">
+                    {t("Application_AtivoInvestments")}
+                  </h4>
+                </div>
+                <div className="card-body">
+                  <div
+                    className="tradingview-widget-container card"
+                    style={{ height: "335px" }}
+                  >
+                    {
+                      Robot.TipoCoin === 0
+                        ? <TradingViewWidget2 symbol={`${Robot.moedaSimbolo}USD`} id='RoboInterno' />
+                        : <TradingViewWidget2 symbol={`${Robot.moedaSimbolo}`} id='RoboInterno' />
+                    }
+                    {" "}
                   </div>
                 </div>
               </div>
-              <div className="col-xl-7 col-lg-7 col-md-7">
-                <div className="card">
-                  <div className="card-header">
-                    <h4 className="card-title">
-                      {t("Application_AtivoInvestments")}
-                    </h4>
-                  </div>
-                  <div className="card-body">
-                    <div
-                      className="tradingview-widget-container card"
-                      style={{ height: "335px" }}
-                    >
-                      {
-                        <TradingViewWidget2 symbol={`${Robot.moedaSimbolo}USD`} id='RoboInterno'
-
-                        />
-                      }{" "}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
+            </div>
+            {isLoading ? (
+              <Loader />
+            ) : (
               <div className={"col-md-12"}>
                 <div className="card">
                   <div class={"card-body"}>
@@ -393,9 +526,7 @@ function Exchange() {
                               {displayedTickets.map((data) => (
                                 <tr key={data.id}>
                                   <td className="text-left">
-                                    <Moment format="DD/MM/YY - HH:mm:ss">
-                                      {data.createdAt}
-                                    </Moment>
+                                    {moment(data.createdAt).tz('America/Sao_Paulo').format('DD/MM/YYYY - HH:mm:ss')}
                                   </td>
                                   <td className="text-left">
                                     {(() => {
@@ -587,13 +718,12 @@ function Exchange() {
                             const regex = /^[0-9,\.]*$/; // Permite números inteiros e decimais com um ponto como separador decimal
                             if (regex.test(inputValue)) {
                               setInputValue(inputValue.replace(",", ".")); // Substitui vírgula por ponto se houver
+                              setShowErrorMessage(false); // Define showErrorMessage como falso para esconder a mensagem de erro
                             }
-
                           }}
-                          onBlur={VerificarValores}
-                          onKeyUp={VerificarValores}
                           readOnly={false}
                         />
+
                       </Form.Group>
                       {showErrorMessage && (
                         <p className="alert alert-danger">
@@ -607,8 +737,9 @@ function Exchange() {
                         disabled={
                           showErrorMessage ||
                           inputValue === "" ||
-                          parseFloat(inputValue) === 0 || //
-                          parseFloat(inputValue) > parseFloat(isValorMargem)
+                          parseFloat(inputValue) === 0
+                          // || //
+                          // parseFloat(inputValue) > parseFloat(isValorMargem)
                         }
                       >
                         {t("Application_confirm")} <i className="fa fa-check-circle-o"></i>
@@ -622,17 +753,18 @@ function Exchange() {
                   </Modal.Footer>
                 </Modal>
               </div>
+            )}
 
-              {/* Adicione a componente de paginação */}
-              <div className="col-md-12">
-                
+            {/* Adicione a componente de paginação */}
+            <div className="col-md-12">
+
               <CustomPagination pageCount={pageCount} onPageChange={handlePageChange} />
-              </div>
-
             </div>
+
           </div>
         </div>
-      )}
+      </div>
+
       <BottomBar selectedIcon="markets" />
     </>
   );

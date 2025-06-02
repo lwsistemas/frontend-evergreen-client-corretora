@@ -14,7 +14,7 @@ function Footer2() {
                         <div class="col-sm-12 col-12">
                     <div class="copyright">
                     <p>© Copyright 2018 - <Moment format='YYYY'></Moment>&nbsp;
-                                INFINITY CAPITAL GLOBAL®</p>
+                                EVER GREEN BROKER GLOBAL®</p>
                             </div>
                         </div>
                         {/* <div class="col-sm-12 col-12">

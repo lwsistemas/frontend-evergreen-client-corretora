@@ -1,6 +1,26 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Ever Broker",
+  "name": "Plataform the Ever Broker",
+  "description": "A comprehensive platform for managing investments and trading in the Ever Broker ecosystem.", 
+  "version": "2.6.1",
+  "author": "Ever Broker Team",
+  "homepage": "https://evergreenbroker.co.uk",
+  "keywords": [
+    "investment",
+    "trading",
+    "brokerage",
+    "finance",
+    "ever broker"
+  ],
+  "license": "MIT",
+  "orientation": "portrait",
+  "scope": "/",
+  "dir": "ltr",
+  "lang": "en-US",
+  "display_override": [
+    "window-controls-overlay"
+  ],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "favicon.ico",

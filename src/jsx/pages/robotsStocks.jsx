@@ -77,7 +77,7 @@ function Exchange() {
         if (!value) {
             setSharesError('Campo obrigatório');
             return false;
-        } else if (!/^[0-9]+$/.test(value)) {
+        } else if (!/^[0-9.,]+$/.test(value)) {
             setSharesError('Apenas números são permitidos');
             return false;
         } else {
@@ -178,7 +178,7 @@ function Exchange() {
 
     const getStock = async () => {
         try {
-            const stockData = await axios.get(`/price/Stocks/${parametros.id}`);
+            const stockData = await axios.get(`/price/Stock/${parametros.id}`);
             setStockData(stockData.data);
         } catch (err) {
             return err.response;
@@ -347,19 +347,21 @@ function Exchange() {
                                                             type="text"
                                                             name="shares"
                                                             className="form-control"
-                                                            inputMode="number" // Define o modo de entrada como decimal
-                                                            pattern="[0-9]*" // Aceita números, pontos e vírgulas
+                                                            inputMode="decimal" // Define o modo de entrada como decimal para números, incluindo ponto
+                                                            pattern="[0-9.]*" // Aceita números e pontos
                                                             onKeyPress={(e) => {
-                                                                // Verifica se o caractere não é um número, ponto ou vírgula
+                                                                // Permite números, ponto
                                                                 const keyCode = e.which || e.keyCode;
                                                                 const keyValue = String.fromCharCode(keyCode);
 
-                                                                if (!/^[0-9]+$/.test(keyValue)) {
+                                                                // Verifica se o caractere é um número ou ponto
+                                                                if (!/^[0-9.]$/.test(keyValue)) {
                                                                     e.preventDefault();
                                                                 }
                                                             }}
                                                             onChange={handleSharesChange}
                                                         />
+
 
                                                         {saldoInsuficiente && (
                                                             <div className="text-danger">Saldo insuficiente para essa compra.</div>

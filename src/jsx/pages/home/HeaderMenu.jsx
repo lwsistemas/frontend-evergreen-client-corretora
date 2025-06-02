@@ -26,11 +26,9 @@ import depositfiat from '../../../images/IconesMenu/depositofiat.png'
 import sacarcrypto from '../../../images/IconesMenu/sacarbitcoin.png'
 import sacarfiat from '../../../images/IconesMenu/sacardinheiro.png'
 import emprestimo from '../../../images/IconesMenu/emprestimo.png'
-
+import plataformaMT from '../../../images/IconesMenu/plataformaMT.png'
 import packageJson from '../../../../package.json'
-
-
-
+import TermosAceitacao from "./components/termosModal";
 const Header = (props) => {
     const user = useSelector((state) => state.user);
     const [showAvatar, setShowAvatar] = useState("none");
@@ -42,8 +40,9 @@ const Header = (props) => {
     const [contract, setContract] = useState([]);
     const [headerScrolled, setHeaderScrolled] = useState(false);
     const [headerTransparent, setHeaderTransparent] = useState(true);
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
-    const [isSmall, setIsSmall] = useState(window.innerWidth <= 980);
+    const Tamanho = 886
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= Tamanho);
+    const [isSmall, setIsSmall] = useState(window.innerWidth <= 960);
     const [isFocusedDeposit, setIsFocusedDeposit] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
     const [isFocusedEmprestimo, setIsFocusedEmprestimo] = useState(false);
@@ -61,53 +60,53 @@ const Header = (props) => {
     const domain = email.slice(atIndex); // Mantém o domínio após o "@"
     const hiddenPart = email.slice(0, atIndex - 3) + "@***"; // Oculta tudo antes do "@" exceto os 3 últimos caracteres
     const lastThreeDomainCharacters = domain.slice(-3); // Mantém apenas os últimos 3 caracteres do domínio
-    const Tamanho = 480
-    const partiallyHiddenEmail = hiddenPart + lastThreeDomainCharacters;
     
+    const partiallyHiddenEmail = hiddenPart + lastThreeDomainCharacters;
+
 
     const currentDate = new Date();
     function generateRandomNumberWithDatePrefix() {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-    const day = currentDate.getDate().toString().padStart(2, '0');
-  
-    const datePrefix = `${year}${month}${day}`;
-    const randomDigits = Math.floor(10000000 + Math.random() * 90000000); // Generate 8 random digits
-    
-    const protocolNumber = `${datePrefix}${randomDigits}`;
-    return protocolNumber;
-  }
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+        const day = currentDate.getDate().toString().padStart(2, '0');
 
-  const NomeGerente = Data.AtendidoPor;
-  const FirstName = user ? user.firstName : "";
-  const SecondName = user ? user.secondName : "";
-  const Email = user ? user.email : "";
-  const Mobile = user ? user.mobile : "";
-  
-  const NumeroAleatorio = generateRandomNumberWithDatePrefix();  
-  const Msg = `
+        const datePrefix = `${year}${month}${day}`;
+        const randomDigits = Math.floor(10000000 + Math.random() * 90000000); // Generate 8 random digits
+
+        const protocolNumber = `${datePrefix}${randomDigits}`;
+        return protocolNumber;
+    }
+
+    const NomeGerente = Data.AtendidoPor;
+    const FirstName = user ? user.firstName : "";
+    const SecondName = user ? user.secondName : "";
+    const Email = user ? user.email : "";
+    const Mobile = user ? user.mobile : "";
+
+    const NumeroAleatorio = generateRandomNumberWithDatePrefix();
+    const Msg = `
   %0DOlá Sr(a) ${NomeGerente}, tudo bem?
-  %0DEu preciso de atendimento na plataforma *Infinity Capital*
+  %0DEu preciso de atendimento na plataforma *Ever Green BROKER*
   %0D*Usuário: ${FirstName + " " + SecondName}*
   %0D*E-mail: ${Email}*
   %0D*Atendimento iniciado: ${currentDate}*
   %0D*Protocolo N: ${NumeroAleatorio}*`;
-  
-  const getUser = async () => {
-    try {
-      const response = await axios.post(`/user/view/`, { authKey: user.authKey });
-      setData(response.data); // Set data with the response data
-    } catch (err) {
-      console.log("Erro ao buscar os dados do usuário:", err);
-    }
-  };
 
-  useEffect(() => {
-    if (user !== null) {
-      getUser();
-    }
-  }, [user]);
+    const getUser = async () => {
+        try {
+            const response = await axios.post(`/user/view/`, { authKey: user.authKey });
+            setData(response.data); // Set data with the response data
+        } catch (err) {
+            console.log("Erro ao buscar os dados do usuário:", err);
+        }
+    };
+
+    useEffect(() => {
+        if (user !== null) {
+            getUser();
+        }
+    }, [user]);
 
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -182,7 +181,7 @@ const Header = (props) => {
 
 
     const handleResize = () => {
-        setIsMobile(window.innerWidth <= 480);
+        setIsMobile(window.innerWidth <= Tamanho);
         setIsSmall(window.innerWidth <= 980);
     };
 
@@ -193,7 +192,12 @@ const Header = (props) => {
         };
     }, []);
 
+    const handleMenuToggle = () => {
+        setIsFocused(!isFocused);
+    };
+
     return (<>
+    <TermosAceitacao isAcceptTerms={Data.isAcceptTerms}/>
 
         <div className="navMenu">
             <div className="wrapper">
@@ -212,7 +216,7 @@ const Header = (props) => {
                             />
                         </Link>
                     ) : (
-                        <Link to="/">
+                        <Link to="/Dashboard">
                             <img
                                 src={LogoHeader}
                                 style={{
@@ -228,55 +232,97 @@ const Header = (props) => {
 
                 </div>
                 {user == null ? (
-                    <div className="nav-links">
-                        <ul className="nav-links">
-                            <li>
-                                <Link to={"./"}>{t("Home")}</Link>
-                            </li>
-                            <li>
-                                <Link to="/ourhistory">{t('Our story')}</Link>
-                            </li>
-                            <li
-                                onMouseEnter={() => setIsFocused(true)}
-                                onMouseLeave={() => setIsFocused(false)}
-                            >
-                                <a
-                                    href="#"
-                                    className={`desktop-item ${isFocused ? "focused" : ""}`}
-                                >
-                                    {t("Application_Mercados")}{" "}
-                                    <i className={`mdi mdi-${isFocused ? "chevron-up" : "chevron-down"}`}></i>
-                                </a>
-                                <ul className="drop-menu">
-                                    <li>
-                                        <Link to="/actives">{t('Active')}
-                                            <p>Compre e venda ativos a qualquer momento</p>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to="/historic">
-                                            {t('Historic')}
-                                            <p>Conheça todo nosso histórico em nosso Book</p>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to="/news">
-                                            {t('Noticias')}
-                                            <p>Saiba tudo sobre o mercado financeiro</p>
-                                        </Link>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <Link to="/Contact">{t("Contact")}</Link>
-                            </li>
-                        </ul>
-                        <div className="nav-links-direito">
-                            <Link to="/signin">Login</Link>
-                            <Link className="btn-cadastrar" to="/signup/createUser">{t('Application_Cadastro')}</Link>
-                            <SelectLanguage onClose={handleCloseModal} />
+
+                    isMobile ? (
+                        // Renderizar menu para dispositivos móveis
+                       <>
+                        <div className="mobile-menu-x9">
+                            
+                            <div className="menu-toggle-x9" onClick={toggleMenu}>
+                                ☰
+                            </div>
+                            <ul className={`nav-links_x9 ${menuOpen ? 'open' : ''}`}>
+                                <div style={{marginTop:"250px"}}>
+                                    <Link to="/"></Link>
+                                </div>
+                                <li>
+                                    <Link to="./">{t("Home")}</Link>
+                                </li>
+                                <li>
+                                    <Link to="./ourhistory">{t('Our story')}</Link>
+                                </li>
+                                <li>
+                                    <Link to="./actives">{t('Active')}</Link>
+                                </li>
+                                
+                                <li>
+                                    <Link to="./allnews">{t('Noticias')}</Link>
+                                </li>
+                                <li>
+                                    <Link to="./contact">{t("Application_Contato")}</Link>
+                                </li>
+                                
+                            </ul>
+                            
                         </div>
-                    </div>
+                        <div style={{position:"absolute", right:0}}>
+                            <SelectLanguage onClose={handleCloseModal} style={{padding: 10,}} />
+                        </div>
+                        </>
+                        
+
+                    ) : (
+                        <div className="nav-links">
+                            <ul className="nav-links">
+                                <li>
+                                    <Link to={"./"}>{t("Home")}</Link>
+                                </li>
+                                <li>
+                                    <Link to="/ourhistory">{t('Our story')}</Link>
+                                </li>
+                                <li
+                                    onMouseEnter={() => setIsFocused(true)}
+                                    onMouseLeave={() => setIsFocused(false)}
+                                >
+                                    <a
+                                        href="#"
+                                        className={`desktop-item ${isFocused ? "focused" : ""}`}
+                                    >
+                                        {t("Application_Mercados")}{" "}
+                                        <i className={`mdi mdi-${isFocused ? "chevron-up" : "chevron-down"}`}></i>
+                                    </a>
+                                    <ul className="drop-menu">
+                                        <li>
+                                            <Link to="/actives">{t('Active')}
+                                                <p>Compre e venda ativos a qualquer momento</p>
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link to="/historic">
+                                                {t('Historic')}
+                                                <p>Conheça todo nosso histórico em nosso Book</p>
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link to="/news">
+                                                {t('Noticias')}
+                                                <p>Saiba tudo sobre o mercado financeiro</p>
+                                            </Link>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <Link to="/Contact">{t("Contact")}</Link>
+                                </li>
+                            </ul>
+                            
+                            <div className="nav-links-direito">
+                                <Link to="/signin">Login</Link>
+                                <Link className="btn-cadastrar" to="/signup/createUser">{t('Application_Cadastro')}</Link>
+                                <SelectLanguage onClose={handleCloseModal} />
+                            </div>
+                        </div>
+                    )
                 ) : (
                     <>
 
@@ -285,7 +331,7 @@ const Header = (props) => {
                         ) : (
                             <ul className="nav-links" >
                                 <li>
-                                    <Link to={"./dashboard"}>
+                                    <Link to={"/dashboard"}>
                                         <i className="mdi mdi-view-dashboard mdi-24px"></i>
                                     </Link>
                                 </li>
@@ -304,16 +350,29 @@ const Header = (props) => {
                                         <i className={`mdi mdi-${isFocused ? "chevron-up" : "chevron-down"}`}></i>
                                     </a>
                                     <ul className="drop-menu">
-                                        <li><img src={market}/>
+                                        <li><img src={market} />
                                             <Link to="/mercados">{t('Application_Mercados')}
-                                               
+
                                                 <p>{t("Application_TextoMercados")}</p>
                                             </Link>
                                         </li>
+                                        <li><img src={market} />
+                                            <Link to="/mercados-ipo">{t('Application_IPOS')}
+
+                                                <p>{t("Application_TextoMercadosIpos")}</p>
+                                            </Link>
+                                        </li>
+                                        <li><img src={plataformaMT} />
+                                            <Link to="/mt-app">{t('Application_PlataformaMT')}
+
+                                                <p>{t("Application_PlataformaMTTxt")}</p>
+                                                <b></b>
+                                            </Link>
+                                        </li>
                                         <li>
-                                        <img src={assistentederobo}/>
-                                        <Link to="/robos">{t('Application_Robo')}
-                                            <p>{t("Application_TextoMercados")}</p>
+                                            <img src={assistentederobo} />
+                                            <Link to="/robos">{t('Application_Robo')}
+                                                <p>{t("Application_TextoMercados")}</p>
                                             </Link>
                                         </li>
                                         <li>
@@ -324,7 +383,7 @@ const Header = (props) => {
                                             </Link>
                                         </li>
                                         <li>
-                                        <img src={crypto} alt="" />
+                                            <img src={crypto} alt="" />
                                             <Link to="/mercados">
                                                 {t('Application_Cryptos')}
                                                 <p>{t("Application_TextCrypto")}</p>
@@ -346,12 +405,12 @@ const Header = (props) => {
                                         <i className={`mdi mdi-${isFocusedDeposit ? "chevron-up" : "chevron-down"}`}></i>
                                     </a>
                                     <ul className="drop-menu">
-                                        <li><img src={depositfiat}/>
+                                        <li><img src={depositfiat} />
                                             <Link to="/deposit">{t('Application_euquerodepositar')}
                                                 <p>{t("Application_TextoDepositar")}</p>
                                             </Link>
                                         </li>
-                                        <li><img src={depositcrypto}/>
+                                        <li><img src={depositcrypto} />
                                             <Link to="/account-deposit-cripto">
                                                 {t('Application_DepositCrypto')}
                                                 <p>{t("Application_TextoDepositarCrypto")}</p>
@@ -375,12 +434,12 @@ const Header = (props) => {
                                         <i className={`mdi mdi-${isFocusedSaque ? "chevron-up" : "chevron-down"}`}></i>
                                     </a>
                                     <ul className="drop-menu">
-                                        <li><img src={sacarfiat}/>
+                                        <li><img src={sacarfiat} />
                                             <Link to="/account-withdraw-fiat">{t('Application_Saque')}
                                                 <p>{t("Application_TextoSaqueFiat")}</p>
                                             </Link>
                                         </li>
-                                        <li><img src={sacarcrypto}/>
+                                        <li><img src={sacarcrypto} />
                                             <Link to="/account-withdraw-cripto">
                                                 {t('Withdraw crypto')}
                                                 <p>{t("Application_TextoSaqueCrypto")}</p>
@@ -404,7 +463,7 @@ const Header = (props) => {
                                         <i className={`mdi mdi-${isFocusedEmprestimo ? "chevron-up" : "chevron-down"}`}></i>
                                     </a>
                                     <ul className="drop-menu">
-                                        <li><img src={emprestimo}/>
+                                        <li><img src={emprestimo} />
                                             <Link to="/emprestimos">{t('Application_Emprestimos')}
                                                 <p>{t("Application_TextoEmprestimo")}</p>
                                             </Link>
@@ -453,7 +512,7 @@ const Header = (props) => {
                                                 <p>{t("Application_TextoInbox")}</p>
                                             </Link>
                                         </li>
-                                        
+
                                         <li>
                                             <Link to="/referal">
                                                 {t('Application_Referal')}
@@ -491,7 +550,7 @@ const Header = (props) => {
 
                                         className={`desktop-item ${isFocusedPerfil ? "focused" : ""}`}
                                     >
-                                        <i className="mdi mdi-infinity mdi-24px"></i>
+                                        <i className="mdi mdi-account mdi-24px"></i>
                                         <i className={`mdi mdi-${isFocusedPerfil ? "chevron-up" : "chevron-down"}`}></i>
                                     </a>
 
@@ -502,125 +561,127 @@ const Header = (props) => {
 
 
 
+                        </div>
+
+
+                        <div className={`menu-lateral ${menuOpen ? 'active' : ''}`}
+                            onMouseLeave={() => {
+                                toggleMenu();
+                                setIsFocusedPerfil(false);
+                            }}>
+                            <div className="header-perfil">
+                                {/* <div className="avatar">
+                                    <img src={user.avatar} alt="Avatar" />
+                                </div> */}
+                                <div className="user-info">
+                                    <h2>{user.firstName + " " + user.secondName}</h2>
+                                    <p>{partiallyHiddenEmail}</p>
+                                    <p>{t("Application_CadastradoEm")}: <Moment format="DD/MM/YYYY HH:mm">{user.createdAt}</Moment></p>
+                                </div>
+
+
+
+                            </div>
+                            <div className="BtnMenuWhats">
+                                <a
+                                    href={`https://wa.me/${Data.CelularAtendimento.replace(/[-()\s]/g, "")}?text=${Msg}`}
+                                    className="btn-atendimentoMenu"
+                                    target="_blank"
+                                >
+                                    <i className="mdi mdi-message-text-outline"></i> {t("Application_FalarComSeugerente")}
+                                </a>
+
+
+                            </div>
+
+                            <div className="balance-menu">
+                                {t("Application_Saldo")}{' '}
+                                <div className="usd">
+                                    {showBalance ? (
+                                        <>
+                                            <span>
+                                                <CountUp
+                                                    start={0}
+                                                    end={Data.balanceBrl}
+                                                    duration={countUpActive ? 1 : 0}
+                                                    separator=","
+                                                    decimals={2}
+                                                    prefix="$ "
+                                                />
+                                            </span>
+                                            <i
+                                                className="mdi mdi-eye-off"
+                                                onClick={toggleBalanceVisibility}
+                                                style={{ cursor: 'pointer', marginLeft: '10px' }} // Adicione um espaço à esquerda
+                                            ></i>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span>***********</span>
+                                            <i
+                                                className="mdi mdi-eye"
+                                                onClick={toggleBalanceVisibility}
+                                                style={{ cursor: 'pointer', marginLeft: '10px' }} // Adicione um espaço à esquerda
+                                            ></i>
+                                        </>
+                                    )}
+                                </div>
                             </div>
 
 
-                            <div className={`menu-lateral ${menuOpen ? 'active' : ''}`}
-                                onMouseLeave={() => {
-                                    toggleMenu();
-                                    setIsFocusedPerfil(false);
-                                }}>
-                                <div className="header-perfil">
-                                    <div className="avatar">
-                                        <img src={user.avatar} alt="Avatar" />
-                                    </div>
-                                    <div className="user-info">
-                                        <h2>{user.firstName + " " + user.secondName}</h2>
-                                        <p>{partiallyHiddenEmail}</p>
-                                        <p>{t("Application_CadastradoEm")}: <Moment format="DD/MM/YYYY HH:mm">{user.createdAt}</Moment></p>
-                                    </div>
+                            <ul className="menu-list">
+                                <Link to="/user/editUser" className="menu-link">
+                                    <i className="mdi mdi-human-greeting"></i> {t("Account")}
+                                </Link>
+                                <Link to="/contratos" className="menu-link">
+                                    <i className="mdi mdi-vector-arrange-above"></i>{" "}
+                                    {t("Application_Contratos")}
+                                </Link>
+                                <Link to="/deposit" className="menu-link">
+                                    <i className="mdi mdi-coins"></i> {t("Deposit fiat")}
+                                </Link>
+                                <Link
+                                    to="/account-deposit-cripto"
+                                    className="menu-link"
+                                >
+                                    <i className="mdi mdi-coin"></i> {t("Deposit crypto")}
+                                </Link>
+                                <Link
+                                    to="/account-withdraw-fiat"
+                                    className="menu-link"
+                                >
+                                    <i className="mdi mdi-cash-multiple"></i>{" "}
+                                    {t("Withdraw fiat")}
+                                </Link>
+                                <Link to="/support" className="menu-link">
+                                    <i className="mdi mdi-message-bulleted"></i>{" "}
+                                    {t("Application_Support")}
+                                </Link>
 
-                                    
+                                <Link to="/user/setup" className="menu-link">
+                                    <i className="mdi mdi-cogs"></i>{" "}
+                                    {t("Application_Configurations")}
+                                </Link>
 
-                                </div>
-                                <div className="BtnMenuWhats">
-                                    <a
-                                        href={`https://wa.me/${Data.CelularAtendimento.replace(/[-()\s]/g, "")}?text=${Msg}`}
-                                        className="btn-atendimentoMenu"
-                                        target="_blank"
-                                    >
-                                        <i className="mdi mdi-message-text-outline"></i> {t("Application_FalarComSeugerente")}
-                                    </a>
+                            </ul>
+                            <div className="footerMenu">
+                                <Link
+                                    to="/signin"
+                                    onClick={() => {
+                                        dispatch(User(null));
+                                        handleSubmit();
+                                    }}
+                                    className="btn-logout"
+                                >
+                                    <i className="mdi mdi-logout"></i> {t("Logout")}
+                                </Link>
+                                
 
-                                    
-                                </div>
-
-                                <div className="balance-menu">
-                                    {t("Application_Saldo")}{' '}
-                                    <div className="usd">
-                                        {showBalance ? (
-                                            <>
-                                                <span>
-                                                    <CountUp
-                                                        start={0}
-                                                        end={props.balanceBRL}
-                                                        duration={countUpActive ? 1 : 0}
-                                                        separator=","
-                                                        decimals={2}
-                                                        prefix="$ "
-                                                    />
-                                                </span>
-                                                <i
-                                                    className="mdi mdi-eye-off"
-                                                    onClick={toggleBalanceVisibility}
-                                                    style={{ cursor: 'pointer', marginLeft: '10px' }} // Adicione um espaço à esquerda
-                                                ></i>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <span>***********</span>
-                                                <i
-                                                    className="mdi mdi-eye"
-                                                    onClick={toggleBalanceVisibility}
-                                                    style={{ cursor: 'pointer', marginLeft: '10px' }} // Adicione um espaço à esquerda
-                                                ></i>
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
-
-
-                                <ul className="menu-list">
-                                    <Link to="/user/editUser" className="menu-link">
-                                        <i className="mdi mdi-human-greeting"></i> {t("Account")}
-                                    </Link>
-                                    <Link to="../contratos" className="menu-link">
-                                        <i className="mdi mdi-vector-arrange-above"></i>{" "}
-                                        {t("Application_Contratos")}
-                                    </Link>
-                                    <Link to="/deposit" className="menu-link">
-                                        <i className="mdi mdi-coins"></i> {t("Deposit fiat")}
-                                    </Link>
-                                    <Link
-                                        to="/account-deposit-cripto"
-                                        className="menu-link"
-                                    >
-                                        <i className="mdi mdi-coin"></i> {t("Deposit crypto")}
-                                    </Link>
-                                    <Link
-                                        to="/account-withdraw-fiat"
-                                        className="menu-link"
-                                    >
-                                        <i className="mdi mdi-cash-multiple"></i>{" "}
-                                        {t("Withdraw fiat")}
-                                    </Link>
-                                    <Link to="/support" className="menu-link">
-                                        <i className="mdi mdi-message-bulleted"></i>{" "}
-                                        {t("Application_Support")}
-                                    </Link>
-
-                                    <Link to="/user/setup" className="menu-link">
-                                        <i className="mdi mdi-cogs"></i>{" "}
-                                        {t("Application_Configurations")}
-                                    </Link>
-                                    
-                                </ul>
-                                <div className="footerMenu">
-                                    <Link
-                                        to="/signin"
-                                        onClick={() => {
-                                            dispatch(User(null));
-                                            handleSubmit();
-                                        }}
-                                        className="btn-logout"
-                                    >
-                                        <i className="mdi mdi-logout"></i> {t("Logout")}
-                                    </Link>
-
-                                    <div>versão build <Moment format="YYYY"></Moment>.{packageJson.version}</div>
-                                </div>
+                                <div>versão build <Moment format="YYYY"></Moment>.{packageJson.version}</div>
+                                
                             </div>
-                       
+                        </div>
+
                     </>
 
                 )}
@@ -631,10 +692,10 @@ const Header = (props) => {
 
 
             </div>
-            
+
         </div>
-        
-        
+
+
     </>);
 }
 

@@ -14,7 +14,7 @@ function Footer2() {
                         <div class="col-sm-8 col-12">
                     <div class="copyright">
                     <p>© Copyright 2018 - 2023
-                                Infinity Capital Global</p>
+                                EVER GREEN BROKER Global</p>
                             </div>
                         </div>
                         <div class="col-sm-4 col-12">

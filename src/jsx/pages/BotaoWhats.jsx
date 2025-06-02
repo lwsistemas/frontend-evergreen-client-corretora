@@ -33,7 +33,7 @@ const ChatButton = () => {
   const NumeroAleatorio = generateRandomNumberWithDatePrefix();  
   const Msg = `
   %0DOlá Sr(a) ${NomeGerente}, tudo bem?
-  %0DEu preciso de atendimento na plataforma *Infinity Capital*
+  %0DEu preciso de atendimento na plataforma *EVER GREEN BROKER*
   %0D*Usuário: ${FirstName + " " + SecondName}*
   %0D*E-mail: ${Email}*
   %0D*Atendimento iniciado: ${currentDate}*

@@ -1,63 +1,13 @@
 {
     "banks": [
       {
-        "name": "Santander",
-        "slug": "santander",
-        "owner": "Lta Gateway Intermediacao Financeira Ltda.",
-        "document": "33.630.661/0001­-50",
-        "agency": "4541",
-        "account_number": "13005760-6",
+        "name": "Banco Votorantim (655)",
+        "slug": "Banco Votorantim",
+        "owner": "Financial Assessoria e Intermediações Ltda",
+        "document": "49.242.392/0001-94",
+        "agency": "1111",
+        "account_number": "6226230411-6",
         "logo_url": "{latam_environment}/assets/bank_logo/santander-488dafeaed9e61efe77bb4827bff476227680087a92516e2e1d20eeb38b56328.png",
-        "operation": ""
-      },
-      {
-        "name": "Ame Digital",
-        "slug": "ame",
-        "owner": "Lta Gateway Intermediacao Financeira Ltda.",
-        "document": "33.630.661/0001­-50",
-        "agency": null,
-        "account_number": null,
-        "logo_url": "{latam_environment}/assets/bank_logo/ame-eed9e21fad123df088caeb0910fb4f1dca1fed00f8dcb81dd3cf05cbf8c7b8f1.png",
-        "operation": null
-      },
-      {
-        "name": "Itaú",
-        "slug": "itau",
-        "owner": "Lta Gateway Intermediacao Financeira Ltda.",
-        "document": "33.630.661/0001­-50",
-        "agency": "0113",
-        "account_number": "86932-5",
-        "logo_url": "{latam_environment}/assets/bank_logo/itau-65ec81270fd9f9314d92c78fa812f84e2f651885cf02c1294974f66790a5923f.png",
-        "operation": ""
-      },
-      {
-        "name": "Bradesco",
-        "slug": "bradesco",
-        "owner": "Lta Gateway Intermediacao Financeira Ltda.",
-        "document": "33.630.661/0001­-50",
-        "agency": "1082",
-        "account_number": "15023-1",
-        "logo_url": "{latam_environment}/assets/bank_logo/bradesco-ec55c20e4b86b2601a03905eec710c654fbe7657b5834ab9fded57dcc9fc06ff.png",
-        "operation": ""
-      },
-      {
-        "name": "Caixa Econômica Federal",
-        "slug": "caixa",
-        "owner": "Lta Gateway Intermediacao Financeira Ltda.",
-        "document": "33.630.661/0001­-50",
-        "agency": "1756",
-        "account_number": "4949-0",
-        "logo_url": "{latam_environment}/assets/bank_logo/caixa-f3f0a161a3a78518065d902dee21cb10e8b4aa26a0fd94f42dd7071c573fc32c.png",
-        "operation": "003"
-      },
-      {
-        "name": "Banco do Brasil",
-        "slug": "banco-do-brasil",
-        "owner": "Lta Gateway Intermediacao Financeira Ltda.",
-        "document": "33.630.661/0001­-50",
-        "agency": "1187-8",
-        "account_number": "36081-3",
-        "logo_url": "{latam_environment}/assets/bank_logo/banco-do-brasil-1a5668db60dfac9d7c57ef602ce3d2d4c4e7e477fed4356514ef6e8120e74d8f.png",
         "operation": ""
       }
     ]

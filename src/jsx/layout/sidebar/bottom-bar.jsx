@@ -150,7 +150,7 @@ const ProfileIcon = (props) => (
   </svg>
 );
 
-const Tamanho = 480
+const Tamanho = 768
 
 const BottomBar = ({ selectedIcon }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -182,31 +182,31 @@ const BottomBar = ({ selectedIcon }) => {
   useEffect(() => {
     setIsBottomBarVisible(windowWidth <= Tamanho);
   }, [windowWidth]);
-  
+
 
   return (
     <>
       {isBottomBarVisible && ( // Only render the BottomBar if it's visible
         <footer
-        style={{
-          position: "fixed",
-          bottom: -3,
-          left: 0,
-          right: 0,
-          height: "56px",
-          backgroundColor: "rgba(18, 19, 24, 0.85)", // Adicione a transparência aqui
-          display: "flex",
-          justifyContent: "space-around",
-          alignItems: "center",
-          color: "white",
-          fontSize: "24px",
-          zIndex:99999
-        }}
-      >
-        
-      
-      
-          <Link to="/">
+          style={{
+            position: "fixed",
+            bottom: -3,
+            left: 0,
+            right: 0,
+            height: "56px",
+            backgroundColor: "rgba(18, 19, 24, 0.85)", // Adicione a transparência aqui
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+            color: "white",
+            fontSize: "24px",
+            zIndex: 99999
+          }}
+        >
+
+
+
+          <Link to="/dashboard">
             <HomeIcon color={selectedIcon === "home" ? "#FFC107" : "#C8C7C8"} />
           </Link>
           <Link to="/mercados">
@@ -219,13 +219,13 @@ const BottomBar = ({ selectedIcon }) => {
             <WalletIcon color={selectedIcon === "wallet" ? "#FFC107" : "#C8C7C8"} />
           </Link>
           <div onClick={handleProfileIconClick}>
-        <ListOutlinedIcon
-            sx={{
-              color: isSidebarOpen ? "#FFC107" : "#C8C7C8",
-            }}
-          />
-      </div>
-          
+            <ListOutlinedIcon
+              sx={{
+                color: isSidebarOpen ? "#FFC107" : "#C8C7C8",
+              }}
+            />
+          </div>
+
         </footer>
       )}
       {isSidebarOpen && <SidebarComponent onClose={() => setIsSidebarOpen(false)} />}

@@ -68,7 +68,18 @@ function Contratos() {
       <div class="content-body">
         <div class="container-fluid h-100">
           <div style={{ paddingBottom: "15px;" }}>
-            <ButtonsMarkets />
+          <div class="" role="group" style={{ display: "flex" }}>
+            <Link class="btn btn-outline-primary  m-1" to={"/mercados"}>{t('Application_Mercados')}&nbsp;<i
+                className="mdi mdi-chart-bar"></i></Link>
+            <Link class="btn btn-outline-primary  m-1" to={"/contratos"}>{t('Application_Contratos')}&nbsp;<i
+                className="mdi mdi-vector-arrange-above"></i></Link>
+            <Link class="btn btn-outline-primary  m-1" to={"/robos"}>{t('Application_Robo')}&nbsp;<i
+                className="mdi mdi-android"></i></Link>
+                <Link class="btn btn-outline-primary  m-1" to={"/termos-de-aceitacao"}>{t('Application_Termos')}&nbsp;<i
+                className="mdi mdi-file"></i></Link>
+
+        </div>
+            
           </div>
           <div class={"row mt-3"}>
 

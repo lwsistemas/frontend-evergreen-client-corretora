@@ -494,8 +494,12 @@ const SidebarComponent = ({ selectedItem, onClose }) => {
             ),
             submenus: [
                 { name: t('Application_Mercados'), link: '/mercados' },
+                { name: t('Application_IPOS'), link: '/mercados-ipo' },
                 { name: t('Application_Contratos'), link: '/contratos' },
-                { name: t('Application_Robo'), link: '/robos' }
+                { name: t('Application_Robo'), link: '/robos' },
+                { name: t('Application_Stock'), link: '/Stocks' },
+                { name: t('Application_Cryptos'), link: '/mercados' },
+                { name: t('Application_PlataformaMT'), link: '/mt-app' }
             ],
             isOpen: false,
         },
@@ -537,7 +541,7 @@ const SidebarComponent = ({ selectedItem, onClose }) => {
             />
             ),
             submenus: [
-                { name: t("Withdraw fiat"), link: '/withdraw' },
+                { name: t("Withdraw fiat"), link: '/account-withdraw-fiat' },
                 { name: t('Withdraw crypto'), link: '/account-withdraw-cripto' },
             ],
             isOpen: false,

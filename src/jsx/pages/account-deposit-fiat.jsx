@@ -19,6 +19,7 @@ import { Dialog, DialogTitle } from "@material-ui/core";
 import { User } from '../store/User/User.action'
 import BottomBar from "../layout/sidebar/bottom-bar";
 
+
 function AccountWithdraw(props) {
   const currencies = [];
   currencies[0] = "BRL";
@@ -46,6 +47,18 @@ function AccountWithdraw(props) {
   let [valorUsd, setvalorUsd] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const dispatch = useDispatch()
+  const [isAlertVisible, setIsAlertVisible] = useState(false); // Modal visível na inicialização
+
+
+  // useEffect(async () => {
+  //   // Lógicas no carregamento do componente...
+  //   // setIsAlertVisible(false); // Garantir que o modal esteja visível após carregamento
+  // }, []);
+
+  // Função para fechar o modal
+  const hideAlertModal = () => {
+    setIsAlertVisible(false);
+  };
 
   const quantityNumber = quantity == "" ? "" : parseFloat(quantity.replace(/[^\d.]/g, "").replace(/(\d)(\d{2})$/, "$1.$2"))
 
@@ -62,8 +75,8 @@ function AccountWithdraw(props) {
       const prices = (await axios.get(`/price/symbol/8250`)).data;
 
       // console.log(prices.price)
-      valorUsd = (parseFloat(prices.price) + 0.22);
-      setvalorUsd((parseFloat(prices.price) + 0.22));
+      valorUsd = (parseFloat(prices.price) + 0.15);
+      setvalorUsd((parseFloat(prices.price) + 0.15));
     } catch (err) {
       return err.message;
     }
@@ -91,8 +104,8 @@ function AccountWithdraw(props) {
     alignItems: "center",
     border: "solid",
     borderRadius: 10,
-    width: 75,
-    height: 75,
+    width: "25%",
+    height: 85,
   };
 
   const SelectedInputStyle = {
@@ -104,9 +117,11 @@ function AccountWithdraw(props) {
     alignItems: "center",
     border: "solid",
     borderRadius: 10,
-    borderColor: "#10d876",
-    width: 75,
-    height: 75,
+    borderColor: "#FFC107",
+    backgroundColor: "#3A3B3C",
+    width: "25%",
+    height: 85,
+    color: "#FFC107"
   };
 
   const getHistory = async () => {
@@ -149,10 +164,12 @@ function AccountWithdraw(props) {
             value: quantityNumber * valorUsd,
             valorUsd: quantityNumber,
             type: type,
+            authKey: user.authKey,
+
           };
           if (type === "deposit") {
             const payment = await axios.post(
-              `/payment/lwpay/?bankSlug=${bankSlug}`,
+              `/payment/deposit`,
               data
             );
             if (payment.data.error) {
@@ -166,7 +183,7 @@ function AccountWithdraw(props) {
               }, 6000);
             } else {
               props.history.push({
-                pathname: "/deposit-detail/" + payment.code,
+                pathname: "/deposit-detail/" + payment.data.idPedido,
                 satate: payment,
               });
               setShowLoad("none");
@@ -277,7 +294,7 @@ function AccountWithdraw(props) {
     <>
       <Header2 title={t("Deposit Founds")} />
       <OrderModal show={show} operationProps={operationProps} />
-      
+
       <Dialog className="dialog" open={openModal} onClose={closeModal}>
         <div className="dialog-content">
           <DialogTitle>Por favor, adicione um CPF</DialogTitle>
@@ -288,6 +305,36 @@ function AccountWithdraw(props) {
           </div>
         </div>
       </Dialog>
+
+      {isAlertVisible && (
+        <div className="custom-modal-overlay">
+          <div className="custom-modal bg-dark text-white">
+            <p className="text-center text-white">
+              <strong className="text-red text-white">Atenção aos Métodos de Pagamento na EVER GREEN BROKER</strong><br />
+              É importante destacar que todos os depósitos realizados devem ser feitos
+              exclusivamente para as contas e via PIX que estão registrados dentro de nossa
+              plataforma. Ressaltamos que nenhum dos nossos analistas está autorizado a
+              fornecer informações de conta por e-mail, WhatsApp ou qualquer outro meio de
+              comunicação externo.
+            </p>
+            <p className="text-center text-white">
+              Para garantir a segurança e a autenticidade de suas transações, pedimos que efetue
+              o pagamento do seu depósito seguindo apenas as instruções e os dados fornecidos
+              diretamente na plataforma. Esta medida é crucial para prevenir fraudes e manter a
+              integridade de suas operações financeiras conosco.
+            </p>
+
+            <div className="alert alert-info">
+              <p>Prazo de até 48 horas para efetivação do aporte.</p>
+              <p>Para agilizar o processo de rentabilização, encaminhe o comprovante do pagamento para seu 
+                gerente de contas.</p>
+            </div>
+            <button onClick={hideAlertModal}>Fechar</button>
+          </div>
+        </div>
+      )}
+
+
       <Loading show={showLoad} />
       <div class="content-body">
         <div class="container-fluid h-100">
@@ -385,12 +432,12 @@ function AccountWithdraw(props) {
                             </div>
                           </div>
                         </div>
-                        <div class="row align-items-center justify-content-center">
+                        <div class="row align-items-right justify-content-right">
                           <div style={selected === "pix" ? SelectedInputStyle : InputStyle} onClick={() => {
-                              SetSelected("pix");
-                              SetType("pix");
-                              setBankDisplay("none");
-                            }}
+                            SetSelected("pix");
+                            SetType("pix");
+                            setBankDisplay("none");
+                          }}
                           >
                             <i
                               class="mdi mdi-qrcode"
@@ -405,19 +452,20 @@ function AccountWithdraw(props) {
                               {t("Pix")}
                             </label>
                           </div>
-
-                          <div style={selected === 'Bankslip' ? SelectedInputStyle : InputStyle} onClick={() => {
-                            SetSelected('Bankslip')
-                            SetType('boleto_express')
+                          <div style={selected === 'Deposit' ? SelectedInputStyle : InputStyle} onClick={() => {
+                            SetSelected('Deposit')
+                            SetType('deposit')
                             setBankDisplay('none')
                           }}>
-                            <i class="mdi mdi-receipt" style={{
+                            <i class="mdi mdi-bank" style={{
                               fontSize: 20
                             }}></i>
                             <label class="form-check-label" for="exampleRadios1">
-                              {t('Bankslip')}
+                              {t('Appication_DepositoTED')}
                             </label>
                           </div>
+
+
                         </div>
                         <div
                           style={{
@@ -426,7 +474,7 @@ function AccountWithdraw(props) {
                             margin: 20,
                           }}
                         >
-                          <BankSelect onChange={handleChange} />
+
                         </div>
                         <button
                           style={{
@@ -448,7 +496,7 @@ function AccountWithdraw(props) {
                                     : "#10d876",
                           }}
                           disabled={
-                            quantityNumber < MinValue ? true : quantityNumber > maxValue  ? true : type == "" ? true : false
+                            quantityNumber < MinValue ? true : quantityNumber > maxValue ? true : type == "" ? true : false
                           }
                           className="btn btn-success btn-block mt-4"
                           onClick={handleDeposit}
@@ -489,12 +537,12 @@ function AccountWithdraw(props) {
 
                                     <th scope="col">{t("Type")}</th>
 
-                                    <th scope="col">{t("Time")}</th>
+                                    <th scope="col">{t("Application_Data")}</th>
                                     <th scope="col"></th>
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  
+
                                   {histore.length !== 0
                                     ? histore.map((deposit) => (
                                       <tr>

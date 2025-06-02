@@ -1,25 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { User } from '../store/User/User.action';
 import axios from '../../services';
 import Header2 from "../pages/home/HeaderMenu";
-import HeaderMegaMenu from '../layout/headerMegaMenu';
-import Sidebar from '../layout/sidebar/sidebar';
 import BottomBar from '../layout/sidebar/bottom-bar';
 import CurrencyFormat from 'react-currency-format';
 import Moment from 'react-moment';
 import { Loader } from './home/components/loader';
 import AddFormEmprestimo from './bank/AddFormEmprestimo';
-import SliderStickBotoes from '../element/dashboard/sliderStickersBotoes';
 import Table from 'react-bootstrap/Table';
 import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import SavingsIcon from '@mui/icons-material/Savings';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
 import { useHistory } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
@@ -36,7 +30,6 @@ const darkTheme = createTheme({
 function Emprestimos() {
     const user = useSelector((state) => state.user);
     const { t } = useTranslation();
-    const parametros = useParams();
     const [isLoading, setIsLoading] = useState(true);
     const dispatch = useDispatch();
     const [userData, setUserData] = useState(0);
@@ -71,32 +64,16 @@ function Emprestimos() {
         }
     };
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
+   
     const getDataEmprestimos = async () => {
         try {
             const response = await axios.post('/emprestimos/all/', { authKey: user.authKey, id: user.id });
-
-            if (isContratos.status == 'inexistente') {
-                setisContrato(response.data);
-
-            } else {
-                setisContrato(response.data);
-                console.log(isContratos)
-                return response.data;
-
-            }
-
+    
+            setisContrato(response.data);
+            console.log(isContratos);
             return response.data;
-
+    
         } catch (err) {
-
             return err.response;
         }
     };
@@ -108,23 +85,6 @@ function Emprestimos() {
             return response.data;
         } catch (err) {
             return err.response;
-        }
-    };
-
-    const validateUser = async () => {
-        try {
-            const response = await axios.put('user/validUser', { authKey: user.authKey });
-        } catch (error) {
-            if (error.response) {
-                if (error.response.status && error.response.status === 406) {
-                    console.log('Usuário inválido');
-                    dispatch(User(null));
-                } else {
-                    console.log('Erro inesperado');
-                }
-            } else {
-                console.log('Erro inesperado 404');
-            }
         }
     };
 
@@ -141,15 +101,23 @@ function Emprestimos() {
     };
 
     useEffect(() => {
+        // Função fetchData que é assíncrona
         async function fetchData() {
             setIsLoading(true);
-            await validateUser();
             await getUserData();
             await getDataEmprestimos();
             setIsLoading(false);
         }
+    
+        // Chamada inicial da função fetchData
         fetchData();
-    }, []);
+    
+        // Função de limpeza (será chamada quando o componente for desmontado)
+        return () => {
+            // Lógica de desmontagem, se necessário
+        };
+    }, []); // O array vazio indica que este efeito só será executado na montagem e desmontagem do componente
+    
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -337,7 +305,7 @@ function Emprestimos() {
 
     return (
         <>
-            <Header2 title={t('Application_Emprestimos')} />
+            <Header2 />
            
             {isLoading ? (
                 <Loader />
@@ -387,7 +355,7 @@ function Emprestimos() {
                             <div className="clearfix" style={{ display: !FormEmprestimo ? "none" : "block" }} id="emprestimo">
                                 <div className="card sub-menu">
                                     <div className="card-body">
-                                        <AddFormEmprestimo valorParaAddPix={userData.ValorEmprestimoLiberado} QtdParcelas={userData.Qtdparcelas} taxaJuros={userData.TaxaJuros} />
+                                        <AddFormEmprestimo valorParaAddPix={userData.ValorEmprestimoLiberado} QtdParcelas={userData.Qtdparcelas} taxaJuros={userData.TaxaJuros}></AddFormEmprestimo>
                                     </div>
                                 </div>
                             </div>
@@ -501,20 +469,7 @@ function Emprestimos() {
                                                                     >
                                                                         <SavingsIcon />
                                                                     </Button>
-                                                                    {/* <Menu
-                                                                        id="basic-menu"
-                                                                        anchorEl={anchorEl}
-                                                                        open={open}
-                                                                        onClose={handleClose}
-                                                                        MenuListProps={{
-                                                                            'aria-labelledby': 'basic-button',
-                                                                        }}
-                                                                    >
-                                                                        
-                                                                        <MenuItem onClick={() => handleChamaUrl(data.codeUnico, 'payout')}>Pagamentos {data.hash}</MenuItem>
-                                                                        <MenuItem onClick={() => handleChamaUrl(data.codeUnico, 'history')}>Histórico</MenuItem>
-                                                                        <MenuItem onClick={() => handleChamaUrl(data.codeUnico, 'detailsContract')}>Detalhes do contrato</MenuItem>
-                                                                    </Menu> */}
+                                                                    
                                                                 </div>
                                                             </td>
                                                         </tr>

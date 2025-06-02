@@ -9,8 +9,7 @@ function RouteWrapper({
   
   const authenticated = useSelector(state => state.user)
   if (authenticated && !isPrivate){
-    // return <Redirect to={redirectTo} />;
-    return <Route {...rest} render={props => <Component {...props} />} />;
+    return <Redirect to={redirectTo} />;
   }
   if(authenticated && isPrivate){
     return <Route {...rest} render={props => <Component {...props} />} />;

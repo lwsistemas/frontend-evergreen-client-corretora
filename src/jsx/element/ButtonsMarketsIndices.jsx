@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 
 
-function ButtonsMarketsIndices() {
+function ButtonsMarketsIndices({ onTypeChange }) {
     const user = useSelector(state => state.user)
     const { t } = useTranslation();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,9 +43,23 @@ function ButtonsMarketsIndices() {
 
     const getStock = (option) => {
         switch (option) {
+            case 'index':
+                onTypeChange('index');
+                // Adicione qualquer outra lógica necessária aqui
+                break;
+
             case 'Stocks':
-                
-                window.location.href = '/Stocks';
+                onTypeChange('STOCKS');
+                // Adicione qualquer outra lógica necessária aqui
+                break;
+
+            case 'fx':
+                onTypeChange('fx');
+                // Adicione qualquer outra lógica necessária aqui
+                break;
+
+            default:
+                break;
         }
 
     }
@@ -59,19 +73,28 @@ function ButtonsMarketsIndices() {
 
     return (
         <div className="flex-row" role="group" style={{ display: 'flex', float: 'right' }}>
-            <Link className="btn btn-outline-primary m-1" to={'/mercados'}>
-                {t('Application_Cryptos')}&nbsp;<i className="mdi mdi-bitcoin"></i>
-            </Link>
+            
             <button
                 className="btn btn-outline-primary m-1"
                 onClick={() => {
-                    if (isStock == true) {
-                        // Chama a função getStock com o parâmetro 'Stocks'
-                        getStock('Stocks');
-                    } else {
-                        const message = getMessage('Stocks');
-                        openModal(message);
-                    }
+                    // const message = getMessage('Indices');
+                    // openModal(message);
+                    getStock('index');
+                }}
+            >
+                {t('Application_Indices')}&nbsp;<i className="mdi mdi-reload"></i>
+            </button>
+            <button
+                className="btn btn-outline-primary m-1"
+                onClick={() => {
+                    // if (isStock == true) {
+                    //     // Chama a função getStock com o parâmetro 'Stocks'
+                    //     getStock('Stocks');
+                    // } else {
+                    //     const message = getMessage('Stocks');
+                    //     openModal(message);
+                    // }
+                    getStock('Stocks');
                 }}
             >
                 
@@ -81,11 +104,12 @@ function ButtonsMarketsIndices() {
             <button
                 className="btn btn-outline-primary m-1"
                 onClick={() => {
-                    const message = getMessage('Arbitragem');
-                    openModal(message);
+                    // const message = getMessage('Indices');
+                    // openModal(message);
+                    getStock('fx');
                 }}
             >
-                {t('Application_Arbitragem')}&nbsp;<i className="mdi mdi-reload"></i>
+                {t('Application_Comodites')}&nbsp;<i className="mdi mdi-reload"></i>
             </button>
 
             {/* Modal */}

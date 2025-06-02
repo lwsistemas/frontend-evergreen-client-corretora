@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef  } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,13 +8,14 @@ import Moment from "react-moment";
 import AlertCom from "../element/dashboard/alertaCom";
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
-import {useGmailTabsStyles,useGmailTabItemStyles} from "@mui-treasury/styles/tabs";
+import { useGmailTabsStyles, useGmailTabItemStyles } from "@mui-treasury/styles/tabs";
 import globalConfig from "../jsonConfig/globalConfig.json";
 import OrderModal from "../element/Ordermodal";
 import axios from "../../services/index";
 import Header2 from "../pages/home/HeaderMenu";
 import { User } from "../store/User/User.action";
 import SeloVerificacao from '../../images/selo_verificacao.png'
+import banner_entrada from '../../images/banners/banner_entrada.png'
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 
 
@@ -29,6 +30,9 @@ function Dashboard() {
   const [ConteudoBlogs, setConteudoBlogs] = useState([]);
   const [balance, setBalance] = useState();
   const [balanceBTC, setBalanceBTC] = useState();
+  const [balanceAtivos, setBalanceAtivos] = useState();
+  const [balanceCriptomoedas, setbalanceCriptomoeda] = useState(0);
+  const [balanceTotal, setBalanceTotal] = useState();
   const [lastModify, setLastModify] = useState();
   const [balanceBRL, setBalanceBRL] = useState(0);
   const [lastModifyBRL, setLastModifyBRL] = useState();
@@ -259,7 +263,7 @@ function Dashboard() {
     setActive("BTC");
   }, [secondary]); //eslint-disable-line
 
-  useEffect(async() => {
+  useEffect(async () => {
     const disableZoom = (event) => {
       if (event.touches.length > 1) {
         event.preventDefault();
@@ -284,6 +288,34 @@ function Dashboard() {
       return err.response;
     }
   };
+
+
+  const getBalanceAtivos = async (currency) => {
+    try {
+      const balanceAtivos = (await axios.post(`/user/view`, { authKey: user.authKey }))
+        .data;
+      setBalanceAtivos(balanceAtivos.SaldoAtivos);
+      return balance;
+    } catch (err) {
+      //console.log("aqui");
+      return err.response;
+    }
+  };
+
+
+  const getBalanceAll = async () => {
+    try {
+      const balanceAtivos = (await axios.post(`/wallet/all`, { authKey: user.authKey }))
+        .data;
+      setbalanceCriptomoeda(balanceAtivos.totalBalanceUSD)
+      return balanceAtivos;
+    } catch (err) {
+
+      return err.response;
+    }
+  };
+
+
 
   const getBalanceBTC = async (currency) => {
     try {
@@ -322,17 +354,22 @@ function Dashboard() {
 
 
   useEffect(async () => {
-    setIsLoading(true); 
+    setIsLoading(true);
+    await getBalanceAtivos()
     await getBalances();
     await getBalanceBTC();
+    await getBalanceAll()
     await getBlog();
     setIsLoading(false);
+
   }, []);
 
   const fetchData = async () => {
     await getBalances();
     await getBalanceBTC();
     await getBlog();
+    await getBalanceAll();
+
   };
 
   const fetchDataRef = useRef(fetchData);
@@ -351,7 +388,7 @@ function Dashboard() {
       clearInterval(fetchDataInterval);
     };
   }, []);
-  
+
 
   function criarSlug(titulo) {
     // Remove caracteres especiais e espaços em branco
@@ -360,298 +397,296 @@ function Dashboard() {
       .replace(/[^a-zA-Z0-9\s]/g, '') // Remove caracteres especiais
       .replace(/\s+/g, '-') // Substitui espaços por hífens
       .trim(); // Remove espaços extras no início e no final
-  
+
     return slug;
   }
 
   return (
     <>
-      
-        
-      
-        <OrderModal show={show} operationProps={operationProps} />
-        <Header2 title={`Olá ${user.firstName + " " + user.secondName}`} balanceBRL={balance} />
-
-        
-          {/* <Sidebar selectedItem="home" /> */}
-          {isLoading ? (
-            <div
-              className="main-content"
-              style={{ flex: 1, display: "flex", justifyContent: "center" }}
-            >
-              <div class="content-body" id="dashboard">
-                <div class="container-fluid">
-
-                  <Stack spacing={1} width="100%">
 
 
-                    <div style={{ width: "100%" }}>
-                      <Skeleton variant="text" sx={{ fontSize: '16px', backgroundColor: '#1E2026' }} />
+
+      <OrderModal show={show} operationProps={operationProps} />
+      <Header2 title={`Olá ${user.firstName + " " + user.secondName}`} balanceBRL={balance} />
+
+
+      {/* <Sidebar selectedItem="home" /> */}
+      {isLoading ? (
+        <div
+          className="main-content"
+          style={{ flex: 1, display: "flex", justifyContent: "center" }}
+        >
+          <div class="content-body" id="dashboard">
+            <div class="container-fluid">
+
+              <Stack spacing={1} width="100%">
+
+
+                <div style={{ width: "100%" }}>
+                  <Skeleton variant="text" sx={{ fontSize: '16px', backgroundColor: '#1E2026' }} />
+                </div>
+
+
+                <Skeleton variant="rectangular" sx={{
+                  backgroundColor: '#1E2026',
+                  minWidth: "1219px",
+                  height: '270px',
+                  "@media (max-width: 767px)": {
+                    display: 'none' // Oculta para dispositivos móveis
+                  }
+                }} />
+
+                <Skeleton variant="rectangular" sx={{
+                  backgroundColor: '#1E2026',
+                  minWidth: "1219px",
+                  height: '230px',
+                  "@media (max-width: 767px)": {
+                    display: 'none' // Oculta para dispositivos móveis
+                  }
+                }} />
+
+                <Skeleton variant="rectangular" sx={{
+                  backgroundColor: '#1E2026',
+                  minWidth: "1219px",
+                  height: '170px',
+                  "@media (max-width: 767px)": {
+                    display: 'none' // Oculta para dispositivos móveis
+                  }
+                }} />
+
+                <Skeleton variant="rectangular" sx={{
+                  backgroundColor: '#1E2026',
+                  minWidth: "360px",
+                  height: "275px",
+                  "@media (min-width: 768px)": {
+                    display: 'none' // Oculta para desktops
+                  }
+                }} />
+
+                <Skeleton variant="rectangular" sx={{
+                  backgroundColor: '#1E2026',
+                  minWidth: "360px",
+                  height: "205px",
+                  "@media (min-width: 768px)": {
+                    display: 'none' // Oculta para desktops
+                  }
+                }} />
+
+                <Skeleton variant="rounded" sx={{ backgroundColor: '#1E2026' }} />
+
+              </Stack>
+
+
+
+            </div>
+          </div>
+        </div>
+
+      ) : (
+        <div class="content-body" id="dashboard">
+          <div class="container-fluid h-100">
+            <div class="row">
+              <div class="col-xl-5 col-xxl-12 col-lg-12 col-xxl-4">
+                <div class="card">
+                  <div class="card-header">
+                    <h4 class="card-title" style={{ marginLeft: '25px' }}>
+                      {
+                        isLoading ? (
+                          <Skeleton variant="text" sx={{ fontSize: '1rem', color: 'gray', backgroundColor: 'gray' }} />
+
+
+                        ) : (
+                          <div>
+                            Olá {user.firstName}&nbsp;{user.secondName}
+                          </div>
+                        )
+                      }
+                    </h4>
+
+                    {(() => {
+                      if (status === 1) {
+                        return (
+                          <img
+                            src={SeloVerificacao}
+                            style={{
+                              height: '20px',
+                              marginLeft: '-15px',
+                              position: 'absolute'
+                            }}
+                            title="Este é um selo de verificação"
+                          />
+                        );
+                      }
+                    })()}
+
+
+
+                    <small>
+                      {t("Application_CadastradoEm")}{" "}
+                      <Moment format="DD/MM/YY">
+                        {user.createdAt}
+                      </Moment>
+                    </small>
+                  </div>
+
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-xl col-lg col-md col-sm-auto col-6">
+                        <p class="mb-0">{user.email}</p>
+                        <h6>
+                          {t("Application_Pais")} {user.nationality}
+                        </h6>
+                      </div>
                     </div>
+                    <Link to="/deposit" class="btn btn-outline-primary m-1"><DepositFiatIcon
+                      color={"#D8AD55"}
 
+                    /> Depositar</Link>
+                    <Link to="/account-withdraw-fiat" class="btn btn-outline-primary m-1"><WithoutFiatIcon
+                      color={"#D8AD55"} /> Sacar</Link>
 
-                    <Skeleton variant="rectangular" sx={{
-                      backgroundColor: '#1E2026',
-                      minWidth: "1219px",
-                      height: '270px',
-                      "@media (max-width: 767px)": {
-                        display: 'none' // Oculta para dispositivos móveis
-                      }
-                    }} />
+                    <Link to="/emprestimos" class="btn btn-outline-primary m-1"><EmprestimoIcon
+                      color={"#D8AD55"}
+                    /> Empréstimo</Link>
+                    <Link to="/account-withdraw-cripto" class="btn btn-outline-primary m-1"> <i className="fa fa-bitcoin"></i> {t('Withdraw crypto')}</Link>
+                  </div>
+                </div>
+              </div>
 
-                    <Skeleton variant="rectangular" sx={{
-                      backgroundColor: '#1E2026',
-                      minWidth: "1219px",
-                      height: '230px',
-                      "@media (max-width: 767px)": {
-                        display: 'none' // Oculta para dispositivos móveis
-                      }
-                    }} />
-
-                    <Skeleton variant="rectangular" sx={{
-                      backgroundColor: '#1E2026',
-                      minWidth: "1219px",
-                      height: '170px',
-                      "@media (max-width: 767px)": {
-                        display: 'none' // Oculta para dispositivos móveis
-                      }
-                    }} />
-
-                    <Skeleton variant="rectangular" sx={{
-                      backgroundColor: '#1E2026',
-                      minWidth: "360px",
-                      height: "275px",
-                      "@media (min-width: 768px)": {
-                        display: 'none' // Oculta para desktops
-                      }
-                    }} />
-
-                    <Skeleton variant="rectangular" sx={{
-                      backgroundColor: '#1E2026',
-                      minWidth: "360px",
-                      height: "205px",
-                      "@media (min-width: 768px)": {
-                        display: 'none' // Oculta para desktops
-                      }
-                    }} />
-
-                    <Skeleton variant="rounded" sx={{ backgroundColor: '#1E2026' }} />
-
-                  </Stack>
-
-
-
+              <div class="col-xl-3 col-xxl-6 col-lg-6 col-xxl-4">
+                <div class="card">
+                  <div class="card-header" style={{ minHeight: "53px" }}>
+                    <h4 class="card-title">{t("Your wallet")}: USD</h4>
+                  </div>
+                  <div class="card-body" style={{ minHeight: "122px" }}>
+                    <div class="row">
+                      <div class="col-xl col-lg col-md col-sm-auto col-6">
+                        <h4 class="mb-0">{t("Balance")}</h4>
+                        <h4>
+                          {Intl.NumberFormat("en", {
+                            style: "currency",
+                            currency: "USD",
+                          }).format(balance)}
+                        </h4>
+                      </div>
+                      <div class="col-xl col-lg col-md col-sm-auto col-6">
+                        <h4 class="mb-0">{t("Application_Total")} ≅ </h4>
+                        <h4>
+                          {Intl.NumberFormat("en", {
+                            style: "currency",
+                            currency: "USD",
+                          }).format(balance + balanceCriptomoedas + balanceAtivos)}
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-4 col-xxl-6 col-lg-6 col-xxl-4">
+                <div class="card">
+                  <div class="card-header" style={{ minHeight: "53px" }}>
+                    <h4 class="card-title">
+                      {t("Application_SaldoAtivos")}
+                    </h4>
+                  </div>
+                  <div class="card-body" style={{ minHeight: "122px" }}>
+                    <div class="row">
+                      <div class="col-xl col-lg col-md col-sm-auto col-6">
+                        <h4 class="mb-0">{t("Balance")}{" "}{t("Application_Robo")}</h4>
+                        <h4>
+                          {Intl.NumberFormat("en", {
+                            style: "currency",
+                            currency: "USD",
+                          }).format(balanceAtivos)}
+                        </h4>
+                      </div>
+                      <div class="col-xl col-lg col-md col-sm-auto col-6">
+                        <h4 class="mb-0">{t("Application_TotalExchange")}</h4>
+                        <h4>
+                          {Intl.NumberFormat("en", {
+                            style: "currency",
+                            currency: "USD",
+                          }).format(balanceCriptomoedas)} ≅
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-          ) : (
-            <div class="content-body" id="dashboard">
-                <div class="container-fluid h-100">
-                  <div class="row">
-                    <div class="col-xl-5 col-xxl-12 col-lg-12 col-xxl-4">
-                      <div class="card">
-                        <div class="card-header">
-                          <h4 class="card-title" style={{ marginLeft: '25px' }}>
-                            {
-                              isLoading ? (
-                                <Skeleton variant="text" sx={{ fontSize: '1rem', color: 'gray', backgroundColor: 'gray' }} />
-
-
-                              ) : (
-                                <div>
-                                  Olá {user.firstName}&nbsp;{user.secondName}
-                                </div>
-                              )
-                            }
-                          </h4>
-
-                          {(() => {
-                            if (status === 1) {
-                              return (
-                                <img
-                                  src={SeloVerificacao}
-                                  style={{
-                                    height: '20px',
-                                    marginLeft: '-15px',
-                                    position: 'absolute'
-                                  }}
-                                  title="Este é um selo de verificação"
-                                />
-                              );
-                            }
-                          })()}
-
-
-
-                          <small>
-                            {t("Application_CadastradoEm")}{" "}
-                            <Moment format="DD/MM/YY">
-                              {user.createdAt}
-                            </Moment>
-                          </small>
-                        </div>
-
-                        <div class="card-body">
-                          <div class="row">
-                            <div class="col-xl col-lg col-md col-sm-auto col-6">
-                              <p class="mb-0">{user.email}</p>
-                              <h6>
-                                {t("Application_Pais")} {user.nationality}
-                              </h6>
-                            </div>
-                          </div>
-                          <Link to="/deposit" class="btn btn-outline-primary m-1"><DepositFiatIcon
-                            color={"#FFC107"}
-
-                          /> Depositar</Link>
-                          <Link to="/account-withdraw-fiat" class="btn btn-outline-primary m-1"><WithoutFiatIcon
-                            color={"#FFC107"} /> Sacar</Link>
-
-                          <Link to="/emprestimos" class="btn btn-outline-primary m-1"><EmprestimoIcon
-                            color={"#FFC107"}
-                          /> Empréstimo</Link>
-                          <Link to="/account-withdraw-cripto" class="btn btn-outline-primary m-1"> <i className="fa fa-bitcoin"></i> {t('Withdraw crypto')}</Link>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="col-xl-3 col-xxl-6 col-lg-6 col-xxl-4">
-                      <div class="card">
-                        <div class="card-header" style={{ minHeight: "70px" }}>
-                          <h4 class="card-title">{t("Your wallet")}: USD</h4>
-                        </div>
-                        <div class="card-body" style={{ minHeight: "122px" }}>
-                          <div class="row">
-                            <div class="col-xl col-lg col-md col-sm-auto col-6">
-                              <p class="mb-0">{t("Balance")}</p>
-                              <h6>
-                                {Intl.NumberFormat("en", {
-                                  style: "currency",
-                                  currency: "USD",
-                                }).format(balance)}
-                              </h6>
-                            </div>
-                            <div class="col-xl col-lg col-md col-sm-auto col-6">
-                              <p class="mb-0">{t("Last Modify")}</p>
-                              <h6>
-                                <Moment format="DD/MM/YY - HH:mm">
-                                  {lastModifyBRL}
-                                </Moment>
-                              </h6>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-xl-4 col-xxl-6 col-lg-6 col-xxl-4">
-                      <div class="card">
-                        <div class="card-header" style={{ minHeight: "70px" }}>
-                          <h4 class="card-title">
-                            {t("Your wallet")}:{" "}
-                            {globalConfig.tokenCoins[currency]}
-                          </h4>
-                        </div>
-                        <div class="card-body" style={{ minHeight: "122px" }}>
-                          <div class="row">
-                            <div class="col-xl col-lg col-md col-sm-auto col-6">
-                              <p class="mb-0">{t("Balance")}</p>
-                              <h6>
-                                <CurrencyFormat
-                                  value={balanceBTC}
-                                  decimalScale={6}
-                                  displayType={"text"}
-                                  thousandSeparator={true}
-                                />{" "}
-                                {globalConfig.tokenCoins[currency]}
-                              </h6>
-                            </div>
-                            <div class="col-xl col-lg col-md col-sm-auto col-6">
-                              <p class="mb-0">{t("Last Modify")}</p>
-                              <h6>
-                                <Moment format="DD/MM/YY - HH:mm">
-                                  {lastModify}
-                                </Moment>
-                              </h6>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="row">
-                    <div className="col-xl-12 col-xxl-12 col-lg-12 col-xxl-12">
-                      <div className="card">
-                        <div className="card-header">
-                          <h4 className="card-title">
-                            {t("Application_SejaBemVindo")}
-                          </h4>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <AlertCom />
-
-                  <div className="blog section-padding" id="blog">
-                    <div className="container">
-                      <div>
-                        <img
-                          src="https://images.infinitycapital.global/banner_entrada.png"
-                          style={{ width: "100%" }}
-                        />
-                      </div>
-
-                      <div className="row justify-content-center">
-                        <div className="col-xl-6">
-                          <div className="section-title text-center">
-                            <h2>Blog</h2>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="row">
-                        {ConteudoBlogs.map((blog) => (
-                          <div className="col-xl-4 col-lg-4 col-md-12">
-                            <div className="blog-grid">
-                              <div className="card">
-                                <img
-                                  className="img-fluid"
-                                  src={blog.Imagem}
-                                  alt=""
-                                />
-                                <div className="card-body">
-                                  <Link to={`/blog/id/${blog.id}/${criarSlug(blog.Titulo)}`}>
-                                    <h4 className="card-title">{blog.Titulo}</h4>
-                                  </Link>
-                                </div>
-                                <div className="card-footer">
-                                  <div className="meta-info">
-                                    <Link
-                                      to={"/blog/id/" + blog.id}
-                                      className="post-date"
-                                    >
-                                      <i className="la la-calendar"></i>{" "}
-                                      <Moment format="DD/MM/YY - HH:mm">
-                                        {blog.createdAt}
-                                      </Moment>{" "}
-                                    </Link>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+            <div className="row">
+              <div className="col-xl-12 col-xxl-12 col-lg-12 col-xxl-12">
+                <div className="card">
+                  <div className="card-header">
+                    <h4 className="card-title">
+                      {t("Application_SejaBemVindo")}
+                    </h4>
                   </div>
                 </div>
               </div>
-          )}
+            </div>
 
-        <BottomBar selectedIcon="home" />
-      
+            <AlertCom />
+
+            <div className="blog section-padding" id="blog">
+              <div className="container">
+                <div>
+                  <img
+                    src={banner_entrada}
+                    style={{ width: "100%", padding: 10 }}
+                  />
+                </div>
+
+                <div className="row justify-content-center">
+                  <div className="col-xl-6">
+                    <div className="section-title text-center">
+                      <h2>Blog</h2>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row">
+                  {ConteudoBlogs.map((blog) => (
+                    <div className="col-xl-4 col-lg-4 col-md-12">
+                      <div className="blog-grid">
+                        <div className="card">
+                          <img
+                            className="img-fluid"
+                            src={blog.Imagem}
+                            alt=""
+                          />
+                          <div className="card-body">
+                            <Link to={`/blog/id/${blog.id}/${criarSlug(blog.Titulo)}`}>
+                              <h4 className="card-title">{blog.Titulo}</h4>
+                            </Link>
+                          </div>
+                          <div className="card-footer">
+                            <div className="meta-info">
+                              <Link
+                                to={"/blog/id/" + blog.id}
+                                className="post-date"
+                              >
+                                <i className="la la-calendar"></i>{" "}
+                                <Moment format="DD/MM/YY - HH:mm">
+                                  {blog.createdAt}
+                                </Moment>{" "}
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <BottomBar selectedIcon="home" />
+
     </>
   );
 }

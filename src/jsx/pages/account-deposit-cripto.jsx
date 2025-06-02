@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import OrderModal from '../element/Ordermodal'
 import { User } from '../store/User/User.action'
 import BottomBar from '../layout/sidebar/bottom-bar';
+import Cookies from 'js-cookie'
 
 function Security() {
     const idETH = 1027
@@ -37,6 +38,18 @@ function Security() {
     const [matches, setMatches] = useState(window.matchMedia("(min-width: 500px)").matches)
     const [walletAll, setwalletAll] = useState([]);
     const dispatch = useDispatch()
+    const [isAlertVisible, setIsAlertVisible] = useState(true); // Modal visível na inicialização
+
+
+    useEffect(async () => {
+        // Lógicas no carregamento do componente...
+        setIsAlertVisible(true); // Garantir que o modal esteja visível após carregamento
+    }, []);
+
+    // Função para fechar o modal
+    const hideAlertModal = () => {
+        setIsAlertVisible(false);
+    };
 
     const handler = (e) => {
         setMatches(e.matches);
@@ -65,7 +78,35 @@ function Security() {
         <>
             <Header2 title={t('Deposit crypto')} />
             <OrderModal show={show} operationProps={operationProps} />
-         
+            {isAlertVisible && (
+                <div className="custom-modal-overlay">
+                    <div className="custom-modal">
+                        <p>
+                            <strong>
+                                Atenção aos Métodos de Pagamento com Criptomoedas na EVER GREEN BROKER
+                            </strong>
+                            É crucial destacar que todos os depósitos realizados em criptomoedas devem ser
+                            efetuados exclusivamente para os endereços de carteiras digitais registrados
+                            na EVER GREEN BROKER. Ressaltamos que nenhum dos nossos analistas está autorizado a
+                            fornecer endereços de carteiras digitais por e-mail, WhatsApp ou qualquer outro
+                            meio de comunicação externo.
+                        </p>
+                        <p>
+                            Para garantir a segurança e a autenticidade de suas transações com criptomoedas,
+                            pedimos que realize o pagamento do seu depósito seguindo apenas as instruções e
+                            os dados de carteiras digitais fornecidos diretamente na plataforma. Esta medida
+                            é fundamental para prevenir fraudes e manter a integridade de suas operações
+                            financeiras conosco no mercado de criptoativos.
+                        </p>
+                        <div className="alert alert-info">
+                            <p>Prazo de até 48 horas para efetivação do aporte.</p>
+                            <p>Para agilizar o processo de rentabilização, encaminhe o comprovante do pagamento para seu gerente de contas.</p>
+                        </div>
+                        <button onClick={hideAlertModal}>Fechar</button>
+                    </div>
+                </div>
+            )}
+
             <div className="content-body">
                 <div className="container-fluid">
                     <div className="row">

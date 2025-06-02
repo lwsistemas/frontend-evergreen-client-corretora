@@ -131,80 +131,61 @@ function ContractTable({ data, filterStatus }) {
 
   return (
     <div className='table-responsive'>
-      <table className="table table-hover">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Data de Criação</th>
-            <th>Código Único</th>
-            <th>Status</th>
-            <th>Valor USD</th>
-            <th>Vencimento</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((contract, index) => {
-            if (!filterStatus || contract.status === filterStatus) {
-              return (
-                <tr key={index}>
-                  <td>{contract.codeUnico}</td>
-                  <td>
-                    <Moment format="DD/MM/YYYY - HH:mm">{contract.createdAt}</Moment>
-                  </td>
-                  <td>{contract.codeUnico}</td>
-                  <td>
-                    {contract.DataVencimento < formattedDate ? (
-                      <>
-                        <span className="badge badge-danger">Vencido</span>
-                        <i className="fa fa-barcode m-1" onClick={() => handleOpenModal(index)}></i>
-                      </>
-                    ) : (
-                      <>
-                        <span
-                          className={`badge badge-${getBadgeClass(contract.status)}`}
-                          onClick={() => {
-                            if (contract.status != 0) {
-                              handleOpenModal(index);
-                            }
-                          }}
-                        >
-                          {getStatusText(contract.status)}
-                        </span>
-
-                        {contract.status === 0 && formattedDate <= contract.DataVencimento && (
-                          <i className="fa fa-barcode m-1" onClick={() => handleOpenModal(index)}></i>
-                        )}
-                      </>
-                    )}
-
-                    <Modal show={showModal} onHide={handleCloseModal} centered>
-                      <Modal.Header closeButton className="bg-dark">
-                        <Modal.Title>Informações de Pagamento</Modal.Title>
-                      </Modal.Header>
-                      <Modal.Body className="bg-dark">
-                        <p>Código Único: {modalContractInfo.codeUnico}</p>
-                        <p>Valor da Parcela: {modalContractInfo.ParcelaValor}</p>
-                        {/* Outras informações do contrato aqui */}
-                      </Modal.Body>
-                      <Modal.Footer className="bg-dark">
-                        <Button variant="outline-primary" onClick={handleCloseModal}>
-                          Fechar
-                        </Button>
-                      </Modal.Footer>
-                    </Modal>
-                  </td>
-                  <td>${contract.ParcelaValor.toFixed(2)}</td>
-                  <td>
-                    <Moment format="DD/MM/YYYY">{contract.DataVencimento}</Moment>
-                  </td>
-                </tr>
-              );
-            }
-            return null;
-          })}
-        </tbody>
-      </table>
-    </div>
+    <table className="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Data de Criação</th>
+          <th>Código Único</th>
+          <th>Status</th>
+          <th>Valor USD</th>
+          <th>Vencimento</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((contract, index) => {
+          if (!filterStatus || contract.status === filterStatus) {
+            return (
+              <tr key={index}>
+                <td>{contract.codeUnico}</td>
+                <td><Moment format="DD/MM/YYYY - HH:mm">{contract.createdAt}</Moment></td>
+                <td>{contract.codeUnico}</td>
+                <td>
+                  {contract.status === 1 ? (
+                    <span className="badge badge-success">Pago</span>
+                  ) : new Date(contract.DataVencimento) < new Date() ? (
+                    <span className="badge badge-danger">Vencido</span>
+                  ) : (
+                    <span className={`badge badge-${getBadgeClass(contract.status)}`}>
+                      {getStatusText(contract.status)}
+                    </span>
+                  )}
+                  <i className="fa fa-barcode m-1" onClick={() => handleOpenModal(contract)}></i>
+                </td>
+                <td><CurrencyFormat value={contract.ParcelaValor} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
+                <td><Moment format="DD/MM/YYYY">{contract.DataVencimento}</Moment></td>
+              </tr>
+            );
+          }
+          return null;
+        })}
+      </tbody>
+    </table>
+    {/* Modal para mostrar detalhes do contrato */}
+    <Modal show={showModal} onHide={handleCloseModal} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Informações de Pagamento</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <p>Código Único: {modalContractInfo.codeUnico}</p>
+        <p>Valor da Parcela: {modalContractInfo.ParcelaValor}</p>
+        {/* Inclua mais informações conforme necessário */}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleCloseModal}>Fechar</Button>
+      </Modal.Footer>
+    </Modal>
+  </div>
   );
 }
 
@@ -301,31 +282,49 @@ function Mercados() {
         authKey: user.authKey,
         codUnico: codUnico
       });
-
+  
       const currentDate = new Date();
-      const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
-
+      // Ao comparar datas, é mais direto comparar objetos Date diretamente
+      // Isso evita problemas com fuso horário ao usar strings
+  
       const filteredContratos = {
-        naoPago: response.data.emprestimosDoUsuario.filter(contrato => contrato.status === 0),
-        pago: response.data.emprestimosDoUsuario.filter(contrato => contrato.status === 1),
-        vencido: response.data.emprestimosDoUsuario.filter(contrato => contrato.status === 2 || contrato.DataVencimento < formattedDate),
-        parcialmentePago: response.data.emprestimosDoUsuario.filter(contrato => contrato.status === 3)
+        naoPago: [],
+        pago: [],
+        vencido: [],
+        parcialmentePago: []
       };
-
+  
+      // Processar cada contrato individualmente
+      response.data.emprestimosDoUsuario.forEach(contrato => {
+        const dataVencimento = new Date(contrato.DataVencimento);
+  
+        if (contrato.status === 1) {
+          // Contrato pago
+          filteredContratos.pago.push(contrato);
+        } else if (dataVencimento < currentDate) {
+          // Contrato vencido (considerando apenas a data, pois o status não é 1)
+          filteredContratos.vencido.push(contrato);
+        } else if (contrato.status === 0) {
+          // Contrato não pago e ainda não vencido
+          filteredContratos.naoPago.push(contrato);
+        } else if (contrato.status === 3) {
+          // Contrato parcialmente pago
+          filteredContratos.parcialmentePago.push(contrato);
+        }
+      });
+  
       setisContrato(filteredContratos);
-      setPayouts(response.data.emprestimosDoUsuario)
-
-
-      setTotalPago(response.data.ganhoSumP)
-      setTotalAVencer(response.data.ganhoSum)
-
-
-
+      setPayouts(response.data.emprestimosDoUsuario);
+  
+      setTotalPago(response.data.ganhoSumP);
+      setTotalAVencer(response.data.ganhoSum);
+  
       return response.data;
     } catch (err) {
       return err.response;
     }
   };
+  
 
 
   const validUser = async () => {
@@ -397,7 +396,7 @@ function Mercados() {
                     <div id="text" className="col-md-6">
                       <h2>{t('Application_Contrato')}{' - '}{parametros.id}</h2>
                       <small>{t('Application_DetalhesPagamentos')} {' '} {parametros.id}</small>
-                      <div style={{ fontSize: '18px', fontWeight: 600, color: 'orange' }}>
+                      <div style={{ fontSize: '18px', fontWeight: 600, color: '#ffffff' }}>
                         {t('Application_ValorContrato')}{' '}<CurrencyFormat
                           value={EmprestimoData.valor}
                           displayType={'text'}
@@ -408,9 +407,10 @@ function Mercados() {
 
                         />
                       </div>
-                      <div>{t("Application_Data")}{' '}<Moment format='DD/MM/YY : HH:mm'>{EmprestimoData.createdAt}</Moment></div>
-                      <div className='text-success'>Total Pago ${totalPago.toFixed(2)}</div>
-                      <div style={{ color: '#17a2b8' }}>Total a vencer ${totalAVencer.toFixed(2)}</div>
+                      <div style={{ color: '#ffffff' }}>{t("Application_Data")}{' '}<Moment format='DD/MM/YY : HH:mm'>{EmprestimoData.createdAt}</Moment></div>
+                      <div style={{ color: '#ffffff' }}>Total Pago ${totalPago.toFixed(2)}</div>
+                      <div style={{ color: '#ffffff' }}>Total a vencer ${totalAVencer.toFixed(2)}</div>
+                      <div style={{ color: '#ffffff', fontSize:16 }}>Banco Provedor: {EmprestimoData.nomeDoBanco} - ({EmprestimoData.codeBank})</div>
                     </div>
                   </div>
                   <div id="margem" className='col-md-2 text-right' style={{ fontSize: '18px' }}>

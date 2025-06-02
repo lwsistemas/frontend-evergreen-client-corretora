@@ -178,14 +178,14 @@ function getPagination() {
 
 export default function DataGridTransfer(props) {
   const { t } = useTranslation()
-  const [sortModel, setSortModel] = useState  ([
+  const [sortModel, setSortModel] = useState([
     {
       field: 'createdAt',
       sort: 'asc',
     },
   ]);
-  function setModel(model){
-   // setSortModel(model)
+  function setModel(model) {
+    // setSortModel(model)
     //console.log(model)
 
   }
@@ -193,7 +193,7 @@ export default function DataGridTransfer(props) {
   const [pageSize, setPageSize] = useState(getPagination());
   const classes = useStyles();
   //const combined2 = props.senderHistory
-  let receiverHistory=[]
+  let receiverHistory = []
   //console.log()
   const combined2 = [...props.senderHistory, ...receiverHistory];
   combined2.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
@@ -204,20 +204,20 @@ export default function DataGridTransfer(props) {
 
   const columns = [
     { field: 'id', hide: true },
-   
-    
+
+
     {
       field: 'quantity',
       headerName: t('Value'),
-      description:t('Value in'),
+      description: t('Value in'),
       width: 150,
-      editable: false, 
+      editable: false,
       valueFormatter: (params) => {
         let keyValue = new Intl.NumberFormat('en-IN', { style: "currency", currency: "USD" }).format(params.value)
         // keyValue = keyValue.replace(",","-")
         // keyValue = keyValue.replace(".",",")
         // keyValue = keyValue.replace("-",".")
-        
+
         //let data = transferType.tokenCoins[params.value]
         return keyValue;
       },
@@ -228,13 +228,14 @@ export default function DataGridTransfer(props) {
       width: 120,
       editable: false,
       valueFormatter: (params) => {
-        let keyValue =""
-       if(params.value==0){
-        keyValue = t("Bank")}
-        else{
+        let keyValue = ""
+        if (params.value == 0) {
+          keyValue = t("Bank")
+        }
+        else {
           keyValue = t("Pix")
         }
-      //  let keyValue = t(params.value)
+        //  let keyValue = t(params.value)
         //let data = transferType.tokenCoins[params.value]
         return keyValue;
       },
@@ -246,27 +247,27 @@ export default function DataGridTransfer(props) {
 
       editable: false,
       valueFormatter: (params) => {
-        let keyValue =""
-       if(params.value==0){
-        keyValue = t('Waiting_Approval')
-      }else if(params.value==1){
-        keyValue = t('Approved')
-      }
-      else if(params.value==2){
-        keyValue = t('Application_Authorized')
-      }
-      else if(params.value==3){
-        keyValue = t('Application_Return')
-      }
-        else{
+        let keyValue = ""
+        if (params.value == 0) {
+          keyValue = t('Waiting_Approval')
+        } else if (params.value == 1) {
+          keyValue = t('Approved')
+        }
+        else if (params.value == 2) {
+          keyValue = t('Application_Authorized')
+        }
+        else if (params.value == 3) {
+          keyValue = t('Application_Return')
+        }
+        else {
           keyValue = t('Refused')
         }
-      //  let keyValue = t(params.value)
+        //  let keyValue = t(params.value)
         //let data = transferType.tokenCoins[params.value]
         return keyValue;
       }
 
-    },   
+    },
     {
       field: 'createdAt',
       headerName: t('Application_Data'),
@@ -302,7 +303,7 @@ export default function DataGridTransfer(props) {
                 alignItems: "center"
               }}
             >
-            {t('No Historic')}
+              {t('No Historic')}
             </div>
           )
         }}

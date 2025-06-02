@@ -1,77 +1,65 @@
+import React from "react";
+import Slider from "react-slick";
 import { useTranslation } from "react-i18next";
 import TitleSecondary from "../../../../components/text/titleSecondary";
+import "../../../../css/home/about.css";
+import aboutImage from "../../../../images/about/1.jpg";
 
 export const About = () => {
   const { t } = useTranslation();
 
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 600,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    arrows: true,
+  };
+
   return (
-    <div className="trade-app section-padding" id="about">
+    <section className="about-section section-padding" id="about">
       <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-xl-6">
-            <div className="section-title text-center">
-              <TitleSecondary>{t("Application_QuemSomos")}</TitleSecondary>
-              <p> {t("Application_TxtQuemSomos")}</p>
-            </div>
+        <div className="row align-items-center">
+          <div className="col-lg-6 mb-5 mb-lg-0">
+            <img
+              src={aboutImage}
+              alt="Sobre nós"
+              className="about-image aos-fade"
+            />
           </div>
-        </div>
-        <div className="row">
-          <div className="col-xl-4 col-lg-4 col-md-12">
-            <div
-              className="card trade-app-content "
-              style={{ background: "transparent" }}
-            >
-              <div
-                className="card-body"
-                style={{ background: "#1D1D1D", borderRadius: "9px" }}
-              >
-                <span>
-                  <i className="fa fa-users" style={{ color: "#FFC107" }}></i>
-                </span>
-                <h4 className="card-title">{t("Application_agentes")}</h4>
+          <div className="col-lg-6">
+            <div className="text-center text-lg-start">
+              <TitleSecondary>{t("Application_QuemSomos")}</TitleSecondary>
+              <p className="about-description">
+                Na EVER GREEN BROKER, nossa missão é revolucionar a forma como
+                você interage com o universo financeiro. Oferecemos uma
+                plataforma robusta, moderna e segura, conectando você às melhores
+                oportunidades de mercado com apenas alguns cliques.
+              </p>
+            </div>
+            <Slider {...settings} className="mt-4">
+              <div className="react-slick-card">
+                <i className="fa fa-users"></i>
+                <h4>{t("Application_agentes")}</h4>
                 <p>{t("txt_agentes")}</p>
               </div>
-            </div>
-          </div>
-          <div className="col-xl-4 col-lg-4 col-md-12">
-            <div
-              className="card trade-app-content"
-              style={{ background: "transparent" }}
-            >
-              <div
-                className="card-body"
-                style={{ background: "#1D1D1D", borderRadius: "4px" }}
-              >
-                <span>
-                  <i className="la la-desktop" style={{ color: "#FFC107" }}></i>
-                </span>
-                <h4 className="card-title">{t("Application_plataforma")}</h4>
+              <div className="react-slick-card">
+                <i className="la la-desktop"></i>
+                <h4>{t("Application_plataforma")}</h4>
                 <p>{t("Application_Txtplataforma")}</p>
               </div>
-            </div>
-          </div>
-          <div className="col-xl-4 col-lg-4 col-md-12">
-            <div
-              className="card trade-app-content"
-              style={{ background: "transparent" }}
-            >
-              <div
-                className="card-body"
-                style={{ background: "#1D1D1D", borderRadius: "4px" }}
-              >
-                <span>
-                  <i
-                    className="la la-connectdevelop"
-                    style={{ color: "#FFC107" }}
-                  ></i>
-                </span>
-                <h4 className="card-title">API</h4>
-                <p>{t("Application_txtApi")} </p>
+              <div className="react-slick-card">
+                <i className="la la-connectdevelop"></i>
+                <h4>API</h4>
+                <p>{t("Application_txtApi")}</p>
               </div>
-            </div>
+            </Slider>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };

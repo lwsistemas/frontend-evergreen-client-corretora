@@ -1,7 +1,7 @@
 .balance-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 2px;
 }
 
 .balance-row {
@@ -21,7 +21,7 @@
 
 }
 
-@media screen and (max-width: 500px) {
+/* @media screen and (max-width: 500px) {
   .balance-row {
     flex-direction: column;
     gap: 16px;
@@ -36,7 +36,7 @@
     width: 24px;
     height: auto;
   }
-}
+} */
 
 .coin {
   font-weight: bold;
@@ -45,7 +45,7 @@
 }
 
 .balance {
-  color: #009688;
+  color: #cfcfcf;
   font-weight: bold;
   font-size: 16px;
 }

@@ -103,13 +103,7 @@ function Mercados() {
 
 
 
-                        <div className="card sub-menu">
-                            <div className="card-body">
-                                <div>
-                                    <ButtonsMarketsIndices />
-                                </div>
-                            </div>
-                        </div>
+                       
                         <div class="row" style={{ marginTop: "50px" }}>
                             {
                                 prices.filter(element => element.isMarket == 1).map(coin => {
@@ -148,7 +142,7 @@ function Mercados() {
                                                     </div>
                                                     <div className="card-body">
                                                         <h5>
-                                                            {Intl.NumberFormat('en-IN', { style: 'currency', currency: 'USD', minimumFractionDigits: 6 }).format(coin.price)}
+                                                            {Intl.NumberFormat('en-IN', { style: 'currency', currency: 'USD', minimumFractionDigits: 10 }).format(coin.price)}
 
                                                         </h5>
                                                         <div style={{ float: "right", margin: '20px 0 0 10px' }}>
@@ -166,7 +160,7 @@ function Mercados() {
                             }
                             
                         </div>
-                        <div class="row">
+                        {/* <div class="row">
                             <div className="col-xl-12 col-lg-12 col-md-12">
                                 <div className="card">
                                     <div className="card-header">
@@ -217,7 +211,7 @@ function Mercados() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             )}

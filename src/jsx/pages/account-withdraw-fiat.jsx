@@ -34,6 +34,7 @@ function DebitCard() {
   const [showErro, setShowErro] = useState('none');
   const [showBank, setShowBank] = useState(false)
   const [bankSelected, setBankSelected] = useState(0)
+  const [Data, setData] = useState({ CelularAtendimento: "" }); // Initialize data as an object
 
   const quantityNumber = quantity == "" ? "" : parseFloat(quantity.replace(/[^\d.]/g, "").replace(/(\d)(\d{2})$/, "$1.$2"))
 
@@ -216,264 +217,322 @@ function DebitCard() {
     }
   }
 
+
   useEffect(async () => {
     await validUser()
   }, [])
+  useEffect(() => {
+    if (user !== null) {
+      getUser();
+    }
+  }, [user]);
 
   useEffect(() => { }, [showBank])
   useEffect(() => { }, [bank])
 
   // useEffect(() => { console.log(quantity) }, [quantity])
   useEffect(() => { console.log(quantityNumber) }, [quantityNumber])
+
+  const getUser = async () => {
+    try {
+      const response = await axios.post(`/user/view/`, { authKey: user.authKey });
+      setData(response.data); // Set data with the response data
+    } catch (err) {
+      console.log("Erro ao buscar os dados do usuário:", err);
+    }
+  };
+
+
   return (
     <>
-      <Header2 title={t("Insert your withdraw info")}/>
-      
+      <Header2 title={t("Insert your withdraw info")} />
+
       <Loading show={showLoad} />
       <div class="content-body">
         <div class="container-fluid h-100" >
           <div class="row">
-            <div class="col-md-5">
-              <div class="auth-form card">
-                <div class="card-header" style={{ display: displayFiat }}>
-                  <h4 class="card-title">{t("Insert your withdraw info")}</h4>
-                </div>
-                <div class="card-body" style={{ display: displaySucess }} >
-                  <div class="form-row align-items-center" style={{
-                    display: 'flex',
-                    alignContent: 'center', justifyContent: 'center'
-                  }}>
-                    <div class="text-center">
-                      <h2 class="card-title">{t("Attention")}!</h2>
-                      <Alert style={{ color: "rgb(16 216 118)", backgroundColor: "transparent", fontSize: "15px" }} icon={<CheckIcon fontSize="inherit" />} severity="success">
-                        {t("Transaction in progress, wait for confirmation in history.")}
-                      </Alert>
-                    </div >
-                  </div>
-                  <div class="form-row align-items-center" style={{
-                    display: 'flex',
-                    alignContent: 'center', justifyContent: 'center'
-                  }}>
-                    <button
-                      style={{
-                        backgroundColor: '#10d876', borderColor: '#10d876',
-                        alignContent: 'center', justifyContent: 'center',
-                        width: '200px',
-                      }}
-                      className="btn btn-success btn-block mt-4" onClick={backToPage}>
-                      {t('Back')}
-                    </button>
-                  </div>
-                </div>
-                <div class="card-body" style={{ display: displayFiat }}>
-                  <div class="mb-3 px-4">
-                    <Form.Label>{t("Withdrawal method")}</Form.Label>
-                    <WithdawTypeSelect onChange={handleChange} />
-                  </div>
-                  {type == "Bank" ? (
-                    <Card.Body>
-                      <Form onSubmit={handleSubmitAccount}>
-                        <Form.Group controlId="fromGridBank">
-                          <Form.Label>{t("Bank")}</Form.Label>
-                          <Form.Control
-                            value={bankSelected}
-                            as="select"
-                            onChange={(e) => handleBank(e.target.value)}
-                          >
-                            {
-                              banks.length == 0 ?
-                                <option
-                                  value={1}>{t('Unregistered data')}
-                                </option>
-                                :
-                                <>
-                                  <option value={0}>{t("Select a bank account")}</option>
-                                  {banks.map((e) => (
-                                    <option value={e.id} >
-                                      {`${e.agency} ${e.account}-${e.digit} / ${e.bank}`}
-                                    </option>
-                                  ))}
-                                </>
-                            }
-                          </Form.Control>
-                        </Form.Group>
-                        {
-                          showBank == true ?
-                            <Form.Group className="disabled" controlId="fromGridTypeAccount">
-                              <Form.Label>{t("Type of account")}</Form.Label>
-                              <Form.Control type="text" value={bank.accountType} />
-                            </Form.Group> :
-                            null
-                        }
-                        {
-                          showBank == true ?
-                            <Form.Group className="disabled" controlId="fromGridUser">
-                              <Form.Label>{t("Holder name")} </Form.Label>
-                              <Form.Control
-                                type="text"
-                                value={user.firstName}
-                              />
-                            </Form.Group> :
-                            null
-                        }
-                        {/* <Form.Group controlId="fromGridBank">
-                          <Form.Label>{t("Agency")}</Form.Label>
-                          <Form.Control type="text" value={bank.agency} />
-                        </Form.Group>
-                        <Form.Group controlId="fromGridBank">
-                          <Form.Label>{t("Account number")}</Form.Label>
-                          <Form.Control type="text" value={bank.account} />
-                        </Form.Group>
-                        <Form.Group controlId="fromGridBank">
-                          <Form.Label>{t("Digit")}</Form.Label>
-                          <Form.Control type="text" value={bank.digit} />
-                        </Form.Group> */}
-                        {
-                          showBank == true ?
-                            <Form.Group>
-                              <Form.Label>{t('Value') + " "}(USD)</Form.Label>
-                              <Form.Control
-                                type="text"
-                                placeholder="0.00"
-                                value={quantity == "" ? quantityNumber : Intl.NumberFormat("en-US", {
-                                  currency: "USD",
-                                  minimumFractionDigits: 2,
-                                }).format(quantityNumber)}
-                                onChange={(e) => setquantity(e.target.value)}
-                                onInput={(event) => {
-                                  event.target.value = event.target.value.replace(/\D/g, "");
-                                  if (event.target.value.length == 1) {
-                                    event.target.value = event.target.value.replace(/^(\d)/, "0.0$1");
-                                  }
-                                  if (event.target.value.length == 2) {
-                                    event.target.value = event.target.value.replace(/^(\d)/, "0.$1");
-                                  } else {
-                                    event.target.value = event.target.value.replace(/(\d)(\d{2})$/, "$1.$2");
-                                  }
-                                  event.target.value = event.target.value.replace(
-                                    /(?=(\d{3})+(\D))\B/g,
-                                    ","
-                                  );
-                                }}
-                                pattern="[0-9,.]*"
-                                style={{ textAlign: "right" }}
-                                inputMode="numeric"
-                              />
-                            </Form.Group> :
-                            null
-                        }
-                        <div class="error-pop-login" style={{ display: showErro, marginTop: "3%" }}>
-                          <Alert style={{ fontWeight: '10', padding: " 0px 10px" }} variant="filled" severity="error">
-                            {t(mensagemErro)}
-                          </Alert>
-                        </div>
-                        <Button variant="success mt-4" type="submit">
-                          {t("Application_EfetuarSaque")} <i className="fa fa-bank"></i>
-                        </Button>
-                      </Form>
-                    </Card.Body>
-                  ) : type == "Pix" ? (
-                    <Card.Body>
-                      <Form onSubmit={handleSubmitPix}>
-                        <Form.Group controlId="fromGridUser">
-                          <Form.Label>{t('Key Name')}</Form.Label>
-                          <Form.Control
-                            as="select"
-                            value={bankSelected}
-                            onChange={(e) => handlePix(e.target.value)}
-                          >
-                            {
-                              pixs.length == 0 ? <option value={1}>{t('Unregistered data')}
-                              </option>
-                                :
-                                <>
-                                  <option value={0}>{t("Select a pix key" )}</option>
-                                  {
-                                    pixs.map(e => (
-                                      <option value={e.id}>{`${e.name}`}</option>
-                                    ))
-                                  }
-                                </>
-                            }
-                          </Form.Control>
-                        </Form.Group>
-                        {
-                          showBank == true ?
-                            <Form.Group controlId="fromGridUser" className="disabled">
-                              <Form.Label>{t("Holder name")} </Form.Label>
-                              <Form.Control
-                                type="text"
-                                value={pix.holderName}
-                              />
-                            </Form.Group> :
-                            null
-                        }
-                        {
-                          showBank == true ?
-                            <Form.Group controlId="fromGridBank" className="disabled">
-                              <Form.Label>{t("Type of key")}</Form.Label>
-                              <Form.Control type="text" value={pix.typePix} />
-                            </Form.Group> :
-                            null
-                        }
-                        {
-                          showBank == true ?
-                            <Form.Group controlId="fromGridBank" className="disabled">
-                              <Form.Label>{t("Key")} Pix</Form.Label>
-                              <Form.Control type="text" value={pix.pix} />
-                            </Form.Group> :
-                            null
-                        }
-                        {
-                          showBank == true ?
-                            <Form.Group>
-                              <Form.Label>{t('Value') + " "}(USD)</Form.Label>
-                              <Form.Control
-                                type="text"
-                                placeholder="0.00"
-                                value={quantity == "" ? quantityNumber : Intl.NumberFormat("en-US", {
-                                  currency: "USD",
-                                  minimumFractionDigits: 2,
-                                }).format(quantityNumber)}
-                                onChange={(e) => setquantity(e.target.value)}
-                                onInput={(event) => {
-                                  event.target.value = event.target.value.replace(/\D/g, "");
-                                  if (event.target.value.length == 1) {
-                                    event.target.value = event.target.value.replace(/^(\d)/, "0.0$1");
-                                  }
-                                  if (event.target.value.length == 2) {
-                                    event.target.value = event.target.value.replace(/^(\d)/, "0.$1");
-                                  } else {
-                                    event.target.value = event.target.value.replace(/(\d)(\d{2})$/, "$1.$2");
-                                  }
-                                  event.target.value = event.target.value.replace(
-                                    /(?=(\d{3})+(\D))\B/g,
-                                    ","
-                                  );
-                                }}
-                                pattern="[0-9,.]*"
-                                style={{ textAlign: "right" }}
-                                inputMode="numeric"
-                              />
-                            </Form.Group> :
-                            null
-                        }
-                        <div class="error-pop-login" style={{ display: showErro, marginTop: "3%" }}>
-                          <Alert style={{ fontWeight: '10', padding: " 0px 10px" }} variant="filled" severity="error">
-                            {t(mensagemErro)}
-                          </Alert>
-                        </div>
-                        <Button variant="success mt-4" type="submit">
-                          {t("Application_EfetuarSaque")} <i className="fa fa-bank"></i>
-                        </Button>
-                      </Form>
-                    </Card.Body>)
-                    : <div></div>
-                  }
-                </div>
-              </div>
 
+            <div class="col-xl-12 col-lg-12 col-xxl-12">
+              <div class="card">
+                <div class="card-header">
+                  <h1 class="card-title"> {t('Application_Capital')}</h1>
+                  <h4>{parseFloat(Data.balanceBrl).toFixed(2)} USD</h4>
+                </div>
+
+              </div>
             </div>
+
+            <div class="col-md-5">
+              {Data.status !== 10 && Data.status !== 11 && Data.status !== 12 && Data.status !== 13 && Data.status !== 0 ? (
+
+                <div>
+                  <div class="auth-form card">
+                    <div class="card-header" style={{ display: displayFiat }}>
+                      <h4 class="card-title">{t("Insert your withdraw info")}</h4>
+                    </div>
+                    <div class="card-body" style={{ display: displaySucess }} >
+                      <div class="form-row align-items-center" style={{
+                        display: 'flex',
+                        alignContent: 'center', justifyContent: 'center'
+                      }}>
+                        <div class="text-center">
+                          <h2 class="card-title">{t("Attention")}!</h2>
+                          <Alert style={{ color: "rgb(16 216 118)", backgroundColor: "transparent", fontSize: "15px" }} icon={<CheckIcon fontSize="inherit" />} severity="success">
+                            {t("Transaction in progress, wait for confirmation in history.")}
+                          </Alert>
+                        </div >
+                      </div>
+                      <div class="form-row align-items-center" style={{
+                        display: 'flex',
+                        alignContent: 'center', justifyContent: 'center'
+                      }}>
+                        <button
+                          style={{
+                            backgroundColor: '#10d876', borderColor: '#10d876',
+                            alignContent: 'center', justifyContent: 'center',
+                            width: '200px',
+                          }}
+                          className="btn btn-success btn-block mt-4" onClick={backToPage}>
+                          {t('Back')}
+                        </button>
+                      </div>
+                    </div>
+                    <div class="card-body" style={{ display: displayFiat }}>
+                      <div class="mb-3 px-4">
+                        <Form.Label>{t("Withdrawal method")}</Form.Label>
+                        <WithdawTypeSelect onChange={handleChange} />
+                      </div>
+                      {type == "Bank" ? (
+                        <Card.Body>
+                          <Form onSubmit={handleSubmitAccount}>
+                            <Form.Group controlId="fromGridBank">
+                              <Form.Label>{t("Bank")}</Form.Label>
+                              <Form.Control
+                                value={bankSelected}
+                                as="select"
+                                onChange={(e) => handleBank(e.target.value)}
+                              >
+                                {
+                                  banks.length == 0 ?
+                                    <option
+                                      value={1}>{t('Unregistered data')}
+                                    </option>
+                                    :
+                                    <>
+                                      <option value={0}>{t("Select a bank account")}</option>
+                                      {banks.map((e) => (
+                                        <option value={e.id} >
+                                          {`${e.agency} ${e.account}-${e.digit} / ${e.bank}`}
+                                        </option>
+                                      ))}
+                                    </>
+                                }
+                              </Form.Control>
+                            </Form.Group>
+                            {
+                              showBank == true ?
+                                <Form.Group className="disabled" controlId="fromGridTypeAccount">
+                                  <Form.Label>{t("Type of account")}</Form.Label>
+                                  <Form.Control type="text" value={bank.accountType} />
+                                </Form.Group> :
+                                null
+                            }
+                            {
+                              showBank == true ?
+                                <Form.Group className="disabled" controlId="fromGridUser">
+                                  <Form.Label>{t("Holder name")} </Form.Label>
+                                  <Form.Control
+                                    type="text"
+                                    value={user.firstName}
+                                  />
+                                </Form.Group> :
+                                null
+                            }
+                            {/* <Form.Group controlId="fromGridBank">
+            <Form.Label>{t("Agency")}</Form.Label>
+            <Form.Control type="text" value={bank.agency} />
+          </Form.Group>
+          <Form.Group controlId="fromGridBank">
+            <Form.Label>{t("Account number")}</Form.Label>
+            <Form.Control type="text" value={bank.account} />
+          </Form.Group>
+          <Form.Group controlId="fromGridBank">
+            <Form.Label>{t("Digit")}</Form.Label>
+            <Form.Control type="text" value={bank.digit} />
+          </Form.Group> */}
+                            {
+                              showBank == true ?
+                                <Form.Group>
+                                  <Form.Label>{t('Value') + " "}(USD)</Form.Label>
+                                  <Form.Control
+                                    type="text"
+                                    placeholder="0.00"
+                                    value={quantity == "" ? quantityNumber : Intl.NumberFormat("en-US", {
+                                      currency: "USD",
+                                      minimumFractionDigits: 2,
+                                    }).format(quantityNumber)}
+                                    onChange={(e) => setquantity(e.target.value)}
+                                    onInput={(event) => {
+                                      event.target.value = event.target.value.replace(/\D/g, "");
+                                      if (event.target.value.length == 1) {
+                                        event.target.value = event.target.value.replace(/^(\d)/, "0.0$1");
+                                      }
+                                      if (event.target.value.length == 2) {
+                                        event.target.value = event.target.value.replace(/^(\d)/, "0.$1");
+                                      } else {
+                                        event.target.value = event.target.value.replace(/(\d)(\d{2})$/, "$1.$2");
+                                      }
+                                      event.target.value = event.target.value.replace(
+                                        /(?=(\d{3})+(\D))\B/g,
+                                        ","
+                                      );
+                                    }}
+                                    pattern="[0-9,.]*"
+                                    style={{ textAlign: "right" }}
+                                    inputMode="numeric"
+                                  />
+                                </Form.Group> :
+                                null
+                            }
+                            <div class="error-pop-login" style={{ display: showErro, marginTop: "3%" }}>
+                              <Alert style={{ fontWeight: '10', padding: " 0px 10px" }} variant="filled" severity="error">
+                                {t(mensagemErro)}
+                              </Alert>
+                            </div>
+                            <Button variant="success mt-4" type="submit">
+                              {t("Application_EfetuarSaque")} <i className="fa fa-bank"></i>
+                            </Button>
+                          </Form>
+                        </Card.Body>
+                      ) : type == "Pix" ? (
+                        <Card.Body>
+                          <Form onSubmit={handleSubmitPix}>
+                            <Form.Group controlId="fromGridUser">
+                              <Form.Label>{t('Key Name')}</Form.Label>
+                              <Form.Control
+                                as="select"
+                                value={bankSelected}
+                                onChange={(e) => handlePix(e.target.value)}
+                              >
+                                {
+                                  pixs.length == 0 ? <option value={1}>{t('Unregistered data')}
+                                  </option>
+                                    :
+                                    <>
+                                      <option value={0}>{t("Select a pix key")}</option>
+                                      {
+                                        pixs.map(e => (
+                                          <option value={e.id}>{`${e.name}`}</option>
+                                        ))
+                                      }
+                                    </>
+                                }
+                              </Form.Control>
+                            </Form.Group>
+                            {
+                              showBank == true ?
+                                <Form.Group controlId="fromGridUser" className="disabled">
+                                  <Form.Label>{t("Holder name")} </Form.Label>
+                                  <Form.Control
+                                    type="text"
+                                    value={pix.holderName}
+                                  />
+                                </Form.Group> :
+                                null
+                            }
+                            {
+                              showBank == true ?
+                                <Form.Group controlId="fromGridBank" className="disabled">
+                                  <Form.Label>{t("Type of key")}</Form.Label>
+                                  <Form.Control type="text" value={pix.typePix} />
+                                </Form.Group> :
+                                null
+                            }
+                            {
+                              showBank == true ?
+                                <Form.Group controlId="fromGridBank" className="disabled">
+                                  <Form.Label>{t("Key")} Pix</Form.Label>
+                                  <Form.Control type="text" value={pix.pix} />
+                                </Form.Group> :
+                                null
+                            }
+                            {
+                              showBank == true ?
+                                <Form.Group>
+                                  <Form.Label>{t('Value') + " "}(USD)</Form.Label>
+                                  <Form.Control
+                                    type="text"
+                                    placeholder="0.00"
+                                    value={quantity == "" ? quantityNumber : Intl.NumberFormat("en-US", {
+                                      currency: "USD",
+                                      minimumFractionDigits: 2,
+                                    }).format(quantityNumber)}
+                                    onChange={(e) => setquantity(e.target.value)}
+                                    onInput={(event) => {
+                                      event.target.value = event.target.value.replace(/\D/g, "");
+                                      if (event.target.value.length == 1) {
+                                        event.target.value = event.target.value.replace(/^(\d)/, "0.0$1");
+                                      }
+                                      if (event.target.value.length == 2) {
+                                        event.target.value = event.target.value.replace(/^(\d)/, "0.$1");
+                                      } else {
+                                        event.target.value = event.target.value.replace(/(\d)(\d{2})$/, "$1.$2");
+                                      }
+                                      event.target.value = event.target.value.replace(
+                                        /(?=(\d{3})+(\D))\B/g,
+                                        ","
+                                      );
+                                    }}
+                                    pattern="[0-9,.]*"
+                                    style={{ textAlign: "right" }}
+                                    inputMode="numeric"
+                                  />
+                                </Form.Group> :
+                                null
+                            }
+                            <div class="error-pop-login" style={{ display: showErro, marginTop: "3%" }}>
+                              <Alert style={{ fontWeight: '10', padding: " 0px 10px" }} variant="filled" severity="error">
+                                {t(mensagemErro)}
+                              </Alert>
+                            </div>
+                            <Button variant="success mt-4" type="submit">
+                              {t("Application_EfetuarSaque")} <i className="fa fa-bank"></i>
+                            </Button>
+                          </Form>
+                        </Card.Body>)
+                        : <div></div>
+                      }
+                    </div>
+                  </div>
+
+                </div>
+              ) : (
+
+
+                <div className="alert alert-warning">
+                  {Data.status === 10 && <p>{t("Application_UserSuspense")}</p>}
+                  {Data.status === 11 && <p>{t("Application_UserSuspense")}</p>}
+                  {Data.status === 12 && <p>{t("User Disabled")}</p>}
+                  {Data.status === 0 && (
+                    <div>
+                      <p>{t("Application_UserSemVerificacao")}</p>
+                      <small>{t('Application_UserSemVerificacaoMSg')}</small>
+                      <div>
+                        <Link to={"/user/mydocuments"} class="btn btn-outline-warning">
+                          {t("Application_EnviarDocumentos")} &nbsp;
+                          <i className="fa fa-upload"></i>
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+
+              )}
+            </div>
+
+
+
 
             <div class="col-xl-7 col-lg-7 col-xxl-7">
               <div class="card">
@@ -493,7 +552,7 @@ function DebitCard() {
             </div>
           </div>
         </div>
-      </div>
+      </div >
       <BottomBar />
     </>
   );
