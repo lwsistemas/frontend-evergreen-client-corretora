@@ -178,7 +178,7 @@ function MyWallet() {
                                                             <div className="balance-row">
                                                                 <div className="d-flex content-icon">
                                                                     <img
-                                                                        src={`https://evergreenbroker.co.uk/${data.walletImg}`}
+                                                                        src={`https://evergreenbroker.co.uk${data.walletImg}`}
                                                                         alt={data.name}/>
                                                                     <h4 className="coin">{data.name}</h4>
                                                                 </div>
